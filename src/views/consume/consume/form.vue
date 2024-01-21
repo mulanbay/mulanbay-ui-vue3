@@ -33,7 +33,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="购买来源" prop="sourceOptions">
+          <el-form-item label="购买来源" prop="sourceId">
 			  <el-select
 			    v-model="form.sourceId"
 			    placeholder="购买来源"
@@ -52,7 +52,7 @@
       </el-row>
       <el-row>
         <el-col :span="12">
-          <el-form-item label="消费类型">
+          <el-form-item label="消费类型" prop="consumeType">
             <el-select
               v-model="form.consumeType"
               :style="{width: '100%'}"
@@ -69,7 +69,7 @@
       </el-row>
       <el-row>
         <el-col :span="24">
-          <el-form-item label="商品标签" prop="keywords">
+          <el-form-item label="商品标签" prop="tags">
             <el-tag
               :key="tag"
               v-for="tag in keywordsTags"
@@ -100,13 +100,12 @@
                   {{tag.text}}
                 </el-tag>
                 <div style="text-align: right; margin: 0">
-                  <el-button size="small" text @click="tagsPopOpen = false">取消</el-button>
-                  <el-button size="small" type="primary" @click="tagsPopOpen = false">确定</el-button>
-                </div>
+					<el-button size="small" type="success" icon="CircleCheckFilled" @click="tagsPopOpen = false">确定</el-button>
+                 </div>
                 <template #reference>
                   <el-button @click="tagsPopOpen = true" type="success" icon="Share">选择</el-button>
                 </template>
-              </el-popover>
+            </el-popover>
           </el-form-item>
         </el-col>
       </el-row>
@@ -141,7 +140,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="支付方式">
+          <el-form-item label="支付方式" prop="payment">
             <el-select v-model="form.payment" :style="{width: '100%'}" placeholder="请选择">
               <el-option
                 v-for="dict in paymentOptions"
@@ -192,11 +191,11 @@
             <el-date-picker type="datetime" v-model="form.expectInvalidTime" format="YYYY-MM-DD HH:mm:ss" value-format="YYYY-MM-DD HH:mm:ss"
                       :style="{width: '210px'}" placeholder="请选择时间" clearable >
             </el-date-picker>
-            &nbsp;&nbsp;
+            <el-tag class="mx-1" size="large">快速选择</el-tag>
             <el-select v-model="invalidPeriod"
             clearable
             placeholder="请选择"
-            style="width: 160px"
+            style="width: 180px"
             @change="selectInvalidDatePeriod">
               <el-option
                 v-for="dict in invalidPeriodOptions"
@@ -245,7 +244,7 @@
 </template>
 
 <script setup name="ConsumeForm">
-	import {createConsume,editConsume,getConsume,getConsumeTagTree} from "@/api/consume/consume";
+	import {createConsume,editConsume,getConsume,getConsumeTagTree,aiMatch} from "@/api/consume/consume";
 	import {getConsumeSourceTree} from "@/api/consume/consumeSource";
 	import {getGoodsTypeTree} from "@/api/consume/goodsType";
 	import {appendTagToOptions} from "@/utils/tagUtils";
@@ -273,7 +272,7 @@
 	const hisKeywordsTags = ref([]);
 	const inputVisible = ref(false);
 	const inputValue = ref('');
-	
+		
 	const data = reactive({
 	  form: {},
 	  // 表单校验
@@ -298,6 +297,9 @@
 	    ],
 	    buyTime: [
 	      { required: true, message: "购买时间不能为空", trigger: "blur" }
+	    ],
+	    payment: [
+	      { required: true, message: "支付方式不能为空", trigger: "blur" }
 	    ]
 	  }
 	});
@@ -362,7 +364,36 @@
 	
 	/** 自动匹配 */
 	function handleAIMatch(){
-		
+		const goodsName = form.value.goodsName;
+		//编辑状态、没填商品名、已经选择过商品类型都不再智能匹配
+		if(form.value.consumeId!=null||proxy.isEmpty(goodsName)||form.value.goodsTypeId!=null){
+		  return;
+		}
+		aiMatch(goodsName).then(response => {
+		  form.value.traceId = response.traceId;
+		  if(response!=null){
+		    if(response.goodsTypeId!=null){
+		      form.value.goodsTypeId = response.goodsTypeId;
+		    }
+		    if(response.payment!=null){
+		      form.value.payment = response.payment;
+		    }
+		    form.value.sourceId = response.sourceId;
+		    form.value.shopName = response.shopName;
+		    if(response.match>=0.8){
+		      //基本上是同一件商品类型
+		      form.value.brand = response.brand;
+		      form.value.price = response.price;
+		      form.value.amount = response.amount;
+		      form.value.shipment = response.shipment;
+		      form.value.totalPrice = response.totalPrice;
+		      form.value.payment = response.payment;
+		      form.value.secondhand = response.secondhand;
+		      form.value.consumeType = response.consumeType;
+		      form.value.sku = response.sku;
+		    }
+		  }
+		});
 	}
 	
 	/** 期望作废时间 */
