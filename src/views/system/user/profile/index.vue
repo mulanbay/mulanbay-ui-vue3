@@ -78,6 +78,9 @@
 			  <el-tab-pane label="快捷菜单" name="fastMenu">
 			    <FastMenu />
 			  </el-tab-pane>
+			  <el-tab-pane label="人生档案" name="archive">
+			    <Archive ref="archiveRef" />
+			  </el-tab-pane>
             </el-tabs>
           </el-card>
         </el-col>
@@ -92,8 +95,9 @@
 	import UserInfo from "./userInfo.vue";
 	import ResetPwd from "./resetPwd.vue";
 	import FastMenu from "./fastMenu.vue";
-	
+	import Archive from "./archive.vue";
 
+	const archiveRef = ref();
 	const activeTab = ref("userinfo");
 	const state = reactive({
 	  user: {}
@@ -104,7 +108,8 @@
 	/** 获取用户信息 **/
 	function getUser() {
 	  getProfile().then(response => {
-		state.user = response;
+		user.value = response;
+		archiveRef.value.showData(response);
 	  });
 	};
 	
