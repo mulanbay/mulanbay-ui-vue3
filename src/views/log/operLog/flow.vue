@@ -128,13 +128,13 @@
             </el-timeline>
           </div>
 
-          <pagination
-            v-show="total>0"
-            :total="total"
-            :page.sync="queryParams.page"
-            :limit.sync="queryParams.pageSize"
-            @pagination="getList"
-          />
+        <pagination
+         v-show="total > 0"
+         :total="total"
+         v-model:page="queryParams.page"
+         v-model:limit="queryParams.pageSize"
+         @pagination="getList"
+        />
 
         </el-card>
       </el-col>

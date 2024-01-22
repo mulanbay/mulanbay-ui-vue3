@@ -108,18 +108,18 @@
 	/>
 	
 	<!-- 系统代码 -->
-	<ComapreDataForm ref="comapreDataFormRef" />
+	<CompareDataForm ref="compareDataFormRef" />
 	
   </div>
 </template>
 
 <script setup name="MatchLog">
 	import {fetchList} from "@/api/log/matchLog";
-	import ComapreDataForm from './comapreData.vue'
+	import CompareDataForm from './compareData.vue'
 
 	const { proxy } = getCurrentInstance();
 	
-	const comapreDataFormRef = ref(true);
+	const compareDataFormRef = ref(true);
 
 	// 遮罩层
 	const loading = ref(true);
@@ -181,7 +181,7 @@
 	
 	/** 数据比较 */
 	function showCompare(row){
-	  comapreDataFormRef.value.openCompareData(row.id);
+	  compareDataFormRef.value.openCompareData(row.id);
 	}
 
 	/** 查询列表 */

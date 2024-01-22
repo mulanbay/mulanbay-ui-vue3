@@ -126,6 +126,15 @@
 		  v-hasPermi="['consume:consume:delete']"
 		>删除</el-button>
 	  </el-col>
+	  <el-col :span="1.5">
+		<el-button
+		  type="success"
+		  icon="switch"
+		  :disabled="single"
+		  @click="showCasecade"
+		  v-hasPermi="['consume:consume:edit']"
+		>关联消费</el-button>
+	  </el-col>
 	</el-row>
 
     <!--列表数据-->
@@ -234,6 +243,8 @@
 	<!-- 表单 -->
 	<ConsumeForm ref="formRef" @success="getList" />
 
+	<!-- 关联 -->
+	<CascadeForm ref="cascadeFormRef" />
   </div>
 </template>
 
@@ -241,11 +252,12 @@
 	import {fetchList,deleteConsume} from "@/api/consume/consume";
 	import {getConsumeSourceTree} from "@/api/consume/consumeSource";
 	import {getGoodsTypeTree} from "@/api/consume/goodsType";
-	
+	import CascadeForm from './cascade/index.vue'
 	import ConsumeForm from './form.vue'
 
 	const { proxy } = getCurrentInstance();
 	const formRef = ref();
+	const cascadeFormRef = ref();
 	
 	// 遮罩层
 	const loading = ref(true);
@@ -293,6 +305,12 @@
 	    moreCdn.value=true;
 		cdnTitle.value='取消';
 	  }
+	}
+	
+	/** 级联 */
+	function showCasecade(){
+	  const consumeId = ids.value.join(",");
+	  cascadeFormRef.value.openCascade(consumeId);
 	}
 	
 	/** 下拉框加载 */
@@ -373,7 +391,7 @@
 	
 	// 多选框选中数据
 	function handleSelectionChange(selection) {
-	  ids.value = selection.map(item => item.sourceId)
+	  ids.value = selection.map(item => item.consumeId)
 	  single.value = selection.length!=1
 	  multiple.value = !selection.length
 	}

@@ -219,7 +219,7 @@
         </el-col>
         <el-col :span="12">
           <el-form-item label="售出时间" prop="invalidTime" v-if="true==showSold">
-            <el-date-picker type="datetime" v-model="form.deleteDate" format="YYYY-MM-DD HH:mm:ss" value-format="YYYY-MM-DD HH:mm:ss"
+            <el-date-picker type="datetime" v-model="form.invalidTime" format="YYYY-MM-DD HH:mm:ss" value-format="YYYY-MM-DD HH:mm:ss"
                       :style="{width: '100%'}" placeholder="请选择时间" clearable >
             </el-date-picker>
           </el-form-item>
@@ -265,6 +265,7 @@
 	const consumeTypeOptions = ref([]);
 	const paymentOptions = ref([]);
 	const invalidPeriodOptions = ref([]);
+	const invalidPeriod = ref();
 	
 	//标签编辑
 	const tagsPopOpen = ref(false);

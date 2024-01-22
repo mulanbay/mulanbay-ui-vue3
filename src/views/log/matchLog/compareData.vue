@@ -8,7 +8,7 @@
         <el-card>
             <div>
               <el-descriptions class="margin-top" :column="1" border >
-                <el-descriptions-item width="150px">
+                <el-descriptions-item >
 					<template #label>
 					  <div class="cell-item">
 						<el-icon><GoodsFilled /></el-icon>
@@ -19,7 +19,7 @@
 					  {{ matchLogInfo.goodsName}}
 					</span>
                 </el-descriptions-item>
-				<el-descriptions-item width="150px">
+				<el-descriptions-item>
 					<template #label>
 					  <div class="cell-item">
 						<el-icon><user /></el-icon>
@@ -30,7 +30,7 @@
 					  {{ matchLogInfo.aiMatch}}
 					</span>
 				</el-descriptions-item>
-				<el-descriptions-item width="150px">
+				<el-descriptions-item >
 					<template #label>
 					  <div class="cell-item">
 						<el-icon><user /></el-icon>
@@ -41,7 +41,7 @@
 					  {{ matchLogInfo.acMatch}}
 					</span>
 				</el-descriptions-item>
-				<el-descriptions-item width="150px">
+				<el-descriptions-item >
 					<template #label>
 					  <div class="cell-item">
 						<el-icon><Operation /></el-icon>
