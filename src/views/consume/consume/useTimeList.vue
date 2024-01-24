@@ -49,7 +49,7 @@
 	      />
 	    </el-select>
 	  </el-form-item>
-	  <el-form-item v-if="moreCdn==true"  label="排序方式" prop="sortField">
+	  <el-form-item label="排序方式" prop="sortField">
 	    <el-select
 	      v-model="queryParams.sortField"
 	      placeholder="字段"
@@ -93,58 +93,12 @@
 	    </el-select>
 	  </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="search" @click="handleQuery" v-hasPermi="['consume:consume:list']">搜索</el-button>
+        <el-button type="primary" icon="search" @click="handleQuery" v-hasPermi="['consume:consume:useTimeList']">搜索</el-button>
         <el-button icon="refresh" @click="resetQuery">重置</el-button>
+		<el-button type="success" icon="TrendCharts" @click="handleStat" v-hasPermi="['consume:consume:useTimeStat']">统计</el-button>
 		<el-button type="warning" icon="more" @click="handleMoreCdn">{{cdnTitle}}</el-button>
       </el-form-item>
     </el-form>
-	
-	<el-row :gutter="10" class="mb8">
-	  <el-col :span="1.5">
-		<el-button
-		  type="primary"
-		  icon="plus"
-		  @click="handleCreate"
-		  v-hasPermi="['consume:consume:create']"
-		>新增</el-button>
-	  </el-col>
-	  <el-col :span="1.5">
-		<el-button
-		  type="success"
-		  icon="edit"
-		  :disabled="single"
-		  @click="handleEdit"
-		  v-hasPermi="['consume:consume:edit']"
-		>修改</el-button>
-	  </el-col>
-	  <el-col :span="1.5">
-		<el-button
-		  type="danger"
-		  icon="delete"
-		  :disabled="multiple"
-		  @click="handleDelete"
-		  v-hasPermi="['consume:consume:delete']"
-		>删除</el-button>
-	  </el-col>
-	  <el-col :span="1.5">
-		<el-button
-		  type="success"
-		  icon="switch"
-		  :disabled="single"
-		  @click="showCasecade"
-		  v-hasPermi="['consume:consume:edit']"
-		>关联消费</el-button>
-	  </el-col>
-	  <el-col :span="1.5">
-		<el-button
-		  type="primary"
-		  icon="plus"
-		  :disabled="single"
-		  @click="handleArchive"
-		  v-hasPermi="['life:archive:sync']"
-		>同步档案</el-button>
-	  </el-col>
-	</el-row>
 
     <!--列表数据-->
 	<el-table v-loading="loading" :data="consumeList" @selection-change="handleSelectionChange">
@@ -168,22 +122,12 @@
 	      <span v-if="scope.row.secondhand==true" style="color: green;">
 	       <el-tag type="warning">二手</el-tag>
 	      </span>
-	      <span class="link-type" @click="handleEdit(scope.row)">{{ scope.row.goodsName }}</span>
+	      <span class="link-type" @click="handleConsumeInfo(scope.row)">{{ scope.row.goodsName }}</span>
 	    </template>
 	  </el-table-column>
-	  <el-table-column label="购买来源" align="center" width="95">
+	  <el-table-column label="使用时长" align="center"  :show-overflow-tooltip="true" width="120">
 	    <template #default="scope">
-	      <span>{{ scope.row.source.sourceName }}</span>
-	    </template>
-	  </el-table-column>
-	  <el-table-column label="商品类型" align="center" width="95">
-	    <template #default="scope">
-	      <span>{{ scope.row.goodsType.typeName }}</span>
-	    </template>
-	  </el-table-column>
-	  <el-table-column label="总价" align="center" width="95">
-	    <template #default="scope">
-	      <span>{{ formatMoney(scope.row.totalPrice) }}</span>
+	      <span :style="{'color':getUseTimeColor(scope.row.duration)}">{{ formatUseTime(scope.row.duration) }}</span>
 	    </template>
 	  </el-table-column>
 	  <el-table-column label="购买日期" align="center" width="190">
@@ -191,53 +135,40 @@
 	      <span>{{ scope.row.buyTime }}</span>
 	    </template>
 	  </el-table-column>
-	  <el-table-column label="店铺名称" align="center" width="90" :show-overflow-tooltip="true">
+	  <el-table-column label="售出/作废时间" align="center" width="190">
 	    <template #default="scope">
-	      <span>{{ scope.row.shopName }}</span>
+	      <span>{{ scope.row.invalidTime }}</span>
 	    </template>
 	  </el-table-column>
-	  <el-table-column label="支付方式" align="center" width="95">
+	  <el-table-column label="买入价格" align="center" width="95">
 	    <template #default="scope">
-	      <span>{{ scope.row.paymentName }}</span>
+	      <span>{{ formatMoney(scope.row.totalPrice) }}</span>
 	    </template>
 	  </el-table-column>
-	  <el-table-column label="运费" align="center" width="95">
+	  <el-table-column label="售出价格" align="center" width="95">
 	    <template #default="scope">
-	      <span>{{ formatMoney(scope.row.shipment) }}</span>
+	      <span>{{ formatMoney(scope.row.soldPrice) }}</span>
 	    </template>
 	  </el-table-column>
-	  <el-table-column label="数量" align="center" width="95">
+	  <el-table-column label="折旧率" :show-overflow-tooltip="true"  align="center">
 	    <template #default="scope">
-	      <span>{{ scope.row.amount }}</span>
+	      <span>{{ formatDepreciation(scope.row) }}</span>
 	    </template>
 	  </el-table-column>
-	  <el-table-column label="单价" align="center" width="95">
+	  <el-table-column label="每天花费" :show-overflow-tooltip="true">
 	    <template #default="scope">
-	      <span>{{ formatMoney(scope.row.price) }}</span>
+	      <span>{{ formatDailyCost(scope.row) }}</span>
 	    </template>
 	  </el-table-column>
-	  <el-table-column label="消费日期" align="center" width="180">
+	  <el-table-column label="购买来源" align="center" width="95">
 	    <template #default="scope">
-	      <span>{{ scope.row.consumeTime }}</span>
+	      <span>{{ scope.row.source.sourceName }}</span>
 	    </template>
 	  </el-table-column>
-	  <el-table-column label="操作" align="center" width="150" fixed="right" class-name="small-padding fixed-width">
-		<template  #default="scope">
-		  <el-button
-			link
-			type="success"
-			icon="plus"
-			@click="handleCopy(scope.row)"
-			v-hasPermi="['consume:consume:create']"
-		  >复制</el-button>
-		  <el-button
-			link
-			type="danger"
-			icon="delete"
-			@click="handleDelete(scope.row)"
-			v-hasPermi="['consume:consume:delete']"
-		  >删除</el-button>
-		</template>
+	  <el-table-column label="商品类型" align="center" width="120">
+	    <template #default="scope">
+	      <span>{{ scope.row.goodsType.typeName }}</span>
+	    </template>
 	  </el-table-column>
 	</el-table>
 
@@ -249,30 +180,22 @@
 	 @pagination="getList"
 	/>
 	
-	<!-- 表单 -->
-	<ConsumeForm ref="formRef" @success="getList" />
-
 	<!-- 关联 -->
 	<CascadeForm ref="cascadeFormRef" />
 	
-	<!-- 档案表单 -->
-	<ArchiveForm ref="archiveFormRef" />
 	
   </div>
 </template>
 
-<script setup name="Consume">
-	import {fetchList,deleteConsume,getConsume} from "@/api/consume/consume";
+<script setup name="ConsumeUseTimeList">
+	import {getConsumeUseTimeList,getConsume} from "@/api/consume/consume";
 	import {getConsumeSourceTree} from "@/api/consume/consumeSource";
 	import {getGoodsTypeTree} from "@/api/consume/goodsType";
+	import {formatDays} from "@/utils/datetime";
 	import CascadeForm from './cascade/index.vue'
-	import ConsumeForm from './form.vue'
-    import ArchiveForm from '../../life/archive/form.vue';
 
 	const { proxy } = getCurrentInstance();
-	const formRef = ref();
 	const cascadeFormRef = ref();
-	const archiveFormRef = ref();
 	
 	// 遮罩层
 	const loading = ref(true);
@@ -322,10 +245,63 @@
 	  }
 	}
 	
-	/** 级联 */
-	function showCasecade(){
-	  const consumeId = ids.value.join(",");
-	  cascadeFormRef.value.openCascade(consumeId);
+	/** 使用时长 */
+	function formatUseTime(duration) {
+	  let days = calsDays(duration);
+	  var time = formatDays(days);
+	  return time;
+	}
+	
+	/** 时长的字段颜色 */
+	function getUseTimeColor(duration) {
+	  let days = calsDays(duration);
+	  if(days>=365*10){
+	    return 'red';
+	  }else if(days>=365*5){
+	      return 'green';
+	  }else if(days>=365){
+	      return 'purple';
+	  }else{
+	    return 'black';
+	  }
+	}
+	
+	/** 计算天数 */
+	function calsDays(duration){
+	  return duration / (24*3600*1000);
+	}
+	
+	/** 折旧率 */
+	function formatDepreciation(row) {
+	  if(row.soldPrice==undefined||row.soldPrice==null){
+	    return '--';
+	  }else{
+	    const dd = row.soldPrice*10/row.totalPrice;
+	    const s = dd.toFixed(1)+'折';
+	    return s;
+	  }
+	}
+	
+	/** 每天花费 */
+	function formatDailyCost(row) {
+	  let days = calsDays(row.duration);
+	  var pp ='';
+	  if(row.soldPrice==null){
+	  	pp = (row.totalPrice)/days;
+	  }else{
+	  	pp = (row.totalPrice-row.soldPrice)/days;
+	  }
+	  return '￥'+pp.toFixed(2);
+	}
+	
+	/** 统计 */
+	function handleStat(){
+		proxy.$router.push({name:'ConsumeUseTimeStat',query: {}})
+	}
+	
+	/** 详情 */
+	function handleConsumeInfo(row){
+		cascadeFormRef.value.openCascade(row.consumeId);
 	}
 	
 	/** 下拉框加载 */
@@ -339,7 +315,7 @@
 		proxy.getDictItemTree('SECONDHAND',false).then(response => {
 		  secondhandOptions.value = response;
 		});
-		proxy.getDictItemTree('CONSUME_SORT_FIELD',false).then(response => {
+		proxy.getDictItemTree('CONSUME_USE_TIME_SORT_FIELD',false).then(response => {
 		  sortFieldOptions.value = response;
 		});
 		proxy.getDictItemTree('SORT_TYPE',false).then(response => {
@@ -351,7 +327,7 @@
 	function getList() {
 	  loading.value = true;
 	  consumeList.value =[];
-	  fetchList(proxy.addDateRange(queryParams.value, dateRange.value)).then(
+	  getConsumeUseTimeList(proxy.addDateRange(queryParams.value, dateRange.value)).then(
 	    response => {
 	      consumeList.value = response.rows;
 		  total.value = response.total;
@@ -371,56 +347,7 @@
 	  queryParams.value.page=1;
 	  handleQuery();
 	}
-	
-	/** 新增按钮操作 */
-	function handleCreate() {
-	  formRef.value.openForm(null,'create');
-	}
-	
-	/** 修改按钮操作 */
-	function handleEdit(row) {
-	  const id = row.consumeId || ids.value.join(",");
-	  formRef.value.openForm(id,'edit');
-	}
-	
-	/** 同步档案按钮操作 */
-	function handleArchive() {
-	  const id = ids.value.join(",");
-	  getConsume(id).then(response => {
-	    let data ={
-		  archiveId:undefined,
-		  title:'消费信息',
-		  content:response.goodsName+',花费:'+response.totalPrice+'元',
-		  date:response.buyTime,
-		  bussType:'CONSUME',
-		  sourceId:response.consumeId,
-		  remark:undefined
-	    };
-	    archiveFormRef.value.syncData(data);
-	  });
-	}
-	
-	/** 复制按钮操作 */
-	function handleCopy(row) {
-	  const id = row.consumeId;
-	  formRef.value.openForm(id,'copy');
-	}
-	
-	/** 删除按钮操作 */
-	function handleDelete(row) {
-	  const deleteIds = row.consumeId || ids.value.join(",");
-	  proxy.$confirm('是否确认删除编号为"' + deleteIds + '"的数据项?', "警告", {
-	      confirmButtonText: "确定",
-	      cancelButtonText: "取消",
-	      type: "warning"
-	    }).then(function() {
-	      return deleteConsume(deleteIds);
-	    }).then(() => {
-		  proxy.$modal.msgSuccess("删除成功");
-		  getList();
-	    }).catch(function() {});
-	}
-	
+
 	// 多选框选中数据
 	function handleSelectionChange(selection) {
 	  ids.value = selection.map(item => item.consumeId)

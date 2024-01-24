@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryRef" :inline="true">
-		<el-form-item label="起止日期" style="width: 308px">
+		<el-form-item v-if="moreCdn==true" label="起止日期" style="width: 308px">
 		   <el-date-picker
 			  v-model="dateRange"
 			  unlink-panels
@@ -14,11 +14,24 @@
 		   ></el-date-picker>
 		</el-form-item>
 	    <el-form-item label="排序方式" prop="sortType">
+		  <el-select
+		    v-model="queryParams.sortField"
+		    placeholder="排序字段"
+		    @change="handleQuery"
+		    style="width: 120px"
+		  >
+		    <el-option
+		      v-for="dict in sortFieldOptions"
+		      :key="dict.id"
+		      :label="dict.text"
+		      :value="dict.id"
+		    />
+		  </el-select>
 	      <el-select
 	        v-model="queryParams.sortType"
 	        placeholder="排序方式"
 	        @change="handleQuery"
-	        style="width: 80px"
+	        style="width: 120px"
 	      >
 	        <el-option
 	          v-for="dict in sortTypeOptions"
@@ -82,7 +95,7 @@
                 v-hasPermi="['life:archive:getSource']"  v-if="item.sourceId!=null">
                 原始信息
               </el-button>
-              <el-button link type="success" style="float: right; padding: 3px 0 ;color: green;" icon="Clock" @click="handleTillNow(item)">
+              <el-button link type="success" style="float: right; padding: 3px 0 ;color: green;" icon="Clock" >
                 {{item.tillNow}}
               </el-button>
             </div>
@@ -166,6 +179,7 @@
 	// 查询列表数据
 	const archiveList = ref([]);
 	const sortTypeOptions = ref([]);
+	const sortFieldOptions = ref([]);
 	const bussTypeOptions = ref([]);
 	const birthday = ref();
 	
@@ -188,6 +202,7 @@
 	  queryParams: {
 		page: 1,
 		pageSize: 10,
+		sortField: 'date',
 		sortType:'desc'
 	  },
 	  rules: {
@@ -336,6 +351,9 @@
 	  });
 	  proxy.getDictItemTree('SORT_TYPE',false).then(response => {
 	    sortTypeOptions.value = response;
+	  });
+	  proxy.getDictItemTree('ARCHIVE_SORT_FIELD',false).then(response => {
+	    sortFieldOptions.value = response;
 	  });
 	})
 	

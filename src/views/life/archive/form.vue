@@ -40,19 +40,7 @@
         </el-row>
         <el-row>
           <el-col :span="12">
-            <el-form-item label="绑定的类">
-              <el-select v-model="form.beanName" placeholder="请选择">
-                <el-option
-                  v-for="dict in beanNameOptions"
-                  :key="dict.id"
-                  :label="dict.text"
-                  :value="dict.id"
-                />
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="原始ID" prop="sourceId">
+            <el-form-item label="业务ID" prop="sourceId">
               <el-input-number v-model="form.sourceId" :style="{width: '100%'}" placeholder="" controls-position="right" :min="0" :controls="false" :precision="0"/>
             </el-form-item>
           </el-col>
@@ -87,7 +75,6 @@
 	const formLoading = ref(false);
 	const formRef = ref();
 	const bussTypeOptions = ref([]);
-	const beanNameOptions = ref([]);
 	const formType = ref('create');
 	
 	const data = reactive({
@@ -130,16 +117,21 @@
 		   formLoading.value = false;
 		 }
 	  }else{
-		  if(formType.value=='create'){
-			title.value = "新增";
-		  }else{
-			title.value = "同步";
-		  }
+		  title.value = "新增";
 	  }
 	}
 	
+	/** 同步 */
+	const syncData = async (data) => {
+	  open.value = true;
+	  resetForm();
+	  formType.value = 'sync';
+	  title.value = "同步";
+	  form.value = data;
+	}
+	
 	// 提供 open 方法，用于打开弹窗
-	defineExpose({ openForm }); 
+	defineExpose({ openForm,syncData }); 
 	
 	// 表单重置
 	function resetForm() {
@@ -147,8 +139,11 @@
 	    archiveId: undefined,
 	    title: undefined,
 		content: undefined,
-		beanName: undefined,
-		sourceId: undefined
+		date:undefined,
+		bussType:undefined,
+		beanName:undefined,
+		sourceId:undefined,
+		remark:undefined
 	  };
 	  proxy.resetForm("formRef");
 	}
@@ -186,19 +181,11 @@
 	  });
 	}
 	
-	/** 查询管理类名下拉树结构 */
-	function getDomainClassSelect() {
-	  getDomainClassList().then(response => {
-	    beanNameOptions.value = response;
-	  });
-	}
-	
 	/** 初始化 **/
 	onMounted(() => {
 		proxy.getEnumDict('BussType','FIELD',false).then(response => {
 		  bussTypeOptions.value = response;
 		});
-		getDomainClassSelect();
 	})
 	
 </script>

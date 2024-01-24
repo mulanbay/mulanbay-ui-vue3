@@ -6,7 +6,7 @@
           v-model="queryParams.name"
           placeholder="请输入名称"
           clearable
-          style="width: 240px"
+          style="width: 320px"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
@@ -15,7 +15,7 @@
 			v-model="queryParams.status"
 			placeholder="状态"
 			clearable
-			style="width: 240px"
+			style="width: 120px"
 		  >
 			<el-option
 			  v-for="dict in commonStatusOptions"
