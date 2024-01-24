@@ -78,7 +78,7 @@
 		  <span>{{ scope.row.groupId }}</span>
 		</template>
 	  </el-table-column>
-	  <el-table-column label="名称" min-width="120px">
+	  <el-table-column label="名称" min-width="140px" :show-overflow-tooltip="true">
 		<template  #default="scope">
 		  <span class="link-type" @click="handleEdit(scope.row)">{{ scope.row.groupName }}</span>
 		</template>

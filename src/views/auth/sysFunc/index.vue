@@ -164,14 +164,14 @@
         <el-row>
           <el-col :span="24">
             <el-form-item label="功能名称" prop="name">
-             <el-input v-model="form.funcName" style="width: 515px" placeholder="请输入功能名称" />
+             <el-input v-model="form.funcName" style="width: 515px" placeholder="请输入功能名称"/>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="24">
             <el-form-item label="请求URL" prop="urlAddress">
-             <el-input v-model="form.urlAddress" style="width: 515px" placeholder="" />
+             <el-input v-model="form.urlAddress" style="width: 515px" placeholder="" @blur="handleBeanName" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -560,6 +560,21 @@
 
 	const { queryParams, form, rules } = toRefs(data);
 
+	/** 根据功能点路径自动算出关联的BeanName */
+	function handleBeanName(){
+		let url = form.value.urlAddress;
+		if(proxy.isEmpty(url)){
+			return;
+		}
+		if(!url.startsWith('/')){
+			return;
+		}
+		let ss = url.split('/');
+		let name = ss[1].substring(0);
+		let r = name.charAt(0).toUpperCase() + name.slice(1);
+		form.value.beanName = r;
+	}
+	
 	/** 展示下拉图标 */
 	function showSelectIcon() {
 	  iconSelectRef.value.reset();

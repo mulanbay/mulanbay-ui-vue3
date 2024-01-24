@@ -1814,11 +1814,9 @@ export function createRadarChartOption(data) {
       startAngle: 90,
       splitNumber: 4,
       shape: 'circle',
-      name: {
+      axisName: {
         formatter: '【{value}】',
-        textStyle: {
-          color: '#72ACD1'
-        }
+        color: '#72ACD1'
       },
       splitArea: {
         areaStyle: {
@@ -1865,9 +1863,6 @@ export function createRadarChartOption(data) {
  * @param {Object} data
  */
 export function createTreeMapChartOption(data, echarts) {
-  //let myChart = echarts.init(document.getElementById(containId));
-  myChart.showLoading();
-  myChart.hideLoading();
 
   function colorMappingChange(value) {
     let levelOption = getLevelOption(value);
@@ -1883,26 +1878,20 @@ export function createTreeMapChartOption(data, echarts) {
   function getLevelOption() {
     return [{
         itemStyle: {
-          normal: {
-            borderWidth: 0,
-            gapWidth: 5
-          }
+          borderWidth: 0,
+          gapWidth: 5
         }
       },
       {
         itemStyle: {
-          normal: {
-            gapWidth: 1
-          }
+          gapWidth: 1
         }
       },
       {
         colorSaturation: [0.35, 0.5],
         itemStyle: {
-          normal: {
-            gapWidth: 1,
-            borderColorSaturation: 0.6
-          }
+          gapWidth: 1,
+          borderColorSaturation: 0.6
         }
       }
     ];
@@ -1939,9 +1928,7 @@ export function createTreeMapChartOption(data, echarts) {
         formatter: '{b}'
       },
       itemStyle: {
-        normal: {
-          borderColor: '#fff'
-        }
+        borderColor: '#fff'
       },
       levels: getLevelOption(),
       data: data.data
