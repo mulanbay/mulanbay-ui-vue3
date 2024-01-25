@@ -239,7 +239,7 @@ export function createLineChartOption(data) {
       subtext: data.subTitle,
       x: 'center',
       y: 'top',
-      textAlign: 'left',
+      textAlign: 'center',
       link: data.link
     },
     tooltip: {
@@ -475,7 +475,7 @@ export function createMixLineBarChartOption(data) {
       },
       x: 'center',
       y: 'top',
-      textAlign: 'left'
+      textAlign: 'center'
     },
     tooltip: {
       trigger: 'axis',
@@ -1020,7 +1020,7 @@ export function createCalanderPieChartOption(data, echarts) {
       subtext: data.subTitle,
       x: 'center',
       y: 'top',
-      textAlign: 'left'
+      textAlign: 'center'
     },
     tooltip: {
       formatter: function (params) {
@@ -1111,7 +1111,7 @@ export function createCalanderHeatMapChartOption(data, echarts) {
     let c = {
       top: 100 + i * 180,
       range: data.years[i],
-      cellSize: ['auto', 30],
+      cellSize: ['auto', 20],
       right: 5
     };
     calendars.push(c);
@@ -1136,7 +1136,7 @@ export function createCalanderHeatMapChartOption(data, echarts) {
     tooltip: {
       position: 'top',
       formatter: function(p) {
-        let format = echarts.format.formatTime('yyyy-MM-dd', p.data[0]);
+        let format = echarts.time.format('yyyy-MM-dd', p.data[0]);
         return format + ': ' + p.data[1] + data.unit;
       }
     },
@@ -1462,7 +1462,7 @@ export function createScatterChartOption(data) {
       subtext: data.subTitle,
       x: 'center',
       y: 'top',
-      textAlign: 'left'
+      textAlign: 'center'
     },
     grid: {
       left: '3%',
@@ -2529,11 +2529,5 @@ export function createWorldCloudChartOption(chartData) {
     }]
   };
   option.series[0].data = chartData.dataList;
-
-  //myChart.setOption(option);
-  myChart.on('click', function(params) {
-    //alert((params.name));
-    window.open('https://www.baidu.com/s?wd=' + encodeURIComponent(params.name));
-  });
   return option;
 }

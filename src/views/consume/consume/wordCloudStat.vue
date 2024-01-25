@@ -13,36 +13,6 @@
 			  :shortcuts="datePickerOptions"
 		   ></el-date-picker>
 		</el-form-item>
-		<el-form-item label="统计分类" prop="dateGroupType">
-		  <el-select
-		    v-model="queryParams.dateGroupType"
-		    placeholder="统计分类"
-		    clearable
-		    style="width: 240px"
-		  >
-		    <el-option
-		      v-for="dict in dateGroupTypeOptions"
-		      :key="dict.id"
-		      :label="dict.text"
-		      :value="dict.id"
-		    />
-		  </el-select>
-		</el-form-item>
-		<el-form-item v-if="moreCdn==true" label="价格类型" prop="groupType">
-		  <el-select
-		    v-model="queryParams.groupType"
-		    placeholder="价格类型"
-		    clearable
-		    style="width: 240px"
-		  >
-		    <el-option
-		      v-for="dict in groupTypeOptions"
-		      :key="dict.id"
-		      :label="dict.text"
-		      :value="dict.id"
-		    />
-		  </el-select>
-		</el-form-item>
 		<el-form-item v-if="moreCdn==true" label="名称检索" prop="roleName">
 		  <el-input
 		    v-model="queryParams.name"
@@ -94,56 +64,71 @@
 	      />
 	    </el-select>
 	    <el-select
-	      v-model="queryParams.chartType"
-	      placeholder="图表类型"
+	      v-model="queryParams.field"
+	      placeholder="统计字段"
 	      style="width: 115px"
 	      @change="handleQuery"
 	    >
 	      <el-option
-	        v-for="dict in chartTypeOptions"
+	        v-for="dict in fieldOptions"
 	        :key="dict.id"
 	        :label="dict.text"
 	        :value="dict.id"
 	      />
 	    </el-select>
 	  </el-form-item>
-	  <el-form-item label="补全日期" prop="compliteDate">
-	    <el-switch v-model="queryParams.compliteDate"  @change="handleQuery"></el-switch>
+	  <el-form-item label="忽略短语" prop="ignoreShort">
+	    <el-switch v-model="queryParams.ignoreShort"  @change="handleQuery"></el-switch>
+	  </el-form-item>
+	  <el-form-item v-if="moreCdn==true" label="商品标签" prop="tags">
+	    <el-select
+	      v-model="queryParams.tags"
+	      placeholder="商品标签"
+	      clearable
+	      style="width: 240px"
+	      @change="handleQuery"
+	    >
+	      <el-option
+	        v-for="dict in tagsOptions"
+	        :key="dict.id"
+	        :label="dict.text"
+	        :value="dict.id"
+	      />
+	    </el-select>
 	  </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="TrendCharts" @click="handleQuery" v-hasPermi="['consume:consume:dateStat']">统计</el-button>
+        <el-button type="primary" icon="TrendCharts" @click="handleQuery" v-hasPermi="['consume:consume:wordCloudStat']">统计</el-button>
         <el-button icon="refresh" @click="resetQuery">重置</el-button>
 		<el-button type="warning" icon="more" @click="handleMoreCdn">{{cdnTitle}}</el-button>
       </el-form-item>
     </el-form>
 
 	<!--图表数据-->
-	<div ref="dateStatChart" :style="{height:height,margin:0 }"/>
+	<div ref="wordCloudStatChart" :style="{height:height,margin:0 }"/>
 	
   </div>
 </template>
 
-<script setup name="ConsumeDateStat">
-	import {getConsumeDateStat} from "@/api/consume/consume";
+<script setup name="ConsumeWordCloudStat">
+	import {getConsumeWordCloudStat,getConsumeTagsTree} from "@/api/consume/consume";
 	import {getConsumeSourceTree} from "@/api/consume/consumeSource";
 	import {getGoodsTypeTree} from "@/api/consume/goodsType";
 	import * as echarts from 'echarts';
-	import {createChart,createBarChartOption,createLineChartOption,createCalanderChartOption,createScatterChartOption,createMixLineBarChartOption} from "@/utils/mulanbay_echarts";
+	import {createChart,createWorldCloudChartOption} from "@/utils/mulanbay_echarts";
+	import 'echarts-wordcloud';
 	
 	const { proxy } = getCurrentInstance();
 	//图形实例
-	const dateStatChart = ref(null);
+	const wordCloudStatChart = ref(null);
 	//echarts实例
-	let dateStatChartIns = ref(null);
+	let wordCloudStatChartIns = ref(null);
 	const height = ref((document.body.clientHeight - 240).toString() + 'px');
 	
 	const goodsTypeOptions = ref([]);
 	const sourceOptions = ref([]);
-	const dateGroupTypeOptions = ref([]);
-	const priceTypeOptions = ref([]);
+	const fieldOptions = ref([]);
+	const tagsOptions = ref([]);
 	const consumeTypeOptions = ref([]);
-	const chartTypeOptions = ref([]);
-	const groupTypeOptions = ref([]);
 	
 	//日期范围快速选择
 	const datePickerOptions = ref(proxy.datePickerOptions);
@@ -152,10 +137,8 @@
 	const data = reactive({
 	  queryParams: {
 		name: undefined,
-		chartType: 'MIX_LINE_BAR',
-		dateGroupType:'MONTH',
-		groupType:'TOTALPRICE',
-		completeDate:true
+		field:'goodsName',
+		ignoreShort:true
 	  }
 	});
 
@@ -184,22 +167,15 @@
 		getGoodsTypeTree().then(response => {
 		  goodsTypeOptions.value = response;
 		});
-		proxy.getDictItemTree('DATE_STAT_CHART_TYPE',false).then(response => {
-		  chartTypeOptions.value = response;
-		});
-		proxy.getDictItemTree('CHART_DATE_GROUP',false).then(response => {
-		  dateGroupTypeOptions.value = response;
-		});
-		proxy.getDictItemTree('DATE_STAT_CHART_TYPE',false).then(response => {
-		  chartTypeOptions.value = response;
+		proxy.getDictItemTree('CONSUME_WORDCLOUD_FIELD',false).then(response => {
+		  fieldOptions.value = response;
 		});
 		proxy.getEnumDict('GoodsConsumeType','ORDINAL',false).then(response => {
 		  consumeTypeOptions.value = response;
 		});
-		proxy.getDictItemTree('CONSUME_DATE_STAT_PRICE_TYPE',false).then(response => {
-		  groupTypeOptions.value = response;
+		getConsumeTagsTree(null,null,false).then(response => {
+		  tagsOptions.value = response;
 		});
-		
 	}
 	
 	/** 修改图表类型 */
@@ -220,46 +196,19 @@
 	
 	function initChart() {
 	  proxy.$modal.loading("正在加载数据，请稍候！");
-	  getConsumeDateStat(proxy.addDateRange(queryParams.value, dateRange.value)).then(
+	  getConsumeWordCloudStat(proxy.addDateRange(queryParams.value, dateRange.value)).then(
 	    response => {
 		  proxy.$modal.closeLoading();
 	      //组装chart数据
-	      let option = null;
-		  const dateGroupType = queryParams.value.dateGroupType;
-		  const chartType = queryParams.value.chartType;
-		  switch (dateGroupType) {
-		    case 'DAYCALENDAR':
-		      //日历图
-			  option = createCalanderChartOption(response);
-		      break;
-		    case 'HOURMINUTE':
-		      //散点图
-			  option = createScatterChartOption(response);
-		      break;
-		    default:
-		      response.chartType=chartType;
-		  }
-		  if(option==null){
-			  if(chartType=='MIX_LINE_BAR'){
-			  	option = createMixLineBarChartOption(response);
-			  }else if(chartType=='BAR'){
-				option = createBarChartOption(response);
-			  }else if(chartType=='LINE'){
-				option = createLineChartOption(response);
-			  }else if(chartType=='PIE'){
-				option = createPieChartOption(response);
-			  }else if(chartType=='TREE_MAP'){
-			  	option = createTreeMapChartOption(response,echarts);
-			  }
-		  }
-		  createChart(option,dateStatChartIns);
+	      let option = createWorldCloudChartOption(response);
+		  createChart(option,wordCloudStatChartIns);
 	    }
 	  );
 	}
 	
 	/** 初始化 **/
 	onMounted(() => {
-	  dateStatChartIns = echarts.init(dateStatChart.value, "macarons");
+	  wordCloudStatChartIns = echarts.init(wordCloudStatChart.value, "macarons");
 	  initChart();
 	  loadOptions();
 	})

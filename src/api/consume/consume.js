@@ -84,9 +84,9 @@ export function getConsumeTreeStat(query) {
   })
 }
 
-export function getConsumeTagTree(startDate,endDate,needRoot) {
+export function getConsumeTagsTree(startDate,endDate,needRoot) {
   return request({
-    url: '/consume/tagTree',
+    url: '/consume/tagsTree',
     method: 'get',
     params: {
       startDate:startDate,
@@ -144,17 +144,17 @@ export function getConsumeYoyStat(query) {
   })
 }
 
-export function getConsumeKeywordsStat(query) {
+export function getConsumeTagsStat(query) {
   return request({
-    url: '/consume/keywordsStat',
+    url: '/consume/tagsStat',
     method: 'get',
     params: query
   })
 }
 
-export function getConsumeKeywordsDetailStat(query) {
+export function getConsumeTagsDetailStat(query) {
   return request({
-    url: '/consume/keywordsDetailStat',
+    url: '/consume/tagsDetailStat',
     method: 'get',
     params: query
   })
@@ -162,7 +162,7 @@ export function getConsumeKeywordsDetailStat(query) {
 
 export function getConsumeWordCloudStat(query) {
   return request({
-    url: '/consume/statWordCloud',
+    url: '/consume/wordCloudStat',
     method: 'get',
     params: query
   })
