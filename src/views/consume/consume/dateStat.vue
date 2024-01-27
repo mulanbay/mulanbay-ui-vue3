@@ -190,9 +190,6 @@
 		proxy.getDictItemTree('CHART_DATE_GROUP',false).then(response => {
 		  dateGroupTypeOptions.value = response;
 		});
-		proxy.getDictItemTree('DATE_STAT_CHART_TYPE',false).then(response => {
-		  chartTypeOptions.value = response;
-		});
 		proxy.getEnumDict('GoodsConsumeType','ORDINAL',false).then(response => {
 		  consumeTypeOptions.value = response;
 		});

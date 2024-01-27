@@ -4,6 +4,7 @@ import store from '@/store'
 import { getToken } from '@/utils/auth'
 import errorCode from '@/utils/errorCode'
 import { tansParams, blobValidate } from '@/utils/ruoyi'
+import useUserStore from '@/store/modules/user'
 
 // 是否显示重新登录
 export let isRelogin = { show: false };
@@ -62,9 +63,9 @@ service.interceptors.response.use(
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-			console.log('登录已经失效');
-          store.dispatch('LogOut').then(() => {
-            location.reload() // 为了重新实例化vue-router对象 避免bug
+		  isRelogin.show = false;
+          useUserStore().logOut().then(() => {
+            location.href = '/index';
           })
         })
       }

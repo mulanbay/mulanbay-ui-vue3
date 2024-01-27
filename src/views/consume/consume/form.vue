@@ -235,7 +235,7 @@
     </el-form>
 	<template #footer>
 	   <div class="dialog-footer">
-	      <el-button type="primary" @click="submitForm">确 定</el-button>
+	      <el-button type="primary" @click="submitForm" :disabled="formType=='view'">确 定</el-button>
 	      <el-button @click="open=false">取 消</el-button>
 	   </div>
 	</template>
@@ -244,7 +244,7 @@
 </template>
 
 <script setup name="ConsumeForm">
-	import {createConsume,editConsume,getConsume,getConsumeTagTree,aiMatch} from "@/api/consume/consume";
+	import {createConsume,editConsume,getConsume,getConsumeTagsTree,aiMatch} from "@/api/consume/consume";
 	import {getConsumeSourceTree} from "@/api/consume/consumeSource";
 	import {getGoodsTypeTree} from "@/api/consume/goodsType";
 	import {appendTagToOptions} from "@/utils/tagUtils";
@@ -257,6 +257,7 @@
 	const open = ref(false);
 	const formLoading = ref(false);
 	const formRef = ref();
+	const formType = ref('edit');
 	
 	const showSold = ref(false);
 	
@@ -313,6 +314,7 @@
 	/** 打开弹窗 */
 	const openForm = async (id,type) => {
 	  open.value = true;
+	  formType.value=type;
 	  resetForm();
 	  if(id!=null){
 		 try {
@@ -430,7 +432,7 @@
 		proxy.getDictItemTree('CONSUME_INVALID_DATE_PERIOD',false).then(response => {
 		  invalidPeriodOptions.value = response;
 		});
-		getConsumeTagTree().then(response => {
+		getConsumeTagsTree().then(response => {
 		  hisKeywordsTags.value = response;
 		});
 	}

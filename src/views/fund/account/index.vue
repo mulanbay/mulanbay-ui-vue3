@@ -18,7 +18,7 @@
 	      style="width: 240px"
 	    >
 	      <el-option
-	        v-for="dict in commonStatusOptions"
+	        v-for="dict in statusOptions"
 	        :key="dict.id"
 	        :label="dict.text"
 	        :value="dict.id"
@@ -26,7 +26,7 @@
 	    </el-select>
 	  </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="search" @click="handleQuery" v-hasPermi="['consume:consumeSource:list']">搜索</el-button>
+        <el-button type="primary" icon="search" @click="handleQuery" v-hasPermi="['fund:account:list']">搜索</el-button>
         <el-button icon="refresh" @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>
@@ -37,7 +37,7 @@
 		  type="primary"
 		  icon="plus"
 		  @click="handleCreate"
-		  v-hasPermi="['consume:consumeSource:create']"
+		  v-hasPermi="['fund:account:create']"
 		>新增</el-button>
 	  </el-col>
 	  <el-col :span="1.5">
@@ -46,7 +46,7 @@
 		  icon="edit"
 		  :disabled="single"
 		  @click="handleEdit"
-		  v-hasPermi="['consume:consumeSource:edit']"
+		  v-hasPermi="['fund:account:edit']"
 		>修改</el-button>
 	  </el-col>
 	  <el-col :span="1.5">
@@ -55,32 +55,50 @@
 		  icon="delete"
 		  :disabled="multiple"
 		  @click="handleDelete"
-		  v-hasPermi="['consume:consumeSource:delete']"
+		  v-hasPermi="['fund:account:delete']"
 		>删除</el-button>
+	  </el-col>
+	  <el-col :span="1.5">
+	    <el-button
+	      type="success"
+	      icon="Histogram"
+	      @click="handleStat"
+	      v-hasPermi="['fund:account:stat']"
+	    >账户统计</el-button>
 	  </el-col>
 	</el-row>
 
     <!--列表数据-->
-	<el-table v-loading="loading" :data="consumeSourceList" @selection-change="handleSelectionChange">
+	<el-table v-loading="loading" :data="accountList" @selection-change="handleSelectionChange">
 	  <el-table-column type="selection" width="55" align="center" />
-	  <el-table-column label="ID" fixed="left" prop="sourceId" sortable="custom" align="center" width="120">
+	  <el-table-column label="编号" fixed="left" prop="accountId" sortable="custom" align="center" width="120">
 	    <template  #default="scope">
-	      <span>{{ scope.row.sourceId }}</span>
+	      <span>{{ scope.row.accountId }}</span>
 	    </template>
 	  </el-table-column>
-	  <el-table-column label="名称" fixed="left" min-width="200px" :show-overflow-tooltip="true">
+	  <el-table-column label="账户名称" fixed="left" min-width="160px" :show-overflow-tooltip="true">
 	    <template #default="scope">
-	      <span class="link-type" @click="handleEdit(scope.row)">{{ scope.row.sourceName }}</span>
+	      <span class="link-type" @click="handleEdit(scope.row)">{{ scope.row.accountName }}</span>
 	    </template>
 	  </el-table-column>
-	  <el-table-column label="状态" align="center" width="100">
+	  <el-table-column label="余额" align="center" min-width="160px" :show-overflow-tooltip="true">
 	    <template #default="scope">
-	      <el-switch v-model="scope.row.status" active-value="ENABLE" inactive-value="DISABLE" disabled></el-switch>
+	      <span>{{ formatMoney(scope.row.amount) }}</span>
 	    </template>
 	  </el-table-column>
-	  <el-table-column label="排序号" align="center">
+	  <el-table-column label="卡号" align="center">
 	    <template #default="scope">
-	      <span>{{ scope.row.orderIndex }}</span>
+	      <span>{{ scope.row.cardNo }}</span>
+	    </template>
+	  </el-table-column>
+	  <el-table-column label="类型" align="center" width="95">
+	    <template #default="scope">
+	      <span>{{ scope.row.typeName }}</span>
+	    </template>
+	  </el-table-column>
+	  <el-table-column label="资产状态" align="center" width="95">
+	    <template #default="scope">
+	      <span>{{ scope.row.statusName }}</span>
 	    </template>
 	  </el-table-column>
 	  <el-table-column label="创建时间" align="center" width="180">
@@ -95,14 +113,21 @@
 			type="success"
 			icon="edit"
 			@click="handleEdit(scope.row)"
-			v-hasPermi="['consume:consumeSource:edit']"
+			v-hasPermi="['fund:account:edit']"
 		  >修改</el-button>
+		  <el-button
+			link
+			type="primary"
+			icon="EditPen"
+			@click="handleChange(scope.row)"
+			v-hasPermi="['fund:account:change']"
+		  >变更</el-button>
 		  <el-button
 			link
 			type="danger"
 			icon="delete"
 			@click="handleDelete(scope.row)"
-			v-hasPermi="['consume:consumeSource:delete']"
+			v-hasPermi="['fund:account:delete']"
 		  >删除</el-button>
 		</template>
 	  </el-table-column>
@@ -117,17 +142,22 @@
 	/>
 	
 	<!-- 表单 -->
-	<ConsumeSourceForm ref="formRef" @success="getList" />
+	<AccountForm ref="formRef" @success="getList" />
+
+	<!-- 修改账户余额表单 -->
+	<AccountChangeForm ref="changeFormRef" @success="getList" />
 
   </div>
 </template>
 
-<script setup name="ConsumeSource">
-	import {fetchList,deleteConsumeSource} from "@/api/consume/consumeSource";
-	import ConsumeSourceForm from './form.vue'
+<script setup name="Account">
+	import {fetchList,deleteAccount} from "@/api/fund/account";
+	import AccountForm from './form.vue'
+	import AccountChangeForm from './change.vue'
 
 	const { proxy } = getCurrentInstance();
 	const formRef = ref();
+	const changeFormRef = ref();
 	
 	// 遮罩层
 	const loading = ref(true);
@@ -140,7 +170,8 @@
 	// 总条数
 	const total = ref(0);
 	// 查询列表数据
-	const consumeSourceList = ref([]);
+	const accountList = ref([]);
+	const statusOptions = ref([]);
 	
 	const data = reactive({
 	  queryParams: {
@@ -151,13 +182,19 @@
 
 	const { queryParams } = toRefs(data);
 	
+	/** 统计 */
+	function handleStat(){
+		//路由定向
+		proxy.$router.push({name:'AccountStat',query: {}})
+	}
+	
 	/** 查询列表 */
 	function getList() {
 	  loading.value = true;
-	  consumeSourceList.value =[];
+	  accountList.value =[];
 	  fetchList(queryParams.value).then(
 	    response => {
-	      consumeSourceList.value = response.rows;
+	      accountList.value = response.rows;
 		  total.value = response.total;
 	      loading.value = false;
 	    }
@@ -176,6 +213,11 @@
 	  handleQuery();
 	}
 	
+	/** 修改账户余额按钮操作 */
+	function handleChange(row) {
+	  changeFormRef.value.openForm(row.accountId);
+	}
+	
 	/** 新增按钮操作 */
 	function handleCreate() {
 	  formRef.value.openForm(null,'create');
@@ -183,19 +225,19 @@
 	
 	/** 修改按钮操作 */
 	function handleEdit(row) {
-	  const id = row.sourceId || ids.value.join(",");
+	  const id = row.accountId || ids.value.join(",");
 	  formRef.value.openForm(id,'edit');
 	}
 	
 	/** 删除按钮操作 */
 	function handleDelete(row) {
-	  const deleteIds = row.sourceId || ids.value.join(",");
+	  const deleteIds = row.accountId || ids.value.join(",");
 	  proxy.$confirm('是否确认删除编号为"' + deleteIds + '"的数据项?', "警告", {
 	      confirmButtonText: "确定",
 	      cancelButtonText: "取消",
 	      type: "warning"
 	    }).then(function() {
-	      return deleteConsumeSource(deleteIds);
+	      return deleteAccount(deleteIds);
 	    }).then(() => {
 		  proxy.$modal.msgSuccess("删除成功");
 		  getList();
@@ -204,7 +246,7 @@
 	
 	// 多选框选中数据
 	function handleSelectionChange(selection) {
-	  ids.value = selection.map(item => item.sourceId)
+	  ids.value = selection.map(item => item.accountId)
 	  single.value = selection.length!=1
 	  multiple.value = !selection.length
 	}
@@ -212,6 +254,9 @@
 	/** 初始化 **/
 	onMounted(() => {
 	  getList();
+	  proxy.getEnumDict('AccountStatus','FIELD',false).then(response => {
+	    statusOptions.value = response;
+	  });
 	})
 	
 </script>
