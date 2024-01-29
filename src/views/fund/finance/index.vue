@@ -7,7 +7,7 @@
 
     <el-card>
       <el-divider content-position="center">
-        <span class="table-title" @click="handleDispatch('Budget')">
+        <span class="table-title" @click="handleDispatch('Consume')">
           <svg-icon icon-class="budget" />
           消费/收入/账户统计
           <i class="el-icon-s-promotion" />

@@ -1,7 +1,7 @@
 <template>
   <el-row :gutter="16" class="panel-group">
     <el-col :span="6">
-      <el-card body-style="height:200px">
+      <el-card body-style="height:230px">
         <div class="statistic-card">
           <el-statistic :value="(monthStat.totalConsume)" prefix="￥">
             <template #title>
@@ -23,9 +23,6 @@
               <span>本月预算</span>
               <span class="red">
                 {{formatMoney(monthStat.budget)}}
-                <el-icon>
-                  <CaretTop />
-                </el-icon>
               </span>
             </div>
             <div class="footer-item">
@@ -38,27 +35,18 @@
               <span>本月预测</span>
               <span class="red">
                 {{formatMoney(monthStat.consumePredict)}}
-                <el-icon>
-                  <CaretTop />
-                </el-icon>
               </span>
             </div>
             <div class="footer-item">
               <span>本月收入</span>
               <span class="green">
                 {{formatMoney(monthStat.income)}}
-                <el-icon>
-                  <CaretTop />
-                </el-icon>
               </span>
             </div>
             <div class="footer-item">
               <span>本月过去</span>
               <span class="green">
                 {{monthStat.passDays+'天&nbsp;(剩'+(monthStat.totalDays-monthStat.passDays)+'天)'}}
-                <el-icon>
-                  <CaretTop />
-                </el-icon>
               </span>
             </div>
           </div>
@@ -66,7 +54,7 @@
       </el-card>
     </el-col>
     <el-col :span="6">
-      <el-card body-style="height:200px">
+      <el-card body-style="height:230px">
         <div class="statistic-card">
           <el-statistic :value="(monthStat.consumeCount)" suffix="次">
             <template #title>
@@ -88,27 +76,19 @@
               <span>普通消费</span>
               <span class="red">
                 {{formatMoney(monthStat.ncAmount)}}
-                <el-icon>
-                  <CaretTop />
-                </el-icon>
               </span>
             </div>
             <div class="footer-item">
               <span>突发消费</span>
               <span class="red">
                 {{formatMoney(monthStat.bcAmount)}}
-                <el-icon>
-                  <CaretTop />
-                </el-icon>
               </span>
             </div>
             <div class="footer-item">
               <span>看病消费</span>
               <span class="red">
+
                 {{formatMoney(monthStat.trAmount)}}
-                <el-icon>
-                  <CaretTop />
-                </el-icon>
               </span>
             </div>
           </div>
@@ -116,7 +96,7 @@
       </el-card>
     </el-col>
     <el-col :span="6">
-      <el-card body-style="height:200px">
+      <el-card body-style="height:230px">
         <div class="statistic-card">
           <el-statistic :value="(yearStat.totalConsume)" prefix="￥">
             <template #title>
@@ -138,9 +118,6 @@
               <span>今年预算</span>
               <span class="red">
                 {{formatMoney(yearStat.budget)}}
-                <el-icon>
-                  <CaretTop />
-                </el-icon>
               </span>
             </div>
             <div class="footer-item">
@@ -153,27 +130,18 @@
               <span>今年预测</span>
               <span class="red">
                 {{formatMoney(yearStat.consumePredict)}}
-                <el-icon>
-                  <CaretTop />
-                </el-icon>
               </span>
             </div>
             <div class="footer-item">
               <span>今年收入</span>
               <span class="green">
                 {{formatMoney(yearStat.income)}}
-                <el-icon>
-                  <CaretTop />
-                </el-icon>
               </span>
             </div>
             <div class="footer-item">
               <span>今年过去</span>
               <span class="green">
                 {{yearStat.passDays+'天&nbsp;('+getPercent(yearStat.passDays,yearStat.totalDays)+'%)'}}
-                <el-icon>
-                  <CaretTop />
-                </el-icon>
               </span>
             </div>
           </div>
@@ -181,7 +149,7 @@
       </el-card>
     </el-col>
     <el-col :span="6">
-      <el-card body-style="height:200px">
+      <el-card body-style="height:230px">
         <div class="statistic-card">
           <el-statistic :value="(yearStat.consumeCount)" suffix="次">
             <template #title>
@@ -203,27 +171,18 @@
               <span>普通消费</span>
               <span class="red">
                 {{formatMoney(yearStat.ncAmount)}}
-                <el-icon>
-                  <CaretTop />
-                </el-icon>
               </span>
             </div>
             <div class="footer-item">
               <span>突发消费</span>
               <span class="red">
                 {{formatMoney(yearStat.bcAmount)}}
-                <el-icon>
-                  <CaretTop />
-                </el-icon>
               </span>
             </div>
             <div class="footer-item">
               <span>看病消费</span>
               <span class="red">
                 {{formatMoney(yearStat.trAmount)}}
-                <el-icon>
-                  <CaretTop />
-                </el-icon>
               </span>
             </div>
           </div>
@@ -241,13 +200,11 @@
   const { proxy } = getCurrentInstance();
 
   const data = reactive({
-    monthStat: {
-    },
-    yearStat: {
-    }
+    monthStat: {},
+    yearStat: {}
   });
 
-  const { monthStat,yearStat } = toRefs(data);
+  const { monthStat, yearStat } = toRefs(data);
 
   function handleGeneralStat() {
     generalStat().then(
@@ -293,6 +250,8 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    white-space: normal;
+    width: 200px;
   }
 
   .statistic-footer .footer-item span:last-child {
