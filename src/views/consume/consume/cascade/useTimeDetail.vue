@@ -26,7 +26,7 @@
 		  <div>
 		    <el-steps :active="timelineSize" align-center finish-status="success">
 		      <template v-for="item in timelineList">
-		        <el-step :title="item.key" :description="item.value"></el-step>
+		      <el-step :title="item.key" :description="item.value"></el-step>
 		      </template>
 		    </el-steps>
 		  </div>
@@ -46,9 +46,9 @@
 	      <el-form :model="queryParams" ref="queryForm" :inline="true">
 	        <el-form-item label="关联子下级" prop="deepCost">
 	          <el-switch v-model="queryParams.deepCost"  @change="handleCostStat" ></el-switch>
-			  <el-tooltip content="如果关联子下级，那么会统计该商品的下级及其下级，为树形统计." effect="dark" placement="top">
-			    <el-icon><QuestionFilled /></el-icon>
-			  </el-tooltip>
+            <el-tooltip content="如果关联子下级，那么会统计该商品的下级及其下级，为树形统计." effect="dark" placement="top">
+              <el-icon><QuestionFilled /></el-icon>
+            </el-tooltip>
 	        </el-form-item>
 	        <el-form-item>
 	          <el-button type="primary" icon="TrendCharts" @click="handleCostStat" v-hasPermi="['consume:consume:costStat']">统计</el-button>

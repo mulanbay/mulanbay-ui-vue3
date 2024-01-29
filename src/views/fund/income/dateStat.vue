@@ -141,11 +141,11 @@
 	      switch (dateGroupType) {
 	        case 'DAYCALENDAR':
 	          //日历图
-	      			  option = createCalanderChartOption(response);
+	      		option = createCalanderChartOption(response);
 	          break;
 	        case 'HOURMINUTE':
 	          //散点图
-	      			  option = createScatterChartOption(response);
+	      		option = createScatterChartOption(response);
 	          break;
 	        default:
 	          response.chartType=chartType;
