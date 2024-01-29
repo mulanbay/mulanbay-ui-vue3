@@ -1,9 +1,10 @@
 <template>
   <div class="app-container">
-    <el-card>
-      <PanelGroup ref="panelGroupRef" />
-    </el-card>
-    
+    <PanelGroup ref="panelGroupRef" />
+
+    <el-divider content-position="center">
+    </el-divider>
+
     <el-card>
       <el-divider content-position="center">
         <span class="table-title" @click="handleDispatch('Budget')">
