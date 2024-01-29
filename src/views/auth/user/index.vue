@@ -196,7 +196,7 @@
     <!-- 表单 -->
     <UserForm ref="formRef" @success="getList" />
     
-    <!-- 表单 -->
+    <!-- 授权表单 -->
     <AuthForm ref="authFormRef" @success="getList" />
 
     <!-- 监控授权 -->

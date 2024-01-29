@@ -106,7 +106,7 @@
   const { proxy } = getCurrentInstance();
 
   //可执行时间段
-  const title = ref('角色');
+  const title = ref('用户');
   const open = ref(false);
   const formLoading = ref(false);
   const formRef = ref();
