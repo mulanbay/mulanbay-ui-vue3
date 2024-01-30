@@ -71,23 +71,6 @@ export function getBudgetStat(query) {
   })
 }
 
-export function getBudgetTimelineStat(query) {
-  return request({
-    url: '/budget/timelineStat',
-    method: 'get',
-    params: query
-  })
-}
-
-export function reStatBudgetTimeline(data) {
-  return request({
-    url: '/budget/reStatTimeline',
-    method: 'post',
-    data
-  })
-}
-
-
 export function getBudgetAnalyse(query) {
   return request({
     url: '/budget/analyse',

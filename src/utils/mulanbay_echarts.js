@@ -131,7 +131,8 @@ export function createBarChartOption(data) {
       data: data.legendData,
       orient: 'horizontal',
       x: 'center',
-      y: 'bottom'
+      y: 'bottom',
+      padding:[100,0,0,0]
     },
     toolbox: {
       show: false,
@@ -261,7 +262,7 @@ export function createLineChartOption(data) {
       orient: 'horizontal',
       x: 'center',
       y: 'bottom',
-      padding:[0,0,0,0]//可设定图例[距上方距离，距右方距离，距下方距离，距左方距离]
+      padding:[100,0,0,0]
     },
     grid: { //四周的宽度
       left: '2%',
@@ -522,7 +523,8 @@ export function createMixLineBarChartOption(data) {
       data: data.legendData,
       orient: 'horizontal',
       x: 'center',
-      y: 'bottom'
+      y: 'bottom',
+      padding:[100,0,0,0]   //可设定图例[距上方距离，距右方距离，距下方距离，距左方距离]
     },
     grid: { //四周的宽度
       left: '2%',

@@ -1,7 +1,7 @@
 <template>
   <el-row :gutter="16" class="panel-group">
     <el-col :span="6">
-      <el-card body-style="height:230px">
+      <el-card body-style="height:200px">
         <div class="statistic-card">
           <el-statistic :value="(monthStat.totalConsume)" prefix="￥">
             <template #title>
@@ -29,6 +29,11 @@
               <span>消费占比</span>
               <span class="red">
                 {{'&nbsp;'+getPercent(monthStat.totalConsume,monthStat.budget)}}%
+                <el-tooltip content="已经消费金额/预算金额" effect="dark" placement="top">
+                  <el-icon>
+                    <QuestionFilled />
+                  </el-icon>
+                </el-tooltip>
               </span>
             </div>
             <div class="footer-item">
@@ -43,18 +48,12 @@
                 {{formatMoney(monthStat.income)}}
               </span>
             </div>
-            <div class="footer-item">
-              <span>本月过去</span>
-              <span class="green">
-                {{monthStat.passDays+'天&nbsp;(剩'+(monthStat.totalDays-monthStat.passDays)+'天)'}}
-              </span>
-            </div>
           </div>
         </div>
       </el-card>
     </el-col>
     <el-col :span="6">
-      <el-card body-style="height:230px">
+      <el-card body-style="height:200px">
         <div class="statistic-card">
           <el-statistic :value="(monthStat.consumeCount)" suffix="次">
             <template #title>
@@ -87,8 +86,13 @@
             <div class="footer-item">
               <span>看病消费</span>
               <span class="red">
-
                 {{formatMoney(monthStat.trAmount)}}
+              </span>
+            </div>
+            <div class="footer-item">
+              <span>本月过去</span>
+              <span class="green">
+                {{monthStat.passDays+'天&nbsp;(剩'+(monthStat.totalDays-monthStat.passDays)+'天)'}}
               </span>
             </div>
           </div>
@@ -96,7 +100,7 @@
       </el-card>
     </el-col>
     <el-col :span="6">
-      <el-card body-style="height:230px">
+      <el-card body-style="height:200px">
         <div class="statistic-card">
           <el-statistic :value="(yearStat.totalConsume)" prefix="￥">
             <template #title>
@@ -124,6 +128,11 @@
               <span>消费占比</span>
               <span class="red">
                 {{'&nbsp;'+getPercent(yearStat.totalConsume,yearStat.budget)}}%
+                <el-tooltip content="已经消费金额/预算金额" effect="dark" placement="top">
+                  <el-icon>
+                    <QuestionFilled />
+                  </el-icon>
+                </el-tooltip>
               </span>
             </div>
             <div class="footer-item">
@@ -138,18 +147,12 @@
                 {{formatMoney(yearStat.income)}}
               </span>
             </div>
-            <div class="footer-item">
-              <span>今年过去</span>
-              <span class="green">
-                {{yearStat.passDays+'天&nbsp;('+getPercent(yearStat.passDays,yearStat.totalDays)+'%)'}}
-              </span>
-            </div>
           </div>
         </div>
       </el-card>
     </el-col>
     <el-col :span="6">
-      <el-card body-style="height:230px">
+      <el-card body-style="height:200px">
         <div class="statistic-card">
           <el-statistic :value="(yearStat.consumeCount)" suffix="次">
             <template #title>
@@ -183,6 +186,12 @@
               <span>看病消费</span>
               <span class="red">
                 {{formatMoney(yearStat.trAmount)}}
+              </span>
+            </div>
+            <div class="footer-item">
+              <span>今年过去</span>
+              <span class="green">
+                {{yearStat.passDays+'天&nbsp;('+getPercent(yearStat.passDays,yearStat.totalDays)+'%)'}}
               </span>
             </div>
           </div>

@@ -106,7 +106,7 @@
           type="success"
           icon="Histogram"
           @click="handleTimelineStat"
-          v-hasPermi="['fund:budget:timelineStat']">进度统计
+          v-hasPermi="['fund:budgetTimeline:stat']">进度统计
         </el-button>
       </el-col>
       <el-col :span="1.5">
@@ -129,8 +129,8 @@
         <el-button
           type="success"
           icon="Histogram"
-          @click="handleBudgetLogValueErrorStat"
-          v-hasPermi="['fund:budgetLog:valueErrorStat']">误差统计
+          @click="handleBudgetLogBiasStat"
+          v-hasPermi="['fund:budgetLog:biasStat']">误差统计
         </el-button>
       </el-col>
       <el-col :span="1.5">
@@ -277,6 +277,9 @@
     <!-- 表单 -->
     <BudgetForm ref="formRef" @success="getList" />
 
+    <!-- 分析 -->
+    <AnalyseForm ref="analyseFormRef" />
+
   </div>
 </template>
 
@@ -286,9 +289,11 @@
   import { getPercent, progressColors } from "@/utils/mulanbay";
   import { getQueryObject } from "@/utils/index";
   import BudgetForm from './form.vue'
+  import AnalyseForm from './analyse.vue'
 
   const { proxy } = getCurrentInstance();
   const formRef = ref();
+  const analyseFormRef = ref();
 
   // 遮罩层
   const loading = ref(true);
@@ -337,9 +342,9 @@
   }
 
   //误差统计
-  function handleBudgetLogValueErrorStat() {
+  function handleBudgetLogBiasStat() {
     //路由定向
-    proxy.$router.push({ name: 'BudgetLogValueErrorStat', query: {} })
+    proxy.$router.push({ name: 'BudgetLogBiasStat', query: {} })
   }
 
   //预算日志
@@ -350,7 +355,7 @@
 
   //预算分析
   function handleBudgetAnalyse() {
-    proxy.budgetAnalyseDetailVisible = true;
+    analyseFormRef.value.showData();
   }
 
   //新增预算流水
