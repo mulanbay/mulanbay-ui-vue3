@@ -55,7 +55,7 @@ service.interceptors.response.use(
         duration: 5 * 1000
       })
       if(res.code >= 9991&&res.code <= 9999){
-        location.href = '/stop?message='+res.message;
+        location.href = '/503?message='+res.message;
         return;
       }else if (res.code === 10004) {
         // to re-login

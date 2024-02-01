@@ -789,11 +789,17 @@
 
   /** 刷新系统缓存 */
   function handleRefreshCache() {
-    proxy.$modal.loading("正在刷新，请稍候！");
-    refreshCache().then(response => {
+    proxy.$confirm('是否确认要刷新系统功能的所有缓存数据,可能会有一点慢?', "警告", {
+      confirmButtonText: "确定",
+      cancelButtonText: "取消",
+      type: "warning"
+    }).then(function() {
+      proxy.$modal.loading("正在刷新，请稍候！");
+      return refreshCache();
+    }).then(() => {
       proxy.$modal.closeLoading();
       proxy.$modal.msgSuccess("刷新成功");
-    });
+    }).catch(function() {});
   }
 
   /** 初始化 **/

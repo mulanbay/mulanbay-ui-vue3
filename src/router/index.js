@@ -58,8 +58,8 @@ export const constantRoutes = [
     hidden: true
   },
   {
-    path: '/stop',
-    component: () => import('@/views/stop'),
+    path: '/503',
+    component: () => import('@/views/error/503'),
     hidden: true
   },
   {
