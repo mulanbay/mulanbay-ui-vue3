@@ -70,11 +70,3 @@ export function getBudgetStat(query) {
     params: query
   })
 }
-
-export function getBudgetAnalyse(query) {
-  return request({
-    url: '/budget/analyse',
-    method: 'get',
-    params: query
-  })
-}

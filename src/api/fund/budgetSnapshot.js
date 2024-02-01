@@ -16,6 +16,15 @@ export function getDetailList(query) {
   })
 }
 
+
+export function getBudgetStat(query) {
+  return request({
+    url: '/budgetSnapshot/budgetStat',
+    method: 'get',
+    params: query
+  })
+}
+
 export function history(query) {
   return request({
     url: '/budgetSnapshot/history',

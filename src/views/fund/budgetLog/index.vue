@@ -60,7 +60,7 @@
 
     <!--列表数据-->
     <el-table v-loading="loading" :data="budgetLogList" @selection-change="handleSelectionChange">
-      el-table-column type="selection" width="55" align="center" />
+      <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="ID" prop="ID" sortable="custom" align="center" width="80" fixed="left">
         <template #default="scope">
           <span>{{ scope.row.logId }}</span>
@@ -70,11 +70,11 @@
         <template #default="scope">
           <span>{{ formartName(scope.row) }}</span>
           <span v-if="scope.row.budget == null">
-            <span v-if="scope.row.period == 'YEARLY'">
-              <el-tag type="danger" >{{ scope.row.periodName }}</el-tag>
+            <span v-if="scope.row.statPeriod == 'YEARLY'">
+              <el-tag type="danger" >{{ scope.row.statPeriodName }}</el-tag>
             </span>
            <span v-else>
-             <el-tag type="success">{{ scope.row.periodName }}</el-tag>
+             <el-tag type="success">{{ scope.row.statPeriodName }}</el-tag>
            </span>
            <span class="link-type" @click="handlePeriodStat(scope.row)"><i class="el-icon-info"></i></span>
           </span>
@@ -214,8 +214,8 @@
     <!-- 表单 -->
     <BudgetLogForm ref="formRef" @success="getList" />
 
-    <!-- 快照列表 -->
-    <BudgetSnapshotList ref="snapshotListRef" />
+    <!-- 快照详情 -->
+    <BudgetSnapshotDetail ref="snapshotDetailRef" />
 
   </div>
 </template>
@@ -227,11 +227,11 @@
   import { getPercent, progressColors } from "@/utils/mulanbay";
   import { getQueryObject } from "@/utils/index";
   import BudgetLogForm from './form.vue'
-  import BudgetSnapshotList from '../budgetSnapshot/list.vue'
+  import BudgetSnapshotDetail from '../budgetSnapshot/detail.vue'
 
   const { proxy } = getCurrentInstance();
   const formRef = ref();
-  const snapshotListRef = ref();
+  const snapshotDetailRef = ref();
 
   // 遮罩层
   const loading = ref(true);
@@ -296,7 +296,7 @@
   
   /** 预算快照 */
   function handleBudgetSnapshot(row){
-    snapshotListRef.value.showData(row.logId);
+    snapshotDetailRef.value.showData(row.logId);
   }
 
   //新增预算流水
@@ -354,18 +354,18 @@
 
   /** 新增按钮操作 */
   function handleCreate() {
-    formRef.value.openForm(null, 'create');
+    formRef.value.openForm(null, 'create',null);
   }
 
   /** 修改按钮操作 */
   function handleEdit(row) {
-    const id = scope.row.logId || ids.value.join(",");
-    formRef.value.openForm(id, 'edit');
+    const id = row.logId || ids.value.join(",");
+    formRef.value.openForm(id, 'edit',null);
   }
 
   /** 删除按钮操作 */
   function handleDelete(row) {
-    const deleteIds = scope.row.logId || ids.value.join(",");
+    const deleteIds = row.logId || ids.value.join(",");
     proxy.$confirm('是否确认删除编号为"' + deleteIds + '"的数据项?', "警告", {
       confirmButtonText: "确定",
       cancelButtonText: "取消",

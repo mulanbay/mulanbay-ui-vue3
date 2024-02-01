@@ -399,6 +399,8 @@ export function createMixLineBarChartOption(data) {
   }
   let showLegend = data.showLegend == null ? true : data.showLegend;
   let smooth = data.smooth == null ? false : data.smooth;
+  //右侧的数据数量，默认是最后一类
+  let s2Size = data.s2Size == null ? 1 : data.s2Size;
   let markPoint = {};
   if (showMarkPoint == true) {
     markPoint = {
@@ -446,7 +448,7 @@ export function createMixLineBarChartOption(data) {
     let cd = data.ydata[i];
     let yAxisIndex = 0;
     let type = serieTypes[0];
-    if (i == n - 1) {
+    if (i >= n - s2Size) {
       yAxisIndex = 1;
       type = serieTypes[1];
     }

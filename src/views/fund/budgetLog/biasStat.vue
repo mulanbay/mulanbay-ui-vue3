@@ -1,14 +1,14 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryRef" :inline="true">
-      <el-form-item label="预算周期" prop="period">
+      <el-form-item label="预算周期" prop="statPeriod">
         <el-select
-          v-model="queryParams.period"
+          v-model="queryParams.statPeriod"
           placeholder="预算周期"
           clearable
           style="width: 160px">
           <el-option
-            v-for="dict in periodOptions"
+            v-for="dict in statPeriodOptions"
             :key="dict.id"
             :label="dict.text"
             :value="dict.id" />
@@ -49,15 +49,7 @@
   let statChartIns = ref(null);
   const height = ref((document.body.clientHeight - 240).toString() + 'px');
 
-  const periodOptions = ref([{
-      id: 'MONTHLY',
-      text: '月度预算'
-    },
-    {
-      id: 'YEARLY',
-      text: '年度预算'
-    }
-  ]);
+  const statPeriodOptions = ref([]);
 
   //日期范围快速选择
   const datePickerOptions = ref(proxy.datePickerOptions);
@@ -65,7 +57,7 @@
 
   const data = reactive({
     queryParams: {
-      period:undefined
+      statPeriod:undefined
     }
   });
 
@@ -73,6 +65,9 @@
 
   /** 下拉框加载 */
   function loadOptions() {
+    proxy.getDictItemTree('BUDGET_STAT_PERIOD', false).then(response => {
+      statPeriodOptions.value = response;
+    });
   }
 
   /** 搜索按钮操作 */

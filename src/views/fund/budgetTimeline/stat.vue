@@ -1,20 +1,20 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryRef" :inline="true">
-      <el-form-item label="周期" prop="period">
+      <el-form-item label="周期" prop="statPeriod">
         <el-select
-          v-model="queryParams.period"
+          v-model="queryParams.statPeriod"
           placeholder="周期"
           clearable
           style="width: 120px">
           <el-option
-            v-for="dict in periodOptions"
+            v-for="dict in statPeriodOptions"
             :key="dict.id"
             :label="dict.text"
             :value="dict.id" />
         </el-select>
       </el-form-item>
-      <el-form-item v-if="queryParams.period == 'YEARLY'" label="选择年份">
+      <el-form-item v-if="queryParams.statPeriod == 'YEARLY'" label="选择年份">
         <el-date-picker
           v-model="queryParams.year"
           type="year"
@@ -23,7 +23,7 @@
           placeholder="选择年份">
         </el-date-picker>
       </el-form-item>
-      <el-form-item v-if="queryParams.period == 'MONTHLY'" label="选择月份">
+      <el-form-item v-if="queryParams.statPeriod == 'MONTHLY'" label="选择月份">
         <el-date-picker
           v-model="queryParams.yearMonth"
           type="month"
@@ -85,19 +85,11 @@
       text: '按金额'
     }
   ]);
-  const periodOptions = ref([{
-      id: 'MONTHLY',
-      text: '月度预算'
-    },
-    {
-      id: 'YEARLY',
-      text: '年度预算'
-    }
-  ]);
+  const statPeriodOptions = ref([]);
 
   const data = reactive({
     queryParams: {
-      period: 'MONTHLY',
+      statPeriod: 'MONTHLY',
       yearMonth: (new Date()).Format("yyyy-MM"),
       statType: 'RATE',
       predict: false,
@@ -108,11 +100,16 @@
   const { queryParams } = toRefs(data);
 
   /** 下拉框加载 */
-  function loadOptions() {}
+  function loadOptions() {
+    //预算周期采用数据字典配置，有些周期类型不好实现
+    proxy.getDictItemTree('BUDGET_STAT_PERIOD', false).then(response => {
+      statPeriodOptions.value = response;
+    });
+  }
 
   /** 计算运营日 */
-  function getBussDay(period) {
-    if (period == 'YEARLY') {
+  function getBussDay(statPeriod) {
+    if (statPeriod == 'YEARLY') {
       return queryParams.value.year + '-01-01';
     } else {
       return queryParams.value.yearMonth + '-01';
@@ -132,10 +129,10 @@
 
   /** 重新统计 */
   function handleReStat() {
-    const period = queryParams.value.period;
-    const bussDay = getBussDay(period);
+    const statPeriod = queryParams.value.statPeriod;
+    const bussDay = getBussDay(statPeriod);
     let title = undefined;
-    if (period == 'MONTHLY') {
+    if (statPeriod == 'MONTHLY') {
       title = '是否重新统计' + queryParams.value.yearMonth + '月的所有预算及具体消费数据?';
     } else {
       title = '是否重新统计' + queryParams.value.year + '年的所有预算及具体消费数据?';
@@ -147,7 +144,7 @@
     }).then(function() {
       proxy.$modal.loading("正在重新统计数据，请稍候！");
       const dd = {
-        period: period,
+        statPeriod: statPeriod,
         bussDay: bussDay
       }
       return reStatBudgetTimeline(dd);
@@ -160,12 +157,12 @@
 
   function initChart() {
     proxy.$modal.loading("正在加载数据，请稍候！");
-    const period = queryParams.value.period;
-    queryParams.value.bussDay = getBussDay(period);
+    const statPeriod = queryParams.value.statPeriod;
+    queryParams.value.bussDay = getBussDay(statPeriod);
     getBudgetTimelineStat(queryParams.value).then(
       response => {
         proxy.$modal.closeLoading();
-        if (period == 'YEARLY') {
+        if (statPeriod == 'YEARLY') {
           response.itemLabelShow = false;
         }
         response.smooth = true;

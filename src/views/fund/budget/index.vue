@@ -121,14 +121,6 @@
         <el-button
           type="success"
           icon="Histogram"
-          @click="handleBudgetAnalyse"
-          v-hasPermi="['fund:budget:analyse']">预算分析
-        </el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          icon="Histogram"
           @click="handleBudgetLogBiasStat"
           v-hasPermi="['fund:budgetLog:biasStat']">误差统计
         </el-button>
@@ -277,9 +269,6 @@
     <!-- 表单 -->
     <BudgetForm ref="formRef" @success="getList" />
 
-    <!-- 分析 -->
-    <AnalyseForm ref="analyseFormRef" />
-
   </div>
 </template>
 
@@ -289,7 +278,6 @@
   import { getPercent, progressColors } from "@/utils/mulanbay";
   import { getQueryObject } from "@/utils/index";
   import BudgetForm from './form.vue'
-  import AnalyseForm from './analyse.vue'
 
   const { proxy } = getCurrentInstance();
   const formRef = ref();
@@ -323,6 +311,12 @@
 
   const { queryParams } = toRefs(data);
 
+  /** 历史记录统计 */
+  function showHistory(row) {
+    //路由定向
+    proxy.$router.push({ name: 'BudgetSnapshotHistory', query: { budgetId: row.budgetId } })
+  }
+
   /** 统计 */
   function handleStat() {
     //路由定向
@@ -351,11 +345,6 @@
   function handleBudgetPeriodStat() {
     //路由定向
     proxy.$router.push({ name: 'BudgetLogPeriodStat', query: {} })
-  }
-
-  //预算分析
-  function handleBudgetAnalyse() {
-    analyseFormRef.value.showData();
   }
 
   //新增预算流水
