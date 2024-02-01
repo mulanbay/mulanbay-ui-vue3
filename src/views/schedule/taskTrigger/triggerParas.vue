@@ -41,7 +41,6 @@
       },
       row: {
         type: '',
-        align: '',
         gutter: 5
       }
     }
@@ -61,6 +60,7 @@
     parasEditOpen.value = true;
     getParaDefine(className).then(response => {
       peRule.value = generateTriggerParasRules(response.paraDefine);
+      //console.log(JSON.stringify(peRule.value));
       //需要重载规则，否则编辑时无法设定值
       peApi.value.reload(peRule.value);
       let tp = {};

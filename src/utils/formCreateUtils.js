@@ -3,23 +3,23 @@
  * 根据后台数据生成规则
  * @param {Object} dataRules
  */
-export function generateFcRules(dataRules){
+export function generateFcRules(dataRules) {
   let selectOptions = new Array();
-  if(dataRules==null||dataRules.length==0){
+  if (dataRules == null || dataRules.length == 0) {
     return selectOptions;
   }
   //组装数据
   const n = dataRules.length;
-  for(let i =0;i<n;i++){
+  for (let i = 0; i < n; i++) {
     let r = dataRules[i];
-    if(r.list==null||r.list.length==0){
+    if (r.list == null || r.list.length == 0) {
       //this.msgError(r.promptMsg);
       return new Array();
     }
     //field插件需要唯一
     let selectData = {
       type: "select",
-      field: "bindValue"+i,
+      field: "bindValue" + i,
       title: r.name,
       value: [],
       options: [],
@@ -29,9 +29,9 @@ export function generateFcRules(dataRules){
     };
     const ll = r.list.length;
     let os = new Array();
-    for(let j=0;j<ll;j++){
+    for (let j = 0; j < ll; j++) {
       let opData = r.list[j];
-      let o = {"value": opData.id, "label": opData.text, "disabled": false};
+      let o = { "value": opData.id, "label": opData.text, "disabled": false };
       os.push(o);
     }
     selectData.options = os;
@@ -44,17 +44,17 @@ export function generateFcRules(dataRules){
  * 获取绑定值:fcObject为表单对象
  * @param {Object} fcObject
  */
-export function getBindValues(fcObject){
+export function getBindValues(fcObject) {
   let formData = fcObject.formData();
   let values = new Array();
-  for(let key in formData){
-    if(formData[key]!=null){
+  for (let key in formData) {
+    if (formData[key] != null) {
       values.push(formData[key]);
     }
   }
-  if(values.length>0){
+  if (values.length > 0) {
     return values.join(',');
-  }else{
+  } else {
     return undefined;
   }
 }
@@ -64,13 +64,13 @@ export function getBindValues(fcObject){
  * @param {Object} bindValues
  * @param {Object} fcObject
  */
-export function setBindValues(bindValues,fcObject){
-  if(bindValues==undefined||bindValues==null){
+export function setBindValues(bindValues, fcObject) {
+  if (bindValues == undefined || bindValues == null) {
     return;
   }
   let ss = bindValues.split(',');
-  for(let i=0;i<ss.length;i++){
-    fcObject.setValue("bindValue"+i,ss[i]);
+  for (let i = 0; i < ss.length; i++) {
+    fcObject.setValue("bindValue" + i, ss[i]);
   }
 }
 
@@ -78,33 +78,33 @@ export function setBindValues(bindValues,fcObject){
  * 产生规则
  * @param {Object} dataRules
  */
-export function generateTriggerParasRules(dataRules){
+export function generateTriggerParasRules(dataRules) {
   let options = new Array();
   const n = dataRules.length;
-  for(let i=0;i<n;i++){
+  for (let i = 0; i < n; i++) {
     let dr = dataRules[i];
-    let title =dr.name;
-    if(dr.desc!=null&&dr.desc!=''){
+    let title = dr.name;
+    if (dr.desc != null && dr.desc != '') {
       //title+='('+dr.desc+')';
     }
-    let op={};
-    if(dr.editType=='BOOLEAN'||dr.dataType=='java.lang.Boolean'){
+    let op = {};
+    if (dr.editType == 'BOOLEAN' || dr.dataType == 'java.lang.Boolean') {
       op = {
-        type:"switch",
-        title:title,
-        field:dr.field,
-        value:true,
+        type: "switch",
+        title: title,
+        field: dr.field,
+        value: true,
         props: {
-            activeValue:true,
-            inactiveValue:false,
+          activeValue: true,
+          inactiveValue: false,
         }
       };
-    }else if(dr.editType=='COMBOBOX'){
+    } else if (dr.editType == 'COMBOBOX') {
       //field插件需要唯一
       op = {
         type: "select",
-        title:title,
-        field:dr.field,
+        title: title,
+        field: dr.field,
         value: [],
         options: [],
         props: {
@@ -114,48 +114,48 @@ export function generateTriggerParasRules(dataRules){
       const ed = eval('(' + dr.editData + ')');
       const ll = ed.length;
       let os = new Array();
-      for(let j=0;j<ll;j++){
+      for (let j = 0; j < ll; j++) {
         let opData = ed[j];
-        let o = {"value": opData.id, "label": opData.text, "disabled": false};
+        let o = { "value": opData.id, "label": opData.text, "disabled": false };
         os.push(o);
       }
       op.options = os;
-    }else if(dr.editType=='NUMBER'){
+    } else if (dr.editType == 'NUMBER') {
       op = {
         type: "InputNumber",
-        title:title,
-        field:dr.field,
+        title: title,
+        field: dr.field,
         value: 1,
         props: {
-            precision:dr.scale
+          precision: dr.scale
         }
       };
-    }else if(dr.editType=='TIME'){
+    } else if (dr.editType == 'TIME') {
       op = {
         type: "TimePicker",
-        title:title,
-        field:dr.field,
+        title: title,
+        field: dr.field,
         value: [],
         props: {
-            isRange:false,
-            format:"HH:mm",
-            valueFormat:"HH:mm"
-          }
-        };
-    }else{
-      op ={
-        type:"input",
-        title:title,
-        field:dr.field,
-        value:"",
+          isRange: false,
+          format: "HH:mm",
+          valueFormat: "HH:mm"
+        }
+      };
+    } else {
+      op = {
+        type: "input",
+        title: title,
+        field: dr.field,
+        value: "",
         props: {
-            "type": "text",
+          "type": "text",
         }
       }
     }
-	op.validate=[
-		{ required: dr.notNull, message: '请输入'+title, trigger: 'blur' },
-	]
+    op.validate = [
+      { required: dr.notNull, message: '请输入' + title+','+dr.desc, trigger: 'blur' },
+    ]
     options.push(op);
   }
   return options;
@@ -166,12 +166,12 @@ export function generateTriggerParasRules(dataRules){
  * @param {Object} bindValues
  * @param {Object} fcObject
  */
-export function setTriggerParasBindValues(paras,fcObject){
-  if(paras==undefined||paras==null){
+export function setTriggerParasBindValues(paras, fcObject) {
+  if (paras == undefined || paras == null) {
     return;
   }
   const pp = eval('(' + paras + ')');
-  for(let key in pp){
-    fcObject.setValue(key,pp[key]);
+  for (let key in pp) {
+    fcObject.setValue(key, pp[key]);
   }
 }

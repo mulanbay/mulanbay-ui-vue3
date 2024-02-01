@@ -130,6 +130,7 @@
   const title = ref('');
   const open = ref(false);
   const formLoading = ref(false);
+  const formType = ref('create');
   const formRef = ref();
   const levelOptions = ref([]);
   const bussTypeOptions = ref([]);
@@ -164,6 +165,7 @@
   const openForm = async (code, type) => {
     open.value = true;
     resetForm();
+    formType.value = type;
     if (code != null) {
       title.value = "修改";
       try {
@@ -205,7 +207,7 @@
   function submitForm() {
     proxy.$refs["formRef"].validate(valid => {
       if (valid) {
-        if (form.value.code != undefined) {
+        if (formType.value == 'edit') {
           editSysCode(form.value).then(response => {
             proxy.$modal.msgSuccess("修改成功");
             open.value = false;
@@ -215,7 +217,7 @@
         } else {
           createSysCode(form.value).then(response => {
             proxy.$modal.msgSuccess("新增成功");
-            dialogOpen.value = false;
+            open.value = false;
             // 发送操作成功的事件
             emit('success');
           });

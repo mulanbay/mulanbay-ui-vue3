@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { ElNotification , ElMessageBox, ElMessage, ElLoading } from 'element-plus'
+import { ElNotification, ElMessageBox, ElMessage, ElLoading } from 'element-plus'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
 import errorCode from '@/utils/errorCode'
@@ -27,8 +27,8 @@ service.interceptors.request.use(config => {
   }
   return config
 }, error => {
-    console.log(error)
-    Promise.reject(error)
+  console.log(error)
+  Promise.reject(error)
 })
 
 // response interceptor
@@ -36,7 +36,7 @@ service.interceptors.response.use(
   /**
    * If you want to get http information such as headers or status
    * Please return  response => response
-  */
+   */
 
   /**
    * Determine the request status by custom code
@@ -54,16 +54,17 @@ service.interceptors.response.use(
         type: 'error',
         duration: 5 * 1000
       })
-
-      // 50008: Illegal token; 50012: Other clients logged in; 50014: Token expired;
-      if (res.code === 10004 || res.code === 10019 ||res.code === 50008 || res.code === 50012 || res.code === 50014) {
+      if(res.code >= 9991&&res.code <= 9999){
+        location.href = '/stop?message='+res.message;
+        return;
+      }else if (res.code === 10004) {
         // to re-login
         ElMessageBox.confirm('你的登录已经失效，你可以停留在此页面或者重新登录', '确认登出', {
           confirmButtonText: '重新登录',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-		  isRelogin.show = false;
+          isRelogin.show = false;
           useUserStore().logOut().then(() => {
             location.href = '/index';
           })
@@ -92,9 +93,9 @@ export default service
  * 关闭加载框
  * 参考：https://element.eleme.cn/#/zh-CN/component/loading#fu-wu
  */
-export function closeLoading(){
+export function closeLoading() {
   let instance = ElLoading.service({ fullscreen: true });
-  if(instance){
+  if (instance) {
     instance.close();
   }
 }
