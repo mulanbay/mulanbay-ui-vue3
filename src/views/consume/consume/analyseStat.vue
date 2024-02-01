@@ -90,6 +90,9 @@
             :value="dict.id" />
         </el-select>
       </el-form-item>
+      <el-form-item label="上层分组" v-if="queryParams.groupField=='goods_type_id'" prop="groupTop">
+        <el-switch v-model="queryParams.groupTop" ></el-switch>
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="TrendCharts" @click="handleQuery" v-hasPermi="['consume:consume:analyseStat']">统计</el-button>
         <el-button icon="refresh" @click="resetQuery">重置</el-button>
@@ -133,7 +136,8 @@
       name: undefined,
       chartType: 'TREE_MAP',
       groupField: 'goods_type_id',
-      type: 'TOTALPRICE'
+      type: 'TOTALPRICE',
+      groupTop: true
     }
   });
 
