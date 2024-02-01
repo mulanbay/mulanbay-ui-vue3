@@ -8,14 +8,6 @@ export function fetchList(query) {
   })
 }
 
-export function setSystemStatus(data) {
-  return request({
-    url: '/command/setSystemStatus',
-    method: 'post',
-    data
-  })
-}
-
 export function exeCmd(data) {
   return request({
     url: '/command/exe',

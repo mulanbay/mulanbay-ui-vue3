@@ -59,8 +59,8 @@
         <el-button
           type="danger"
           icon="delete"
-          @click="handleSystemStatus"
-          v-hasPermi="['system:command:setSystemStatus']">关闭系统
+          @click="handleSystemLock"
+          v-hasPermi="['system:system:lock']">锁定系统
         </el-button>
       </el-col>
     </el-row>
@@ -142,7 +142,7 @@
     <CommandForm ref="formRef" @success="getList" />
 
     <!-- 关闭系统 -->
-    <SystemStatusForm ref="systemStatusFormRef" />
+    <SystemLockForm ref="systemLockFormRef" />
 
   </div>
 </template>
@@ -150,11 +150,11 @@
 <script setup name="DBCLean">
   import { fetchList, deleteCommand, exeCmd } from "@/api/system/command";
   import CommandForm from './form.vue'
-  import SystemStatusForm from './systemStatus.vue'
+  import SystemLockForm from './systemLock.vue'
 
   const { proxy } = getCurrentInstance();
   const formRef = ref();
-  const systemStatusFormRef = ref();
+  const systemLockFormRef = ref();
 
   // 遮罩层
   const loading = ref(true);
@@ -197,8 +197,8 @@
   }
   
   /** 系统状态设置 */
-  function handleSystemStatus(){
-    systemStatusFormRef.value.openForm();
+  function handleSystemLock(){
+    systemLockFormRef.value.openForm();
   }
 
   /** 查询列表 */

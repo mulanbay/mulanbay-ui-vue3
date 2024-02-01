@@ -25,13 +25,13 @@
 
 </template>
 
-<script setup name="SystemStatusForm">
-  import { setSystemStatus} from "@/api/system/command";
+<script setup name="SystemLockForm">
+  import { lockSystem} from "@/api/system/system";
 
   const { proxy } = getCurrentInstance();
 
   //可执行时间段
-  const title = ref('消息发送');
+  const title = ref('锁定系统');
   const open = ref(false);
   const formLoading = ref(false);
   const formRef = ref();
@@ -58,7 +58,7 @@
   const openForm = async () => {
     open.value = true;
     resetForm();
-    title.value = "关闭系统";
+    title.value = "锁定系统";
   }
 
   // 提供 open 方法，用于打开弹窗
@@ -68,7 +68,7 @@
   function resetForm() {
     form.value = {
       code: 9999,
-      message: '系统关闭',
+      message: '锁定系统',
       expireTime:undefined
     };
     proxy.resetForm("formRef");
@@ -78,7 +78,7 @@
   function submitForm() {
     proxy.$refs["formRef"].validate(valid => {
       if (valid) {
-        setSystemStatus(form.value).then(response => {
+        lockSystem(form.value).then(response => {
           proxy.$modal.msgSuccess("关闭成功");
           open.value = false;
         });
