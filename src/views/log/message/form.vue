@@ -19,9 +19,11 @@
       </el-form-item>
       <el-form-item label="消息代码" prop="code">
         <el-input-number v-model="form.code" controls-position="right" :min="0" :controls="true" :precision="0" />
-        <span class="link-type" @click="showMsg('提示','不填表示为立即发送')"><el-icon>
+        <el-tooltip content="不填表示为立即发送." effect="dark" placement="top">
+          <el-icon>
             <QuestionFilled />
-          </el-icon></span>
+          </el-icon>
+        </el-tooltip>
       </el-form-item>
     </el-form>
     <template #footer>
@@ -67,11 +69,6 @@
 
   // 定义 success 事件，用于操作成功后的回调
   const emit = defineEmits(['success']);
-
-  /** 消息提示 */
-  function showMsg(title, content) {
-    proxy.$modal.msgInfo(title, content);
-  }
 
   /** 打开弹窗 */
   const openForm = async () => {

@@ -6,8 +6,8 @@
         <el-descriptions-item>
           <template #label>
             <div class="cell-item">
-              <el-icon><StarFilled /></el-icon>
-              业务日期
+              <el-icon><Clock /></el-icon>
+              业务KEY
             </div>
           </template>
           {{ budgetLog.bussKey}}
@@ -15,20 +15,20 @@
         <el-descriptions-item>
           <template #label>
             <div class="cell-item">
-              <el-icon><StarFilled /></el-icon>
-              发生时间
+              <el-icon><Clock /></el-icon>
+              业务日期
             </div>
           </template>
-          {{ budgetLog.occurDate}}
+          {{ budgetLog.bussDay}}
         </el-descriptions-item>
         <el-descriptions-item>
           <template #label>
             <div class="cell-item">
-              <el-icon><Shop /></el-icon>
-              收入
+              <el-icon><Clock /></el-icon>
+              创建时间
             </div>
           </template>
-          {{ formatMoney(budgetLog.incomeAmount)}}
+          {{ budgetLog.createdTime}}
         </el-descriptions-item>
         <el-descriptions-item>
           <template #label>
@@ -74,6 +74,15 @@
             </div>
           </template>
           {{ formatMoney(budgetLog.budgetAmount)}}
+        </el-descriptions-item>
+        <el-descriptions-item>
+          <template #label>
+            <div class="cell-item">
+              <el-icon><Shop /></el-icon>
+              收入
+            </div>
+          </template>
+          {{ formatMoney(budgetLog.incomeAmount)}}
         </el-descriptions-item>
         <el-descriptions-item>
           <template #label>
