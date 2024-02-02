@@ -15,6 +15,10 @@
         <el-tooltip content="文档地址" effect="dark" placement="bottom">
           <MulanbayDoc id="mulanbay-doc" class="right-menu-item hover-effect" />
         </el-tooltip>
+        
+        <el-tooltip content="锁定系统" effect="dark" placement="bottom" >
+          <MulanbayLock id="mulanbay-lock" class="right-menu-item hover-effect"/>
+        </el-tooltip>
 
         <screenfull id="screenfull" class="right-menu-item hover-effect" />
 
@@ -73,12 +77,14 @@
 	import HeaderSearch from '@/components/HeaderSearch'
 	import MulanbayGit from '@/components/Mulanbay/Git'
 	import MulanbayDoc from '@/components/Mulanbay/Doc'
+  import MulanbayLock from '@/components/Mulanbay/Lock'
 	import useAppStore from '@/store/modules/app'
 	import useUserStore from '@/store/modules/user'
 	import useSettingsStore from '@/store/modules/settings'
 	import {getIndexFastMenu} from "@/api/auth/fastMenu";
 
 	const { proxy } = getCurrentInstance();
+  const systemLockFormRef = ref();
 
 	const appStore = useAppStore()
 	const userStore = useUserStore()

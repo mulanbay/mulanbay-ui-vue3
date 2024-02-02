@@ -46,7 +46,7 @@
 </template>
 
 <script setup>
-  import errImage from "@/assets/401_images/401.gif";
+  import errImage from "@/assets/503_images/503.png";
   import { getQueryObject } from "@/utils/mulanbay";
   import { unlockSystem} from "@/api/system/system";
 
@@ -57,7 +57,7 @@
   const formLoading = ref(false);
   const formRef = ref();
   
-  const errGif = ref(errImage + "?" + +new Date());
+  const errGif = ref(errImage);
   const msg = ref();
   
   const data = reactive({

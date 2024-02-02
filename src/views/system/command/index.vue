@@ -141,20 +141,15 @@
     <!-- 表单 -->
     <CommandForm ref="formRef" @success="getList" />
 
-    <!-- 关闭系统 -->
-    <SystemLockForm ref="systemLockFormRef" />
-
   </div>
 </template>
 
 <script setup name="DBCLean">
   import { fetchList, deleteCommand, exeCmd } from "@/api/system/command";
   import CommandForm from './form.vue'
-  import SystemLockForm from './systemLock.vue'
 
   const { proxy } = getCurrentInstance();
   const formRef = ref();
-  const systemLockFormRef = ref();
 
   // 遮罩层
   const loading = ref(true);
@@ -196,11 +191,6 @@
     }).catch(function() {});
   }
   
-  /** 系统状态设置 */
-  function handleSystemLock(){
-    systemLockFormRef.value.openForm();
-  }
-
   /** 查询列表 */
   function getList() {
     loading.value = true;
