@@ -56,6 +56,15 @@
           <span>{{ scope.row.lastPaidTime }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="历史" align="center">
+        <template #default="scope">
+          <span class="link-type" @click="showHistory(scope.row)" v-hasPermi="['fund:budgetSnapshot:history']">
+            <el-icon>
+              <Compass />
+            </el-icon>
+          </span>
+        </template>
+      </el-table-column>
       <el-table-column label="创建时间" prop="value" align="center" width="180px">
         <template #default="scope">
           <span>{{ scope.row.createdTime }}</span>
@@ -79,6 +88,12 @@
     budgetSnapshotList.value = dataList;
   }
 
+  /** 历史记录统计 */
+  function showHistory(row) {
+    //路由定向
+    proxy.$router.push({ name: 'BudgetSnapshotHistory', query: { budgetId: row.budgetId } })
+  }
+  
   // 提供 open 方法，用于打开弹窗
   defineExpose({ showData });
 

@@ -123,9 +123,12 @@
         <template #default="scope">
           <span>{{ scope.row.typeName }}</span>
           <span v-if="scope.row.type == 'SECONDHAND_SOLD'">
-            <span class="link-type" @click="handleConsumeInfo(scope.row)"><el-icon>
-                <GoodsFilled />
-              </el-icon></span>
+            <el-tooltip content="点击查看原始消费信息." effect="dark" placement="top">
+              <span class="link-type" @click="handleConsumeInfo(scope.row)"><el-icon><GoodsFilled /></el-icon></span>
+            </el-tooltip>
+            <el-tooltip content="点击查看消费/出售关联信息." effect="dark" placement="top">
+              <span class="link-type" @click="handleCasecadeInfo(scope.row)"><el-icon><Share /></el-icon></span>
+            </el-tooltip>
           </span>
         </template>
       </el-table-column>
@@ -177,6 +180,10 @@
     <!-- 消费详情表单 -->
     <ConsumeForm ref="consumeFormRef" />
 
+
+    <!-- 消费关联 -->
+    <CascadeForm ref="cascadeFormRef" />
+
   </div>
 </template>
 
@@ -185,10 +192,12 @@
   import { getAccountTree } from "@/api/fund/account";
   import IncomeForm from './form.vue'
   import ConsumeForm from '../../consume/consume/form.vue'
+  import CascadeForm from '../../consume/consume/cascade/index.vue'
 
   const { proxy } = getCurrentInstance();
   const formRef = ref();
   const consumeFormRef = ref();
+  const cascadeFormRef = ref();
 
   // 遮罩层
   const loading = ref(true);
@@ -253,6 +262,20 @@
       }
     );
 
+  }
+  
+  /** 消费关联详情 */
+  function handleCasecadeInfo(row) {
+    getConsumeRefer(row.incomeId).then(
+      response => {
+        if (response == null) {
+          proxy.$modal.msgError("未找到相关消费信息");
+          return;
+        }
+        cascadeFormRef.value.openCascade(response.consumeId);
+      }
+    );
+  
   }
 
   /** 查询列表 */

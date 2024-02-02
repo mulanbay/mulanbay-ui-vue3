@@ -90,7 +90,7 @@
             :value="dict.id" />
         </el-select>
       </el-form-item>
-      <el-form-item label="上层分组" v-if="queryParams.groupField=='goods_type_id'" prop="groupTop">
+      <el-form-item label="大类分组" v-if="queryParams.groupField=='goods_type_id'" prop="groupTop">
         <el-switch v-model="queryParams.groupTop" ></el-switch>
       </el-form-item>
       <el-form-item>
@@ -134,7 +134,7 @@
   const data = reactive({
     queryParams: {
       name: undefined,
-      chartType: 'TREE_MAP',
+      chartType: 'PIE',
       groupField: 'goods_type_id',
       type: 'TOTALPRICE',
       groupTop: true

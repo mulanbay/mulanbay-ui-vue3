@@ -73,7 +73,7 @@
               <el-table-column label="说明" prop="desc" align="center" width="60px">
                 <template #default="scope">
                   <span v-if="scope.row.desc != null">
-                    <el-tooltip :content="scope.row.desc" effect="dark" placement="top">
+                    <el-tooltip :content="scope.row.desc" raw-content effect="dark" placement="top">
                       <el-icon>
                         <QuestionFilled />
                       </el-icon>
