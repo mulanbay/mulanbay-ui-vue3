@@ -168,6 +168,14 @@ export function getConsumeWordCloudStat(query) {
   })
 }
 
+export function getGoodsSimilarity(query) {
+  return request({
+    url: '/consume/goodsSimilarity',
+    method: 'get',
+    params: query
+  })
+}
+
 export function aiMatch(goodsName) {
   const data = {
       goodsName

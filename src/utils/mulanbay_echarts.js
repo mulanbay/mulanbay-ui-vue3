@@ -2162,6 +2162,7 @@ export function createGaugeChartOption(data) {
         color: 'inherit',
         distance: 40,
         fontSize: 15
+        //formatter: data.valueFormatter
       },
       detail: {
         //valueAnimation: true,

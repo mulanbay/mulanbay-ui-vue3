@@ -218,7 +218,7 @@
     let di = data[0];
     let total = di.totalSpace / 1.0 / 1024 / 1024 / 1024;
     let freeSpace = di.freeSpace / 1.0 / 1024 / 1024 / 1024;
-    let usedRate = ((total - freeSpace) / total * 100).toFixed(2);
+    let usedRate = ((total - freeSpace) / total * 100).toFixed(0);
     let diskMonitorData = {};
     diskMonitorData.value = usedRate;
     diskMonitorData.name = '磁盘使用率';
@@ -230,7 +230,7 @@
   function createMemoryMonitorChart(data) {
     let total = data.totalMemorySize / 1.0 / 1024 / 1024 / 1024;
     let freePhysicalMemorySize = data.freePhysicalMemorySize / 1.0 / 1024 / 1024 / 1024;
-    let usedRate = ((total - freePhysicalMemorySize) / total * 100).toFixed(2);
+    let usedRate = ((total - freePhysicalMemorySize) / total * 100).toFixed(0);
     let memoryMonitorData = {};
     memoryMonitorData.value = usedRate;
     memoryMonitorData.name = '内存使用率';
@@ -240,7 +240,7 @@
   }
 
   function createCpuMonitorChart(data) {
-    let sysRate = (data.sysCpuRate * 100).toFixed(2);
+    let sysRate = (data.sysCpuRate * 100).toFixed(0);
     let cpuMonitorData = {};
     cpuMonitorData.value = sysRate;
     cpuMonitorData.name = 'CPU使用率';
