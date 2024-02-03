@@ -30,16 +30,24 @@
       <el-table-column label="名称" min-width="200px" fixed="left" :show-overflow-tooltip="true">
         <template #default="scope">
           <span v-if="'M'==scope.row.funcDataType">
-            <svg-icon icon-class="tree" />
+            <el-tooltip content="目录" effect="dark" placement="top">
+              <svg-icon icon-class="tree" />
+            </el-tooltip>
           </span>
           <span v-else-if="'C'==scope.row.funcDataType">
-            <svg-icon icon-class="international" />
+            <el-tooltip content="菜单" effect="dark" placement="top">
+              <svg-icon icon-class="international" />
+            </el-tooltip>
           </span>
           <span v-else-if="'F'==scope.row.funcDataType">
-            <svg-icon icon-class="icon" />
+            <el-tooltip content="按钮" effect="dark" placement="top">
+              <svg-icon icon-class="icon" />
+            </el-tooltip>
           </span>
           <span v-else>
-            <svg-icon icon-class="tree-table" />
+            <el-tooltip content="条件" effect="dark" placement="top">
+              <svg-icon icon-class="tree-table" />
+            </el-tooltip>
           </span>
           <span class="link-type" @click="handleEdit(scope.row)">{{ scope.row.funcName }}</span>
         </template>
@@ -54,16 +62,24 @@
       <el-table-column prop="icon" label="安全" width="80">
         <template #default="scope">
           <span v-if="true ==scope.row.loginAuth">
-            <svg-icon icon-class="lock" />
+            <el-tooltip content="登录验证" effect="dark" placement="top">
+              <svg-icon icon-class="lock" />
+            </el-tooltip>
           </span>
           <span v-if="true ==scope.row.permissionAuth">
-            <svg-icon icon-class="password" />
+            <el-tooltip content="权限验证" effect="dark" placement="top">
+              <svg-icon icon-class="password" />
+            </el-tooltip>
           </span>
           <span v-if="true ==scope.row.secAuth">
-            <svg-icon icon-class="2" />
+            <el-tooltip content="二次认证" effect="dark" placement="top">
+              <svg-icon icon-class="2" />
+            </el-tooltip>
           </span>
           <span v-if="true ==scope.row.alwaysShow">
-            <svg-icon icon-class="show" />
+            <el-tooltip content="始终显示" effect="dark" placement="top">
+              <svg-icon icon-class="show" />
+            </el-tooltip>
           </span>
         </template>
       </el-table-column>
@@ -280,7 +296,11 @@
           <el-col :span="12">
             <el-form-item label="主键列名" prop="idField">
               <el-input v-model="form.idField" style="width: 200px" placeholder="" />
-              <span class="link-type" @click="msgAlert('提示','操作日志通过该字段获取操作对象的主键值，日志分析使用')"><i class="el-icon-question" /></span>
+              <el-tooltip content="操作日志通过该字段获取操作对象的主键值，日志分析使用." effect="dark" placement="top">
+                <el-icon>
+                  <QuestionFilled />
+                </el-icon>
+              </el-tooltip>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -331,7 +351,11 @@
           <el-col :span="6">
             <el-form-item label="二次认证" prop="secAuth">
               <el-switch v-model="form.secAuth"></el-switch>
-              <span class="link-type" @click="msgAlert('提示','有些敏感的功能点需要在session过期后重新登录')"><i class="el-icon-question" /></span>
+              <el-tooltip content="有些敏感的功能点需要在session过期后重新登录." effect="dark" placement="top">
+                <el-icon>
+                  <QuestionFilled />
+                </el-icon>
+              </el-tooltip>
             </el-form-item>
           </el-col>
           <el-col :span="6">
@@ -343,7 +367,11 @@
           <el-col :span="6">
             <el-form-item label="始终显示" v-if="true == form.permissionAuth" prop="alwaysShow">
               <el-switch v-model="form.alwaysShow"></el-switch>
-              <span class="link-type" @click="msgAlert('提示','如果是目录类型，有可能下面的子节点有些不需要权限认证，这里设置为true，那么菜单能正常显示')"><i class="el-icon-question" /></span>
+              <el-tooltip content="如果是目录类型，有可能下面的子节点有些不需要权限认证，这里设置为true，那么菜单能正常显示." effect="dark" placement="top">
+                <el-icon>
+                  <QuestionFilled />
+                </el-icon>
+              </el-tooltip>
             </el-form-item>
           </el-col>
         </el-row>
@@ -351,13 +379,21 @@
           <el-col :span="12">
             <el-form-item label="系统代码" prop="code">
               <el-input-number v-model="form.code" controls-position="right" :min="0" :controls="true" :precision="0" style="width: 200px" />
-              <span class="link-type" @click="msgAlert('提示','如果设置非0值，则该功能类型操作将通过错误代码表判断是否需要消息通知')"><i class="el-icon-question" /></span>
+              <el-tooltip content="如果设置非0值，则该功能类型操作将通过错误代码表判断是否需要消息通知." effect="dark" placement="top">
+                <el-icon>
+                  <QuestionFilled />
+                </el-icon>
+              </el-tooltip>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="积分奖励" prop="rewardPoint">
               <el-input-number v-model="form.rewardPoint" controls-position="right" :min="0" :controls="true" :precision="0" style="width: 190px" />
-              <span class="link-type" @click="msgAlert('提示','如果设置非0值，则每操作一次该功能都会有相应的积分积累')"><i class="el-icon-question" /></span>
+              <el-tooltip content="如果设置非0值，则每操作一次该功能都会有相应的积分积累." effect="dark" placement="top">
+                <el-icon>
+                  <QuestionFilled />
+                </el-icon>
+              </el-tooltip>
             </el-form-item>
           </el-col>
         </el-row>
