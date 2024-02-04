@@ -22,7 +22,8 @@
       <el-row>
         <el-col :span="12">
           <el-form-item label="练习时长" prop="minutes">
-            <el-input-number v-model="form.minutes" placeholder="分钟" controls-position="right" :min="0" :controls="false" :precision="0" :style="{width: '240px'}" />
+            <el-input-number v-model="form.minutes" placeholder="分钟" controls-position="right" :min="0" :controls="false" :precision="0" :style="{width: '100%'}">
+            </el-input-number>
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -42,11 +43,18 @@
           </el-form-item>
         </el-col>
       </el-row>
+      <el-row>
+        <el-col :span="24">
+          <el-form-item label="备注信息">
+            <el-input v-model="form.remark" type="text" placeholder="请输入内容"></el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
     </el-form>
     <template #footer>
       <div class="dialog-footer" align="right">
         <el-button type="primary" @click="submitForm">确 定</el-button>
-        <el-button type="danger" @click="open=false">关 闭</el-button>
+        <el-button type="danger" @click="closeForm">关 闭</el-button>
       </div>
     </template>
 
@@ -154,8 +162,15 @@
   function calculateMinutes() {
     let startTime = form.value.startTime;
     let endTime = form.value.endTime;
-    let minutes = minuteDiff(startTime, endTime);
+    let minutes = minuteDiff(startTime, endTime).toFixed(0);
     form.value.minutes = minutes;
+  }
+  
+  /** 关闭按钮 */
+  function closeForm() {
+    open.value = false;
+    // 发送操作成功的事件
+    emit('success');
   }
 
   /** 提交按钮 */

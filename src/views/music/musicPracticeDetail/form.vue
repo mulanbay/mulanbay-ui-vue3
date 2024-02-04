@@ -3,23 +3,6 @@
   <!-- 表单编辑对话框 -->
   <el-dialog :title="title" v-model="open" width="400px" append-to-body>
     <el-form ref="formRef" :model="form" :rules="rules" v-loading="formLoading" label-width="80px">
-      <el-form-item label="曲子名称" prop="tune">
-        <el-input v-model="form.tune" placeholder="请输入名称" />
-      </el-form-item>
-      <el-form-item label="练习水平" prop="level">
-        <el-select
-          v-model="form.level"
-          :style="{width: '100%'}"
-          default-first-option
-        >
-          <el-option
-            v-for="dict in levelOptions"
-            :key="dict.id"
-            :label="dict.text"
-            :value="dict.id"
-          />
-        </el-select>
-      </el-form-item>
       <el-form-item label="曲子类型" prop="tuneType">
         <el-select
           v-model="form.tuneType"
@@ -35,9 +18,39 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="练习时长" prop="times">
+      <el-form-item :label="tuneLable" prop="tune">
+        <el-select
+          v-model="form.tune"
+          :style="{width: '100%'}"
+          filterable
+          allow-create
+          default-first-option
+        >
+          <el-option
+            v-for="dict in tuneOptions"
+            :key="dict.id"
+            :label="dict.text"
+            :value="dict.id"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item :label="timesLable" prop="times">
         <el-input-number v-model="form.times" controls-position="right" :min="0" :controls="true" :precision="0" />
         {{unit}}
+      </el-form-item>
+      <el-form-item label="练习水平" prop="level">
+        <el-select
+          v-model="form.level"
+          :style="{width: '100%'}"
+          default-first-option
+        >
+          <el-option
+            v-for="dict in levelOptions"
+            :key="dict.id"
+            :label="dict.text"
+            :value="dict.id"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item label="备注信息">
         <el-input v-model="form.remark" type="textarea" placeholder="请输入备注"></el-input>
@@ -55,6 +68,7 @@
 
 <script setup name="MusicPracticeDetailForm">
   import { createMusicPracticeDetail, editMusicPracticeDetail, getMusicPracticeDetail } from "@/api/music/musicPracticeDetail";
+  import { getTuneTree } from "@/api/music/musicPracticeDetail";
 
   const { proxy } = getCurrentInstance();
 
@@ -65,8 +79,12 @@
   const formRef = ref();
   const levelOptions = ref([]);
   const tuneTypeOptions = ref([]);
+  const tuneOptions = ref([]);
+  
   const unit = ref('遍');
-
+  const tuneLable = ref('曲子名称');
+  const timesLable = ref('练习遍数');
+  
   const data = reactive({
     form: {},
     // 表单校验
@@ -109,6 +127,7 @@
           if(practiceId!=form.value.practiceId){
             proxy.$modal.msgError("练习编号对应不上");
           }
+          handleTuneTypeChange();
         });
       } finally {
         formLoading.value = false;
@@ -116,18 +135,32 @@
     } else {
       title.value = "新增";
       form.value.practiceId = practiceId;
+      handleTuneTypeChange();
     }
   }
 
   // 提供 open 方法，用于打开弹窗
   defineExpose({ openForm });
 
+  /** 类型改变 */
   function handleTuneTypeChange(){
     if(form.value.tuneType=='TUNE'){
       unit.value = '遍';
+      tuneLable.value='曲子名称';
+      timesLable.value='练习遍数';
     }else{
       unit.value = '分钟';
+      tuneLable.value='曲子名称';
+      timesLable.value='练习遍数';
     }
+    loadTuneTree(form.value.tuneType);
+  }
+  
+  /** 加载曲子列表按钮 */
+  function loadTuneTree(tuneType){
+    getTuneTree(tuneType).then(response => {
+      tuneOptions.value = response;
+    });
   }
   
   // 表单重置

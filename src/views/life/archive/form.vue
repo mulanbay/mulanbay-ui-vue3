@@ -38,8 +38,8 @@
         </el-col>
       </el-row>
       <el-row>
-        <el-col :span="12">
-          <el-form-item label="业务ID" prop="sourceId">
+        <el-col :span="24">
+          <el-form-item label="业务主键" prop="sourceId">
             <el-input-number v-model="form.sourceId" :style="{width: '100%'}" placeholder="" controls-position="right" :min="0" :controls="false" :precision="0" />
           </el-form-item>
         </el-col>

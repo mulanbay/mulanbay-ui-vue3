@@ -60,6 +60,15 @@
           v-hasPermi="['music:musicPractice:delete']">删除
         </el-button>
       </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="primary"
+          icon="plus"
+          :disabled="single"
+          @click="handleArchive"
+          v-hasPermi="['life:archive:sync']">同步档案
+        </el-button>
+      </el-col>
     </el-row>
 
     <!--列表数据-->
@@ -105,9 +114,9 @@
           <el-button
             link
             type="success"
-            icon="edit"
-            @click="handleEdit(scope.row)"
-            v-hasPermi="['music:musicPractice:edit']">修改
+            icon="plus"
+            @click="handleCopy(scope.row)"
+            v-hasPermi="['music:musicPractice:copy']">复制
           </el-button>
           <el-button
             link
@@ -131,22 +140,32 @@
     <MusicPracticeForm ref="formRef" @success="getList" />
     
     <!-- 表单 -->
+    <MusicPracticeCopyForm ref="copyFormRef" @success="getList" />
+    
+    <!-- 表单 -->
     <TillNowStat ref="tillNowStatRef" />
+    
+    <!-- 档案表单 -->
+    <ArchiveForm ref="archiveFormRef" />
 
   </div>
 </template>
 
 <script setup name="MusicPractice">
-  import { fetchList, deleteMusicPractice } from "@/api/music/musicPractice";
+  import { fetchList, deleteMusicPractice, getMusicPractice } from "@/api/music/musicPractice";
   import { getInstrumentTree } from "@/api/music/instrument";
   import { getPercent, progressColors } from "@/utils/mulanbay";
   import { getQueryObject } from "@/utils/index";
   import MusicPracticeForm from './form.vue'
+  import MusicPracticeCopyForm from './copyForm.vue'
   import TillNowStat from './tillNowStat.vue'
+  import ArchiveForm from '../../life/archive/form.vue';
 
   const { proxy } = getCurrentInstance();
   const formRef = ref();
+  const copyFormRef = ref();
   const tillNowStatRef = ref();
+  const archiveFormRef = ref();
 
   // 遮罩层
   const loading = ref(true);
@@ -195,6 +214,24 @@
     } else {
       return 'black';
     }
+  }
+  
+  /** 同步档案按钮操作 */
+  function handleArchive() {
+    const id = ids.value.join(",");
+    getMusicPractice(id).then(response => {
+      let data = {
+        archiveId: undefined,
+        title:'音乐练习信息',
+        content:response.instrument.instrumentName,
+        date:response.startTime,
+        bussType:'MUSIC_PRACTICE',
+        relatedBeans:'MusicPractice',
+        sourceId:response.practiceId,
+        remark:undefined
+      };
+      archiveFormRef.value.syncData(data);
+    });
   }
 
   /** 距离现在的统计值 */
@@ -246,7 +283,13 @@
     queryParams.value.page = 1;
     handleQuery();
   }
+  copyFormRef
 
+  /** 复制按钮操作 */
+  function handleCopy(row) {
+    copyFormRef.value.openForm(row);
+  }
+  
   /** 新增按钮操作 */
   function handleCreate() {
     formRef.value.openForm(null, 'create', null);
@@ -266,7 +309,7 @@
       cancelButtonText: "取消",
       type: "warning"
     }).then(function() {
-      return deleteBudgetLog(deleteIds);
+      return deleteMusicPractice(deleteIds);
     }).then(() => {
       proxy.$modal.msgSuccess("删除成功");
       getList();

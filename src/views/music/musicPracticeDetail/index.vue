@@ -43,7 +43,7 @@
           <span>{{ scope.row.levelName }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="创建时间" align="center" width="180">
+      <el-table-column label="创建时间" v-if="fromMP==false" align="center" width="180">
         <template #default="scope">
           <span>{{ scope.row.createdTime }}</span>
         </template>
@@ -93,7 +93,7 @@
   //练习页码过来
   const fromMP = ref(false);
   // 遮罩层
-  const loading = ref(true);
+  const loading = ref(false);
   // 选中数组
   const ids = ref([]);
   // 非单个禁用
