@@ -90,7 +90,7 @@
       </el-table-column>
       <el-table-column label="状态" align="center" width="100">
         <template #default="scope">
-          <el-switch v-model="scope.row.status" active-value="ENABLE" inactive-value="DISABLE" ></el-switch>
+          <el-switch v-model="scope.row.status" active-value="ENABLE" inactive-value="DISABLE" @click="handleChangeStatus(scope.row)"></el-switch>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" width="150" class-name="small-padding fixed-width">
@@ -128,6 +128,7 @@
 
 <script setup name="DictItem">
   import { fetchList, getDictItem, createDictItem, editDictItem, deleteDictItem } from "@/api/config/dictItem";
+  import {deepClone} from "@/utils/index";
   import DictItemForm from './form.vue'
   
   const { proxy } = getCurrentInstance();
@@ -208,6 +209,22 @@
     ids.value = selection.map(item => item.itemId)
     single.value = selection.length != 1
     multiple.value = !selection.length
+  }
+  
+  /** 修改状态按钮操作 */
+  function handleChangeStatus(row){
+    var changeForm = deepClone(row);
+    changeForm.groupId = row.group.groupId;
+    changeForm.group = null;
+    if(row.status == 'ENABLE'){
+      changeForm.status = 'DISABLE';
+    }else{
+      changeForm.status = 'ENABLE';
+    }
+    editDictItem(changeForm).then(response => {
+      proxy.$modal.msgSuccess("修改成功");
+      getList();
+    });
   }
   
   /** 新增按钮操作 */

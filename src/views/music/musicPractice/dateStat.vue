@@ -72,7 +72,7 @@
         <el-switch v-model="queryParams.completeDate"  @change="handleQuery"></el-switch>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="TrendCharts" @click="handleQuery" v-hasPermi="['fund:income:dateStat']">统计</el-button>
+        <el-button type="primary" icon="TrendCharts" @click="handleQuery" v-hasPermi="['music:musicPractice:dateStat']">统计</el-button>
         <el-button icon="refresh" @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>

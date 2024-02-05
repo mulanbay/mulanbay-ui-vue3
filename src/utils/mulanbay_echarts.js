@@ -1109,7 +1109,7 @@ export function createCalanderPieChartOption(data, echarts) {
  * @param {Object} data
  * @param {Object} echarts
  */
-export function createCalanderHeatMapChartOption(data, echarts) {
+export function createCalenderHeatMapChartOption(data, echarts) {
   let calendars = new Array();
   for (let i = 0; i < data.years.length; i++) {
     let c = {
@@ -1258,9 +1258,7 @@ export function createHeatMapChartOption(data, echarts) {
     let color = getGradualColor(val,step,data.maxValue,"#15B1F4","#D1621D");
     if (color != null) {
       obj = {
-        normal: {
-          color: color,
-        }
+        color: color
       }
     }
     return obj;
@@ -1283,9 +1281,7 @@ export function createHeatMapChartOption(data, echarts) {
       data: serieDetails,
       label: {
         show: showLabel,
-        textStyle: {
-          color: "#fff"
-        }
+        color: "#fff"
       },
       emphasis: {
         itemStyle: {
@@ -1297,25 +1293,22 @@ export function createHeatMapChartOption(data, echarts) {
     seriesData.push(serie);
   }
   let option = {
+    backgroundColor: '#203c61',
     title: {
       text: data.title,
       subtext: data.subTitle,
       x: 'center',
       y: 'top',
-      textStyle: {
-        color: "#fff"
-      },
+      color: "#fff",
       textAlign: 'center',
       left: 'center',
       top: '2%'
     },
     tooltip: {
       position: 'top',
-      backgroundColor: 'rgba(42, 47, 53, 0.9)',
+      backgroundColor: '#a9e1c5',
       borderColor: '#ffffff',
-      textStyle: {
-        color: "#fff"
-      },
+      color: "#fff",
       axisPointer: {
         lineStyle: {
           color: '#fff'
@@ -1346,9 +1339,7 @@ export function createHeatMapChartOption(data, echarts) {
       },
       axisLabel: {
         show: true,
-        textStyle: {
-          color: '#fff',
-        },
+        color: '#fff'
       },
     }, {
       type: 'category',
@@ -1358,9 +1349,7 @@ export function createHeatMapChartOption(data, echarts) {
       },
       axisLabel: {
         show: showXLabel,
-        textStyle: {
-          color: '#fff',
-        },
+        color: '#fff',
         interval: 0,
         rotate: 0
       },
@@ -1373,9 +1362,7 @@ export function createHeatMapChartOption(data, echarts) {
       },
       axisLabel: {
         show: true,
-        textStyle: {
-          color: '#fff',
-        },
+        color: '#fff',
         interval: 0,
         // rotate: 15
       },
@@ -1387,9 +1374,7 @@ export function createHeatMapChartOption(data, echarts) {
       orient: 'vertical',
       left: 'right',
       top: 'center',
-      textStyle: {
-        color: "#fff"
-      },
+      color: "#fff",
       // bottom: '15%',
       //自定义热力图颜色
       inRange: {

@@ -111,7 +111,7 @@
   import { getYearList } from "@/api/common";
   import { deepClone } from "@/utils/index";
   import * as echarts from 'echarts';
-  import { createChart, createLineChartOption, createCalanderHeatMapChartOption } from "@/utils/mulanbay_echarts";
+  import { createChart, createLineChartOption, createCalenderHeatMapChartOption } from "@/utils/mulanbay_echarts";
 
   const { proxy } = getCurrentInstance();
   //图形实例
@@ -217,7 +217,7 @@
         let option = null;
         //组装chart数据
         if (dateGroupType == 'DAY') {
-          option = createCalanderHeatMapChartOption(response, echarts);
+          option = createCalenderHeatMapChartOption(response, echarts);
         } else {
           option = createLineChartOption(response);
         }

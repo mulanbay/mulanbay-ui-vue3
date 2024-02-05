@@ -60,7 +60,7 @@ export function getMusicPracticeNameStat(query) {
   })
 }
 
-export function getMusicPracticeTuneLevelStat(query) {
+export function getMusicPracticeLevelStat(query) {
   return request({
     url: '/musicPracticeDetail/levelStat',
     method: 'get',

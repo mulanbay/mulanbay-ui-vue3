@@ -8,14 +8,12 @@
           v-model="form.tuneType"
           :style="{width: '100%'}"
           default-first-option
-          @change="handleTuneTypeChange"
-        >
+          @change="handleTuneTypeChange">
           <el-option
             v-for="dict in tuneTypeOptions"
             :key="dict.id"
             :label="dict.text"
-            :value="dict.id"
-          />
+            :value="dict.id" />
         </el-select>
       </el-form-item>
       <el-form-item :label="tuneLable" prop="tune">
@@ -24,14 +22,12 @@
           :style="{width: '100%'}"
           filterable
           allow-create
-          default-first-option
-        >
+          default-first-option>
           <el-option
             v-for="dict in tuneOptions"
             :key="dict.id"
             :label="dict.text"
-            :value="dict.id"
-          />
+            :value="dict.id" />
         </el-select>
       </el-form-item>
       <el-form-item :label="timesLable" prop="times">
@@ -42,14 +38,12 @@
         <el-select
           v-model="form.level"
           :style="{width: '100%'}"
-          default-first-option
-        >
+          default-first-option>
           <el-option
             v-for="dict in levelOptions"
             :key="dict.id"
             :label="dict.text"
-            :value="dict.id"
-          />
+            :value="dict.id" />
         </el-select>
       </el-form-item>
       <el-form-item label="备注信息">
@@ -69,6 +63,7 @@
 <script setup name="MusicPracticeDetailForm">
   import { createMusicPracticeDetail, editMusicPracticeDetail, getMusicPracticeDetail } from "@/api/music/musicPracticeDetail";
   import { getTuneTree } from "@/api/music/musicPracticeDetail";
+  import { ElNotification } from 'element-plus'
 
   const { proxy } = getCurrentInstance();
 
@@ -80,11 +75,11 @@
   const levelOptions = ref([]);
   const tuneTypeOptions = ref([]);
   const tuneOptions = ref([]);
-  
+
   const unit = ref('遍');
   const tuneLable = ref('曲子名称');
   const timesLable = ref('练习遍数');
-  
+
   const data = reactive({
     form: {},
     // 表单校验
@@ -113,7 +108,7 @@
   const emit = defineEmits(['success']);
 
   /** 打开弹窗 */
-  const openForm = async (detailId,type,practiceId) => {
+  const openForm = async (detailId, type, practiceId) => {
     open.value = true;
     resetForm();
     if (detailId != null) {
@@ -124,8 +119,11 @@
           form.value = response;
           form.value.practiceId = response.practice.practiceId;
           form.value.practice = null;
-          if(practiceId!=form.value.practiceId){
-            proxy.$modal.msgError("练习编号对应不上");
+          if (practiceId != form.value.practiceId) {
+            ElNotification({
+              title: '警告',
+              message: h('i', { style: 'color: teal' }, '表单中的父级练习编号与列表查询的练习编号对应不上，可能是不同页面跳转过来引起'),
+            })
           }
           handleTuneTypeChange();
         });
@@ -143,26 +141,26 @@
   defineExpose({ openForm });
 
   /** 类型改变 */
-  function handleTuneTypeChange(){
-    if(form.value.tuneType=='TUNE'){
+  function handleTuneTypeChange() {
+    if (form.value.tuneType == 'TUNE') {
       unit.value = '遍';
-      tuneLable.value='曲子名称';
-      timesLable.value='练习遍数';
-    }else{
+      tuneLable.value = '曲子名称';
+      timesLable.value = '练习遍数';
+    } else {
       unit.value = '分钟';
-      tuneLable.value='曲子名称';
-      timesLable.value='练习遍数';
+      tuneLable.value = '曲子名称';
+      timesLable.value = '练习遍数';
     }
     loadTuneTree(form.value.tuneType);
   }
-  
+
   /** 加载曲子列表按钮 */
-  function loadTuneTree(tuneType){
+  function loadTuneTree(tuneType) {
     getTuneTree(tuneType).then(response => {
       tuneOptions.value = response;
     });
   }
-  
+
   // 表单重置
   function resetForm() {
     form.value = {
