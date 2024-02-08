@@ -1,7 +1,7 @@
 <template>
 
   <!-- 表单编辑对话框 -->
-  <el-dialog :title="title" v-model="open" append-to-body>
+  <el-dialog :title="title" v-model="open" width="550px"  append-to-body>
     <el-form ref="formRef" :model="form" :rules="rules" v-loading="formLoading" label-width="80px">
       <el-row>
         <el-col :span="24">
