@@ -142,7 +142,7 @@
       name: undefined,
       chartType: 'MIX_LINE_BAR',
       dateGroupType: 'MONTH',
-      groupType: 'TOTALPRICE',
+      groupType: 'TOTAL_PRICE',
       completeDate: true
     }
   });

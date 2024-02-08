@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryRef" :inline="true">
-      <el-form-item label="练习日期" style="width: 308px">
+      <el-form-item label="锻炼日期" style="width: 308px">
         <el-date-picker
           v-model="dateRange"
           unlink-panels
@@ -17,14 +17,12 @@
           v-model="queryParams.dateGroupType"
           placeholder="统计分类"
           clearable
-          style="width: 120px"
-        >
+          style="width: 120px">
           <el-option
             v-for="dict in dateGroupTypeOptions"
             :key="dict.id"
             :label="dict.text"
-            :value="dict.id"
-          />
+            :value="dict.id" />
         </el-select>
       </el-form-item>
       <el-form-item label="统计分组" prop="valueType">
@@ -32,18 +30,16 @@
           v-model="queryParams.valueType"
           placeholder="统计分组"
           clearable
-          style="width: 120px"
-        >
+          style="width: 120px">
           <el-option
             v-for="dict in valueTypeOptions"
             :key="dict.id"
             :label="dict.text"
-            :value="dict.id"
-          />
+            :value="dict.id" />
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="TrendCharts" @click="handleQuery" v-hasPermi="['music:musicPractice:overallStat']">统计</el-button>
+        <el-button type="primary" icon="TrendCharts" @click="handleQuery" v-hasPermi="['sport:exercise:overallStat']">统计</el-button>
         <el-button icon="refresh" @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>
@@ -54,8 +50,8 @@
   </div>
 </template>
 
-<script setup name="MusicPracticeOverallStat">
-  import { getMusicPracticeOverallStat } from "@/api/music/musicPractice";
+<script setup name="ExerciseOverallStat">
+  import { getExerciseOverallStat } from "@/api/sport/exercise";
   import * as echarts from 'echarts';
   import { createChart, createHeatMapChartOption } from "@/utils/mulanbay_echarts";
 
@@ -68,14 +64,17 @@
   const height = ref((document.body.clientHeight - 240).toString() + 'px');
 
   const dateGroupTypeOptions = ref([]);
-  const valueTypeOptions = ref([
-    {
+  const valueTypeOptions = ref([{
       id: 'COUNT',
       text: '次数'
     },
     {
-      id: 'MINUTES',
-      text: '练习时间'
+      id: 'DURATION',
+      text: '锻炼时间'
+    },
+    {
+      id: 'VALUE',
+      text: '锻炼值'
     }
   ]);
 
@@ -85,7 +84,7 @@
 
   const data = reactive({
     queryParams: {
-      dateGroupType:'MONTH',
+      dateGroupType: 'MONTH',
       valueType: 'COUNT'
     }
   });
@@ -112,11 +111,11 @@
 
   function initChart() {
     proxy.$modal.loading("正在加载数据，请稍候！");
-    getMusicPracticeOverallStat(proxy.addDateRange(queryParams.value, dateRange.value)).then(
+    getExerciseOverallStat(proxy.addDateRange(queryParams.value, dateRange.value)).then(
       response => {
         proxy.$modal.closeLoading();
         //组装chart数据
-        let option = createHeatMapChartOption(response,echarts);
+        let option = createHeatMapChartOption(response, echarts);
         createChart(option, overallStatChartIns);
       }
     );

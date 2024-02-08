@@ -67,6 +67,11 @@
           <span class="link-type" @click="handleEdit(scope.row)">{{ scope.row.sportName }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="单位" align="center">
+        <template #default="scope">
+          <span>{{ scope.row.unit }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="状态" align="center" width="100">
         <template #default="scope">
           <el-switch v-model="scope.row.status" active-value="ENABLE" inactive-value="DISABLE" disabled></el-switch>

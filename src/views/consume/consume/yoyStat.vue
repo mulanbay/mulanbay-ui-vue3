@@ -132,7 +132,7 @@
     queryParams: {
       name: undefined,
       dateGroupType: 'MONTH',
-      groupType: 'TOTALPRICE'
+      groupType: 'TOTAL_PRICE'
     }
   });
 
