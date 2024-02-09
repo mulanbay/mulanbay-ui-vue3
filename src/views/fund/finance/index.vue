@@ -166,7 +166,7 @@
   function consumeChartStat() {
     let para = proxy.addDateRange(queryParams.value, dateRange.value);
     para.groupField = 'goods_type_id';
-    para.type = 'TOTALPRICE';
+    para.type = 'TOTAL_PRICE';
     para.chartType = 'PIE';
     getConsumeAnalyseStat(para).then(
       response => {

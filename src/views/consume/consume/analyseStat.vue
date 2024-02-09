@@ -136,7 +136,7 @@
       name: undefined,
       chartType: 'PIE',
       groupField: 'goods_type_id',
-      type: 'TOTALPRICE',
+      type: 'TOTAL_PRICE',
       groupTop: true
     }
   });

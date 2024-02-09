@@ -466,7 +466,7 @@
   function consumeChartStat() {
     let para = getDateRange();
     para.groupField = 'goods_type_id';
-    para.type = 'TOTALPRICE';
+    para.type = 'TOTAL_PRICE';
     para.chartType = 'PIE';
     getConsumeAnalyseStat(para).then(
       response => {
