@@ -32,6 +32,15 @@ export function editTreat(data) {
     data
   })
 }
+
+export function copyTreat(data) {
+  return request({
+    url: '/treat/copy',
+    method: 'post',
+    data
+  })
+}
+
 export function deleteTreat(ids) {
   const data = {
       ids

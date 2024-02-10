@@ -2,26 +2,26 @@ import request from '@/utils/request'
 
 export function fetchList(query) {
   return request({
-    url: '/treatDrug/getData',
+    url: '/treatDrug/list',
     method: 'get',
     params: query
   })
 }
 
 
-export function getTreatDrug(id) {
+export function getTreatDrug(drugId) {
   return request({
     url: '/treatDrug/get',
     method: 'get',
-    params: { id }
+    params: { drugId }
   })
 }
 
-export function getLastTreatDrug(name) {
+export function getLastTreatDrug(drugName) {
   return request({
-    url: '/treatDrug/getLastTreatDrug',
+    url: '/treatDrug/lastDrug',
     method: 'get',
-    params: { name }
+    params: { drugName }
   })
 }
 
@@ -33,7 +33,7 @@ export function createTreatDrug(data) {
   })
 }
 
-export function updateTreatDrug(data) {
+export function editTreatDrug(data) {
   return request({
     url: '/treatDrug/edit',
     method: 'post',
@@ -52,9 +52,9 @@ export function deleteTreatDrug(ids) {
 }
 
 
-export function getTreatDrugCategoryTree(groupField,needRoot) {
+export function getTreatDrugCateTree(groupField,needRoot) {
   return request({
-    url: '/treatDrug/getTreatDrugCategoryTree',
+    url: '/treatDrug/tree',
     method: 'get',
     params: {
       groupField:groupField,

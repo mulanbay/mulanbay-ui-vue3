@@ -2,18 +2,18 @@ import request from '@/utils/request'
 
 export function fetchList(query) {
   return request({
-    url: '/treatDrugDetail/getData',
+    url: '/treatDrugDetail/list',
     method: 'get',
     params: query
   })
 }
 
 
-export function getTreatDrugDetail(id) {
+export function getTreatDrugDetail(detailId) {
   return request({
     url: '/treatDrugDetail/get',
     method: 'get',
-    params: { id }
+    params: { detailId }
   })
 }
 
@@ -25,7 +25,7 @@ export function createTreatDrugDetail(data) {
   })
 }
 
-export function updateTreatDrugDetail(data) {
+export function editTreatDrugDetail(data) {
   return request({
     url: '/treatDrugDetail/edit',
     method: 'post',

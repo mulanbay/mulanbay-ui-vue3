@@ -25,14 +25,12 @@
           v-model="queryParams.sick"
           placeholder="是否有病"
           clearable
-          style="width: 240px"
-        >
+          style="width: 240px">
           <el-option
             v-for="dict in booleanOptions"
             :key="dict.id"
             :label="dict.text"
-            :value="dict.id"
-          />
+            :value="dict.id" />
         </el-select>
       </el-form-item>
       <el-form-item v-if="moreCdn==true" label="疾病标签" prop="tags">
@@ -40,14 +38,12 @@
           v-model="queryParams.tags"
           placeholder="疾病标签"
           clearable
-          style="width: 240px"
-        >
+          style="width: 240px">
           <el-option
             v-for="dict in hisTagOptions"
             :key="dict.id"
             :label="dict.text"
-            :value="dict.id"
-          />
+            :value="dict.id" />
         </el-select>
       </el-form-item>
       <el-form-item v-if="moreCdn==true" label="看病类型" prop="treatType">
@@ -55,14 +51,12 @@
           v-model="queryParams.treatType"
           placeholder="看病类型"
           clearable
-          style="width: 240px"
-        >
+          style="width: 240px">
           <el-option
             v-for="dict in treatTypeOptions"
             :key="dict.id"
             :label="dict.text"
-            :value="dict.id"
-          />
+            :value="dict.id" />
         </el-select>
       </el-form-item>
       <el-form-item v-if="moreCdn==true" label="门诊阶段" prop="stage">
@@ -70,14 +64,12 @@
           v-model="queryParams.stage"
           placeholder="门诊阶段"
           clearable
-          style="width: 240px"
-        >
+          style="width: 240px">
           <el-option
             v-for="dict in stageOptions"
             :key="dict.id"
             :label="dict.text"
-            :value="dict.id"
-          />
+            :value="dict.id" />
         </el-select>
       </el-form-item>
       <el-form-item>
@@ -120,22 +112,6 @@
           v-hasPermi="['life:archive:sync']">同步档案
         </el-button>
       </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          icon="Histogram"
-          @click="handleMultiStat"
-          v-hasPermi="['health:treat:treat:multiStat']">数据统计
-        </el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          icon="refresh"
-          @click="handleRefreshMaxStat"
-          v-hasPermi="['health:treat:treat:refreshMaxStat']">刷新最佳
-        </el-button>
-      </el-col>
     </el-row>
 
     <!--列表数据-->
@@ -156,7 +132,7 @@
           <span class="link-type" style="color:darkgreen" @click="showBodyAnalyse(scope.row.disease,'DISEASE')">{{ scope.row.disease }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="医院"  min-width="160" :show-overflow-tooltip="true">
+      <el-table-column label="医院" min-width="160" :show-overflow-tooltip="true">
         <template #default="scope">
           <span>{{ scope.row.hospital }}</span>
         </template>
@@ -164,24 +140,28 @@
       <el-table-column label="阶段" width="80" align="center">
         <template #default="scope">
           <span v-if="scope.row.stage=='FIRST'">
-           <el-tag type="success">首诊</el-tag>
+            <el-tag type="success">首诊</el-tag>
           </span>
           <span v-if="scope.row.stage=='RETURN'">
-           <el-tag type="danger">复诊</el-tag>
+            <el-tag type="danger">复诊</el-tag>
           </span>
         </template>
       </el-table-column>
       <el-table-column label="药品" width="80" align="center">
         <template #default="scope">
-          <span class="link-type" @click="handleDrugList(scope.row)"><el-icon><Grid /></el-icon></span>
+          <span class="link-type" @click="handleDrugList(scope.row)"><el-icon>
+              <Grid />
+            </el-icon></span>
         </template>
       </el-table-column>
       <el-table-column label="手术" width="80" align="center">
         <template #default="scope">
-          <span class="link-type" @click="handleOperationList(scope.row)"><el-icon><Grid /></el-icon></span>
+          <span class="link-type" @click="handleOperationList(scope.row)"><el-icon>
+              <Grid />
+            </el-icon></span>
         </template>
       </el-table-column>
-      <el-table-column label="确诊疾病"  min-width="120" :show-overflow-tooltip="true">
+      <el-table-column label="确诊疾病" min-width="120" :show-overflow-tooltip="true">
         <template #default="scope">
           <span class="link-type" style="color:darkgreen" @click="showBodyAnalyse(scope.row.confirmDisease,'DISEASE')">{{ scope.row.confirmDisease }}</span>
         </template>
@@ -191,7 +171,7 @@
           <span>{{ scope.row.department }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="器官" width="100" >
+      <el-table-column label="器官" width="100">
         <template #default="scope">
           <span class="link-type" style="color:darkgreen" @click="showBodyAnalyse(scope.row.organ,'ORGAN')">{{ scope.row.organ }}</span>
         </template>
@@ -199,10 +179,10 @@
       <el-table-column label="病情" align="center" width="60">
         <template #default="scope">
           <span v-if="scope.row.sick==true" style="color: red;">
-           <el-tag type="danger">病</el-tag>
+            <el-tag type="danger">病</el-tag>
           </span>
           <span v-else style="color: green;">
-           <el-tag type="success">无</el-tag>
+            <el-tag type="success">无</el-tag>
           </span>
         </template>
       </el-table-column>
@@ -214,7 +194,9 @@
       <el-table-column label="费用" align="center" width="120">
         <template #default="scope">
           <span>{{ formatMoney(scope.row.totalFee) }}</span>
-          <span class="link-type" @click="showFeeDetail(scope.row)"><el-icon><Grid /></el-icon></span>
+          <span class="link-type" @click="showFeeDetail(scope.row)"><el-icon>
+              <Grid />
+            </el-icon></span>
         </template>
       </el-table-column>
       <el-table-column label="门诊类型" align="center">
@@ -232,9 +214,9 @@
           <el-button
             link
             type="success"
-            icon="edit"
-            @click="handleEdit(scope.row)"
-            v-hasPermi="['health:treat:treat:edit']">修改
+            icon="plus"
+            @click="handleCopy(scope.row)"
+            v-hasPermi="['health:treat:treat:copy']">复制
           </el-button>
           <el-button
             link
@@ -256,23 +238,39 @@
 
     <!-- 表单 -->
     <TreatForm ref="formRef" @success="getList" />
-    
+
+    <!-- 复制表单 -->
+    <TreatCopyForm ref="copyFormRef" @success="getList" />
+
     <!-- 费用表单 -->
-    <FeeForm ref="feeFormRef" @success="" />
-    
+    <FeeForm ref="feeFormRef" @success="confirmFee" />
+
+    <!-- 档案表单 -->
+    <ArchiveForm ref="archiveFormRef" />
+
+    <!-- 药品列表页面 -->
+    <el-dialog :title="treatDrugTitle" width="900px" v-model="treatDrugOpen" append-to-body>
+      <TreatDrug ref="treatDrugRef" />
+    </el-dialog>
+
   </div>
 </template>
 
 <script setup name="Treat">
-  import { fetchList,getTreatCateTree, deleteTreat, getTreat } from "@/api/health/treat/treat";
-  import { formatDays,getHourDesc } from "@/utils/datetime";
+  import { fetchList, getTreatCateTree, deleteTreat, getTreat } from "@/api/health/treat/treat";
+  import { formatDays, getHourDesc } from "@/utils/datetime";
   import TreatForm from './form.vue'
+  import TreatCopyForm from './copyForm.vue'
   import FeeForm from './feeForm.vue'
-  
+  import ArchiveForm from '../../../life/archive/form.vue';
+  import TreatDrug from '../treatDrug/index.vue';
+
   const { proxy } = getCurrentInstance();
   const formRef = ref();
+  const copyFormRef = ref();
   const feeFormRef = ref();
-  
+  const archiveFormRef = ref();
+
   // 遮罩层
   const loading = ref(true);
   // 选中数组
@@ -289,6 +287,11 @@
   const hisTagOptions = ref([]);
   const treatTypeOptions = ref([]);
   const stageOptions = ref([]);
+
+  //药品列表
+  const treatDrugTitle = ref('药品列表');
+  const treatDrugOpen = ref(false);
+  const treatDrugRef = ref();
 
   //查询条件更多属性 start
   const cdnTitle = ref("更多");
@@ -319,8 +322,17 @@
     }
   }
 
+  /** 药品列表 */
+  function handleDrugList(row) {
+    treatDrugTitle.value = '[' + row.disease + ']药品列表';
+    treatDrugOpen.value = true;
+    setTimeout(function() {
+      treatDrugRef.value.showData(row.treatId);
+    }, 500);
+  }
+
   //刷新
-  function showBodyAnalyse(name,groupField) {
+  function showBodyAnalyse(name, groupField) {
     refreshRef.value.openRefresh();
   }
 
@@ -333,15 +345,15 @@
   function handleRefreshMaxStat() {
     refreshMaxStatRef.value.openForm();
   }
-  
+
   /** 里程碑 */
   function handleAchieveMilestone(TreatId) {
     achieveMilestoneRef.value.openForm(TreatId);
   }
-  
+
   /** 费用信息 */
-  function showFeeDetail(row){
-    feeFormRef.value.openForm(row,true);
+  function showFeeDetail(row) {
+    feeFormRef.value.openForm(row, true);
   }
 
   /** 同步档案按钮操作 */
@@ -350,15 +362,20 @@
     getTreat(id).then(response => {
       let data = {
         archiveId: undefined,
-        title: '锻炼信息',
-        content: response.sport.sportName + ',' + response.value + response.sport.unit + ',时长:' + response.duration + '分钟',
-        date: response.TreatTime,
-        bussType: 'Treat',
-        sourceId: response.TreatId,
+        title: '看病信息',
+        content: '生病:' + response.confirmDisease,
+        date: response.treatTime,
+        bussType: 'TREAT',
+        sourceId: response.treatId,
         remark: undefined
       };
       archiveFormRef.value.syncData(data);
     });
+  }
+
+  /** 费用确认 */
+  function confirmFee() {
+
   }
 
   /** 查询列表 */
@@ -397,6 +414,11 @@
     formRef.value.openForm(id, 'edit');
   }
 
+  /** 复制按钮操作 */
+  function handleCopy(row) {
+    copyFormRef.value.openForm(row);
+  }
+
   /** 删除按钮操作 */
   function handleDelete(row) {
     const deleteIds = row.treatId || ids.value.join(",");
@@ -422,7 +444,7 @@
   /** 初始化 **/
   onMounted(() => {
     getList();
-    getTreatCateTree('tags',false).then(
+    getTreatCateTree('tags', false).then(
       response => {
         hisTagOptions.value = response;
       }

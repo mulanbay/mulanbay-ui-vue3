@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryRef" :inline="true" v-if="fromMP==false">
+    <el-form :model="queryParams" ref="queryRef" :inline="true" v-if="fp==false">
       <el-form-item label="名称检索" prop="name">
         <el-input
           v-model="queryParams.name"
@@ -18,7 +18,7 @@
     <!--列表数据-->
     <el-table v-loading="loading" :data="detailList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="ID" prop="detailId" v-if="fromMP==false" sortable="custom" align="center" width="80" fixed="left">
+      <el-table-column label="ID" prop="detailId" v-if="fp==false" sortable="custom" align="center" width="80" fixed="left">
         <template #default="scope">
           <span>{{ scope.row.detailId }}</span>
         </template>
@@ -59,7 +59,7 @@
           </span>
         </template>
       </el-table-column>
-      <el-table-column label="创建时间" v-if="fromMP==false" align="center" width="180">
+      <el-table-column label="创建时间" v-if="fp==false" align="center" width="180">
         <template #default="scope">
           <span>{{ scope.row.createdTime }}</span>
         </template>
@@ -118,7 +118,7 @@
   const levelStatRef = ref();
   
   //练习页码过来
-  const fromMP = ref(false);
+  const fp = ref(false);
   // 遮罩层
   const loading = ref(false);
   // 选中数组
@@ -146,7 +146,7 @@
   /** 打开弹窗 */
   const showData = async (practiceId) => {
     queryParams.value.practiceId = practiceId;
-    fromMP.value = true;
+    fp.value = true;
     detailList.value = [];
     total.value = 0;
     if(practiceId==null){
@@ -229,7 +229,7 @@
 
   /** 初始化 **/
   onMounted(() => {
-    if(fromMP.value == false){
+    if(fp.value == false){
       getList();
     }
   })
