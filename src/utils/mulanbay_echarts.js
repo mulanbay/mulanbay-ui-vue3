@@ -978,8 +978,8 @@ export function createCalanderChartOption(data) {
  */
 export function createCalanderPieChartOption(data, echarts) {
   const unit = data.unit == null ? '' : data.unit;
-  let cellSize = [cellSizeValue, cellSizeValue];
   let cellSizeValue = data.cellSize ==null ? 100:data.cellSize;
+  let cellSize = [cellSizeValue, cellSizeValue];
   let pieRadius = data.pieRadius ==null ? 30:data.pieRadius;
   let app = {};
   let seriesData = data.seriesData;

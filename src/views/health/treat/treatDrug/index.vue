@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryRef" :inline="true">
-      <el-form-item label="用药日期" v-if="moreCdn==true" style="width: 308px">
+      <el-form-item label="用药日期" v-show="moreCdn==true" style="width: 308px">
         <el-date-picker
           v-model="dateRange"
           unlink-panels
@@ -20,19 +20,17 @@
           style="width: 240px"
           @keyup.enter.native="handleQuery" />
       </el-form-item>
-      <el-form-item v-if="moreCdn==true" label="疾病标签" prop="tags">
+      <el-form-item v-show="moreCdn==true" label="疾病标签" prop="tags">
         <el-select
           v-model="queryParams.tags"
           placeholder="疾病标签"
           clearable
-          style="width: 240px"
-        >
+          style="width: 240px">
           <el-option
             v-for="dict in tagsOptions"
             :key="dict.id"
             :label="dict.text"
-            :value="dict.id"
-          />
+            :value="dict.id" />
         </el-select>
       </el-form-item>
       <el-form-item>
@@ -72,34 +70,56 @@
     <!--列表数据-->
     <el-table v-loading="loading" :data="treatDrugList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="ID" fixed="left" prop="drugId" sortable="custom" align="center" width="120">
+      <el-table-column label="ID" fixed="left" prop="drugId" sortable="custom" align="center" width="80">
         <template #default="scope">
           <span>{{ scope.row.drugId }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="药品名" width="250" :show-overflow-tooltip="true">
+      <el-table-column label="药品名" fixed="left" width="230" :show-overflow-tooltip="true">
         <template #default="scope">
           <span v-if="scope.row.active == true">
-           <el-tag type="success">用药中</el-tag>
+            <el-tag type="success">用药中</el-tag>
           </span>
           <span v-if="scope.row.available==false">
-           <el-tag type="danger">无效</el-tag>
+            <el-tag type="danger">无效</el-tag>
           </span>
           <span class="link-type" @click="handleEdit(scope.row)">{{ scope.row.drugName }}</span>
         </template>
       </el-table-column>
       <el-table-column label="明细" width="80" align="center">
         <template #default="scope">
-          <span class="link-type" @click="handleAddDetail(scope.row)"><el-icon><CirclePlusFilled /></el-icon></span>
+          <el-tooltip class="box-item" effect="dark" content="添加明细" placement="top">
+            <span class="link-type" @click="handleAddDetail(scope.row)">
+              <el-icon>
+                <CirclePlusFilled />
+              </el-icon>
+            </span>
+          </el-tooltip>
           <el-divider direction="vertical"></el-divider>
-          <span class="link-type" @click="handleDetailList(scope.row)"><el-icon><Grid /></el-icon></span>
+          <el-tooltip class="box-item" effect="dark" content="明细列表" placement="top">
+            <span class="link-type" @click="handleDetailList(scope.row)">
+              <el-icon>
+                <Grid />
+              </el-icon>
+            </span>
+          </el-tooltip>
         </template>
       </el-table-column>
       <el-table-column label="统计" width="80" align="center">
         <template #default="scope">
-          <span class="link-type" @click="handleDetailCalendarStat(scope.row)"><el-icon><Histogram /></el-icon></span>
+          <el-tooltip class="box-item" effect="dark" content="日历统计" placement="top">
+            <span class="link-type" @click="handleDetailCalendarStat(scope.row)"><el-icon>
+                <Histogram />
+              </el-icon>
+            </span>
+          </el-tooltip>
           <el-divider direction="vertical"></el-divider>
-          <span class="link-type" @click="handleDetailTimeStat(scope.row)"><el-icon><Compass /></el-icon></span>
+          <el-tooltip class="box-item" effect="dark" content="时间点统计" placement="top">
+            <span class="link-type" @click="handleDetailTimeStat(scope.row)"><el-icon>
+                <Compass />
+              </el-icon>
+            </span>
+          </el-tooltip>
         </template>
       </el-table-column>
       <el-table-column label="频率" align="center" width="100">
@@ -109,12 +129,12 @@
           次
         </template>
       </el-table-column>
-      <el-table-column label="用药量" align="center"  width="140">
+      <el-table-column label="用药量" align="center" width="140">
         <template #default="scope">
           <span v-if="null !=scope.row.eu">
-           每次
-           <el-tag type="">{{ scope.row.ec }}</el-tag>
-           {{ scope.row.eu }}
+            每次
+            <el-tag type="">{{ scope.row.ec }}</el-tag>
+            {{ scope.row.eu }}
           </span>
         </template>
       </el-table-column>
@@ -163,7 +183,7 @@
           <span>{{ scope.row.treat.confirmDisease }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="单价" align="center" >
+      <el-table-column label="单价" align="center">
         <template #default="scope">
           <span>{{ formatMoney(scope.row.unitPrice) }}</span>
         </template>
@@ -176,10 +196,14 @@
       <el-table-column label="是否有效" align="center" width="100">
         <template #default="scope">
           <span v-if="scope.row.available==true">
-           <el-icon color="green"><SuccessFilled /></el-icon>
+            <el-icon color="green">
+              <SuccessFilled />
+            </el-icon>
           </span>
           <span v-else>
-           <el-icon color="red"><CircleCloseFilled /></el-icon>
+            <el-icon color="red">
+              <CircleCloseFilled />
+            </el-icon>
           </span>
         </template>
       </el-table-column>
@@ -188,15 +212,8 @@
           <el-switch v-model="scope.row.remind" disabled=""></el-switch>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" width="150" fixed="right" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" width="80" fixed="right" class-name="small-padding fixed-width">
         <template #default="scope">
-          <el-button
-            link
-            type="success"
-            icon="edit"
-            @click="handleEdit(scope.row)"
-            v-hasPermi="['health:treat:treatDrug:edit']">修改
-          </el-button>
           <el-button
             link
             type="danger"
@@ -217,29 +234,34 @@
 
     <!-- 表单 -->
     <TreatDrugForm ref="formRef" @success="getList" />
-    
+
     <!-- 明细列表 -->
     <TreatDrugDetail ref="treatDrugDetailRef" />
-    
+
     <!-- 明细表单 -->
     <TreatDrugDetailForm ref="treatDrugDetailFormRef" />
-    
+
+    <!-- 日历统计 -->
+    <TreatDrugDetailCalendarStat ref="treatDrugDetailCalendarStatRef" />
+
   </div>
 </template>
 
 <script setup name="TreatDrug">
-  import { fetchList,getTreatDrugCateTree, deleteTreatDrug, getTreatDrug } from "@/api/health/treat/treatDrug";
+  import { fetchList, getTreatDrugCateTree, deleteTreatDrug, getTreatDrug } from "@/api/health/treat/treatDrug";
   import { getTreatCateTree } from "@/api/health/treat/treat";
-  import {getDay,getDayByDate,getNowDateString} from "@/utils/datetime";
+  import { getDay, getDayByDate, getNowDateString } from "@/utils/datetime";
   import TreatDrugForm from './form.vue'
   import TreatDrugDetail from '../treatDrugDetail/index.vue'
   import TreatDrugDetailForm from '../treatDrugDetail/form.vue'
-  
+  import TreatDrugDetailCalendarStat from '../treatDrugDetail/calendarStat.vue'
+
   const { proxy } = getCurrentInstance();
   const formRef = ref();
   const treatDrugDetailRef = ref();
   const treatDrugDetailFormRef = ref();
-  
+  const treatDrugDetailCalendarStatRef = ref();
+
   // 遮罩层
   const loading = ref(true);
   // 选中数组
@@ -250,7 +272,7 @@
   const multiple = ref(true);
   // 总条数
   const total = ref(0);
-  
+
   //从父级页面过来
   const fp = ref(false);
   // 查询列表数据
@@ -267,7 +289,7 @@
 
   const data = reactive({
     queryParams: {
-      treatId:undefined,
+      treatId: undefined,
       page: 1,
       pageSize: 10,
       name: undefined
@@ -275,14 +297,14 @@
   });
 
   const { queryParams } = toRefs(data);
-  
+
   /** 显示数据 */
   const showData = async (treatId) => {
-    queryParams.value.treatId=treatId;
+    queryParams.value.treatId = treatId;
     fp.value = true;
     handleQuery();
   }
-  
+
   // 提供 open 方法，用于打开弹窗
   defineExpose({ showData });
 
@@ -305,18 +327,18 @@
       response => {
         let dataList = response.rows;
         const n = dataList.length;
-        const nowTime = new Date(Date.parse(getNowDateString().replace(/-/g,"/")));
-        for(let i=0;i<n;i++){
+        const nowTime = new Date(Date.parse(getNowDateString().replace(/-/g, "/")));
+        for (let i = 0; i < n; i++) {
           let row = dataList[i];
           //先计算出days供下面的方法使用
-          if(!proxy.isEmpty(row.beginDate)&&!proxy.isEmpty(row.endDate)){
-            const bd = new Date(Date.parse(row.beginDate.replace(/-/g,"/")));
-            const ed = new Date(Date.parse(row.endDate.replace(/-/g,"/")));
+          if (!proxy.isEmpty(row.beginDate) && !proxy.isEmpty(row.endDate)) {
+            const bd = new Date(Date.parse(row.beginDate.replace(/-/g, "/")));
+            const ed = new Date(Date.parse(row.endDate.replace(/-/g, "/")));
             const s1 = parseInt(bd - nowTime);
             const s2 = parseInt(ed - nowTime);
-            if(s1<0&&s2>=0){
+            if (s1 < 0 && s2 >= 0) {
               row.active = true;
-            }else{
+            } else {
               row.active = false;
             }
           }
@@ -340,31 +362,36 @@
     handleQuery();
   }
   
-  /** 新增明细按钮操作 */
-  function handleAddDetail(row){
-    treatDrugDetailFormRef.value.openForm(null, 'create',row.drugId);
+  /** 日历统计操作 */
+  function handleDetailCalendarStat(row){
+    treatDrugDetailCalendarStatRef.value.showData(row.drugId,row.drugName);
   }
-  
+
+  /** 新增明细按钮操作 */
+  function handleAddDetail(row) {
+    treatDrugDetailFormRef.value.openForm(null, 'create', row.drugId);
+  }
+
   /** 明细列表按钮操作 */
-  function handleDetailList(row){
+  function handleDetailList(row) {
     treatDrugDetailRef.value.showData(row.drugId);
   }
 
   /** 新增按钮操作 */
   function handleCreate() {
-    if(queryParams.value.treatId==null){
+    if (queryParams.value.treatId == null) {
       proxy.$modal.msgError("没有看病记录编号绑定，无法新增");
       return;
     }
-    formRef.value.openForm(null, 'create',queryParams.value.treatId);
+    formRef.value.openForm(null, 'create', queryParams.value.treatId);
   }
 
   /** 修改按钮操作 */
   function handleEdit(row) {
     const id = row.drugId || ids.value.join(",");
-    formRef.value.openForm(id, 'edit',null);
+    formRef.value.openForm(id, 'edit', null);
   }
-  
+
   /** 删除按钮操作 */
   function handleDelete(row) {
     const deleteIds = row.drugId || ids.value.join(",");
@@ -390,11 +417,11 @@
   /** 初始化 **/
   onMounted(() => {
     setTimeout(function() {
-      if(fp.value == false){
+      if (fp.value == false) {
         getList();
       }
     }, 1000);
-    getTreatCateTree('tags',false).then(
+    getTreatCateTree('tags', false).then(
       response => {
         tagsOptions.value = response;
       }

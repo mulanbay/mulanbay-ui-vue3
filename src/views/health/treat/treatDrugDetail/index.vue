@@ -33,6 +33,11 @@
           <span>{{ scope.row.occurTime }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="时辰" align="center" >
+        <template #default="scope">
+          <span>{{ getHourDesc(scope.row.occurTime) }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="用药量" align="center">
         <template #default="scope">
           <span v-if="scope.row.ec==null">
@@ -81,7 +86,7 @@
 
 <script setup name="TreatDrugDetail">
   import { fetchList,deleteTreatDrugDetail } from "@/api/health/treat/treatDrugDetail";
-  import { formatDays } from "@/utils/datetime";
+  import { formatDays,getHourDesc } from "@/utils/datetime";
   import TreatDrugDetailForm from './form.vue'
 
   const { proxy } = getCurrentInstance();
@@ -90,6 +95,7 @@
   const title = ref('用药明细');
   const open = ref(false);
   const formRef = ref();
+  
   const detailList = ref([]);
   // 遮罩层
   const loading = ref(true);

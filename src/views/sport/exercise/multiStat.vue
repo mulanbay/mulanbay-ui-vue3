@@ -63,7 +63,7 @@
 
 </template>
 
-<script setup name="ExerciseMultiStat">
+<script setup name="CalendarStat">
   import { getExerciseMultiStat, getExerciseByMultiStat } from "@/api/sport/exercise";
   import { getSportTree } from "@/api/sport/sport";
   import { formatFloat } from "@/utils/mulanbay";
