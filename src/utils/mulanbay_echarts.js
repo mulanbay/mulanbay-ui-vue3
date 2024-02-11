@@ -976,7 +976,7 @@ export function createCalanderChartOption(data) {
  * @param {Object} data
  * @param {Object} echarts
  */
-export function createCalanderPieChartOption(data, echarts) {
+export function createCalanderPieChartOption(data,myChart,echarts) {
   const unit = data.unit == null ? '' : data.unit;
   let cellSizeValue = data.cellSize ==null ? 100:data.cellSize;
   let cellSize = [cellSizeValue, cellSizeValue];
@@ -993,10 +993,8 @@ export function createCalanderPieChartOption(data, echarts) {
         type: 'pie',
         center: center,
         label: {
-          normal: {
-            formatter: '{c}',
-            position: 'inside'
-          }
+          formatter: '{c}',
+          position: 'inside'
         },
         radius: pieRadius,
         data: seriesData[item[0]]
@@ -1047,9 +1045,7 @@ export function createCalanderPieChartOption(data, echarts) {
       cellSize: cellSize,
       yearLabel: {
         show: false,
-        textStyle: {
-          fontSize: 30
-        }
+        fontSize: 30
       },
       dayLabel: {
         margin: 20,
@@ -1068,17 +1064,13 @@ export function createCalanderPieChartOption(data, echarts) {
       coordinateSystem: 'calendar',
       symbolSize: 1,
       label: {
-        normal: {
-          show: true,
-          formatter: function(params) {
-            return echarts.format.formatTime('dd', params.value[0]);
-          },
-          offset: [-cellSize[0] / 2 + 10, -cellSize[1] / 2 + 10],
-          textStyle: {
-            color: '#000',
-            fontSize: 12
-          }
-        }
+        show: true,
+        formatter: function(params) {
+          return echarts.format.formatTime('dd', params.value[0])+'号';
+        },
+        offset: [-cellSize[0] / 2 + 10, -cellSize[1] / 2 + 10],
+        color: '#000',
+        fontSize: 12
       },
       data: data.scatterData
     }]

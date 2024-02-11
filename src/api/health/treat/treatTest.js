@@ -2,18 +2,18 @@ import request from '@/utils/request'
 
 export function fetchList(query) {
   return request({
-    url: '/treatTest/getData',
+    url: '/treatTest/list',
     method: 'get',
     params: query
   })
 }
 
 
-export function getTreatTest(id) {
+export function getTreatTest(testId) {
   return request({
     url: '/treatTest/get',
     method: 'get',
-    params: { id }
+    params: { testId }
   })
 }
 
@@ -25,7 +25,7 @@ export function createTreatTest(data) {
   })
 }
 
-export function updateTreatTest(data) {
+export function editTreatTest(data) {
   return request({
     url: '/treatTest/edit',
     method: 'post',
@@ -43,17 +43,20 @@ export function deleteTreatTest(ids) {
   })
 }
 
-export function getTreatTestCategoryTree(needRoot) {
+export function getTreatTestCateTree(groupField,needRoot) {
   return request({
-    url: '/treatTest/getTreatTestCategoryTree',
+    url: '/treatTest/tree',
     method: 'get',
-    params: { needRoot }
+    params: {
+      groupField:groupField,
+      needRoot:needRoot
+    }
   })
 }
 
 export function getLastTreatTest(name) {
   return request({
-    url: '/treatTest/getLastTest',
+    url: '/treatTest/lastTest',
     method: 'get',
     params: { name }
   })

@@ -65,6 +65,14 @@
           @click="handleDelete"
           v-hasPermi="['health:treat:treatDrug:delete']">删除</el-button>
       </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="primary"
+          icon="plus"
+          v-if="queryParams.treatId!=null"
+          @click="handleCopyDetail"
+          v-hasPermi="['health:treat:treatDrugDetail:copy']">复制明细</el-button>
+      </el-col>
     </el-row>
 
     <!--列表数据-->
@@ -241,8 +249,14 @@
     <!-- 明细表单 -->
     <TreatDrugDetailForm ref="treatDrugDetailFormRef" />
 
+    <!-- 明细复制表单 -->
+    <TreatDrugDetailCopyForm ref="treatDrugDetailCopyFormRef" />
+
     <!-- 日历统计 -->
     <TreatDrugDetailCalendarStat ref="treatDrugDetailCalendarStatRef" />
+
+    <!-- 时间点统计 -->
+    <TreatDrugDetailTimeStat ref="treatDrugDetailTimeStatRef" />
 
   </div>
 </template>
@@ -254,13 +268,17 @@
   import TreatDrugForm from './form.vue'
   import TreatDrugDetail from '../treatDrugDetail/index.vue'
   import TreatDrugDetailForm from '../treatDrugDetail/form.vue'
+  import TreatDrugDetailCopyForm from '../treatDrugDetail/copyForm.vue'
   import TreatDrugDetailCalendarStat from '../treatDrugDetail/calendarStat.vue'
+  import TreatDrugDetailTimeStat from '../treatDrugDetail/timeStat.vue'
 
   const { proxy } = getCurrentInstance();
   const formRef = ref();
   const treatDrugDetailRef = ref();
   const treatDrugDetailFormRef = ref();
+  const treatDrugDetailCopyFormRef = ref();
   const treatDrugDetailCalendarStatRef = ref();
+  const treatDrugDetailTimeStatRef = ref();
 
   // 遮罩层
   const loading = ref(true);
@@ -367,6 +385,16 @@
     treatDrugDetailCalendarStatRef.value.showData(row.drugId,row.drugName);
   }
 
+  /** 时间点统计操作 */
+  function handleDetailTimeStat(row){
+    treatDrugDetailTimeStatRef.value.showData(row.drugId,row.drugName);
+  }
+  
+  /** 复制明细操作 */
+  function handleCopyDetail(){
+    treatDrugDetailCopyFormRef.value.openForm(queryParams.value.treatId,null);
+  }
+  
   /** 新增明细按钮操作 */
   function handleAddDetail(row) {
     treatDrugDetailFormRef.value.openForm(null, 'create', row.drugId);
@@ -416,11 +444,11 @@
 
   /** 初始化 **/
   onMounted(() => {
-    setTimeout(function() {
+    proxy.$nextTick(()=>{
       if (fp.value == false) {
         getList();
       }
-    }, 1000);
+    });
     getTreatCateTree('tags', false).then(
       response => {
         tagsOptions.value = response;

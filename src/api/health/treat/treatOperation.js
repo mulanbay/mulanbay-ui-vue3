@@ -2,18 +2,18 @@ import request from '@/utils/request'
 
 export function fetchList(query) {
   return request({
-    url: '/treatOperation/getData',
+    url: '/treatOperation/list',
     method: 'get',
     params: query
   })
 }
 
 
-export function getTreatOperation(id) {
+export function getTreatOperation(operationId) {
   return request({
     url: '/treatOperation/get',
     method: 'get',
-    params: { id }
+    params: { operationId }
   })
 }
 
@@ -25,7 +25,7 @@ export function createTreatOperation(data) {
   })
 }
 
-export function updateTreatOperation(data) {
+export function editTreatOperation(data) {
   return request({
     url: '/treatOperation/edit',
     method: 'post',
@@ -43,9 +43,9 @@ export function deleteTreatOperation(ids) {
   })
 }
 
-export function getTreatOperationCategoryTree(groupField,needRoot) {
+export function getTreatOperationCateTree(groupField,needRoot) {
   return request({
-    url: '/treatOperation/getTreatOperationCategoryTree',
+    url: '/treatOperation/tree',
     method: 'get',
     params: {
       groupField:groupField,

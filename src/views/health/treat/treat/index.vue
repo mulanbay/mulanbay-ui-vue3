@@ -252,6 +252,12 @@
     <el-dialog :title="treatDrugTitle" width="900px" v-model="treatDrugOpen" append-to-body>
       <TreatDrug ref="treatDrugRef" />
     </el-dialog>
+    
+    <!-- 手术列表页面 -->
+    <el-dialog :title="treatOperationTitle" width="900px" v-model="treatOperationOpen" append-to-body>
+      <TreatOperation ref="treatOperationRef" />
+    </el-dialog>
+    
 
   </div>
 </template>
@@ -264,6 +270,7 @@
   import FeeForm from './feeForm.vue'
   import ArchiveForm from '../../../life/archive/form.vue';
   import TreatDrug from '../treatDrug/index.vue';
+  import TreatOperation from '../treatOperation/index.vue';
 
   const { proxy } = getCurrentInstance();
   const formRef = ref();
@@ -292,6 +299,11 @@
   const treatDrugTitle = ref('药品列表');
   const treatDrugOpen = ref(false);
   const treatDrugRef = ref();
+  
+  //手术列表
+  const treatOperationTitle = ref('手术列表');
+  const treatOperationOpen = ref(false);
+  const treatOperationRef = ref();
 
   //查询条件更多属性 start
   const cdnTitle = ref("更多");
@@ -328,6 +340,15 @@
     treatDrugOpen.value = true;
     setTimeout(function() {
       treatDrugRef.value.showData(row.treatId);
+    }, 500);
+  }
+  
+  /** 手术列表 */
+  function handleOperationList(row) {
+    treatOperationTitle.value = '[' + row.disease + ']手术列表';
+    treatOperationOpen.value = true;
+    setTimeout(function() {
+      treatOperationRef.value.showData(row.treatId);
     }, 500);
   }
 

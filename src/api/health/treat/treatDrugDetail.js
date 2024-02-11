@@ -25,6 +25,14 @@ export function createTreatDrugDetail(data) {
   })
 }
 
+export function copyTreatDrugDetail(data) {
+  return request({
+    url: '/treatDrugDetail/copy',
+    method: 'post',
+    data
+  })
+}
+
 export function editTreatDrugDetail(data) {
   return request({
     url: '/treatDrugDetail/edit',

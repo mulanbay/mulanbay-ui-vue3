@@ -1,14 +1,18 @@
 <template>
   <!-- 刷新对话框 -->
-  <el-dialog :title="title" v-model="open" width="850px" append-to-body>
+  <el-dialog :title="title" v-model="open" width="900px" append-to-body>
     <div class="app-container">
-
       <el-form ref="queryRef" :model="queryParams" label-width="80px" :inline="true">
         <el-form-item label="统计类型" prop="dateGroupType">
-          <el-radio-group v-model="queryParams.dateGroupType">
-            <el-radio label="YEAR">年</el-radio>
-            <el-radio label="MONTH">月</el-radio>
-          </el-radio-group>
+          <el-select
+            v-model="queryParams.dateGroupType"
+            :style="{width: '80px'}">
+            <el-option
+              v-for="dict in dateGroupTypeOptions"
+              :key="dict.id"
+              :label="dict.text"
+              :value="dict.id" />
+          </el-select>
         </el-form-item>
         <el-form-item v-if="queryParams.dateGroupType == 'YEAR'" label="选择年份">
           <el-date-picker
@@ -32,9 +36,7 @@
           <el-switch v-model="queryParams.mergeSameName" @change="handleQuery"></el-switch>
           <el-tooltip class="box-item" effect="dark" content="合并相同药名：多次看病记录有相同药品名称的药合并在一起统计。否则只统计该次看病记录中该药品的记录" placement="top">
             <span>
-              <el-icon>
-                <Histogram />
-              </el-icon>
+              <el-icon><QuestionFilled /></el-icon>
             </span>
           </el-tooltip>
         </el-form-item>
@@ -62,12 +64,22 @@
   const statChart = ref(null);
   //echarts实例
   let statChartIns = ref(null);
-  const height = ref((document.body.clientHeight - 240).toString() + 'px');
+  const height = ref((document.body.clientHeight - 300).toString() + 'px');
 
   //可执行时间段
   const title = ref('日历统计');
   const open = ref(false);
   const formRef = ref();
+  const dateGroupTypeOptions = ref([
+    {
+      id: 'YEAR',
+      text: '年'
+    },
+    {
+      id: 'MONTH',
+      text: '月'
+    }
+  ]);
 
   const data = reactive({
     queryParams: {
@@ -87,8 +99,10 @@
   const showData = async (drugId, drugName) => {
     open.value = true;
     title.value = '[' + drugName + ']用药日历统计';
-    resetForm();
     queryParams.value.drugId = drugId;
+    proxy.$nextTick(()=>{
+      statChartIns = echarts.init(statChart.value, "macarons");
+    });
     //initChart();
   }
 
@@ -141,8 +155,5 @@
 
   /** 初始化 **/
   onMounted(() => {
-    setTimeout(function() {
-      statChartIns = echarts.init(statChart.value, "macarons");
-    }, 5000);
   })
 </script>
