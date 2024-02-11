@@ -20,7 +20,7 @@
           style="width: 240px"
           @keyup.enter.native="handleQuery" />
       </el-form-item>
-      <el-form-item v-if="moreCdn==true" label="匹配类型" prop="matchType">
+      <el-form-item v-show="moreCdn==true" label="匹配类型" prop="matchType">
         <el-select
           v-model="queryParams.matchType"
           placeholder="匹配类型"

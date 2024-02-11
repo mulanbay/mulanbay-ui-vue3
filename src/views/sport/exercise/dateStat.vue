@@ -39,10 +39,10 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item v-if="moreCdn==true" label="绘制最佳" prop="bestField">
+      <el-form-item v-show="moreCdn==true" label="绘制最佳" prop="bestField">
         <el-switch v-model="queryParams.bestField" ></el-switch>
       </el-form-item>
-      <el-form-item v-if="moreCdn==true" label="详细统计" prop="fullStat">
+      <el-form-item v-show="moreCdn==true" label="详细统计" prop="fullStat">
         <el-switch v-model="queryParams.fullStat" ></el-switch>
       </el-form-item>
       <el-form-item label="补全日期" prop="completeDate">

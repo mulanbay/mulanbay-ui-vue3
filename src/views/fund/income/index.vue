@@ -20,7 +20,7 @@
           style="width: 240px"
           @keyup.enter.native="handleQuery" />
       </el-form-item>
-      <el-form-item v-if="moreCdn==true" label="关联账户" prop="accountId">
+      <el-form-item v-show="moreCdn==true" label="关联账户" prop="accountId">
         <el-tree-select
           v-model="queryParams.accountId"
           style="width: 240px"
@@ -31,7 +31,7 @@
           placeholder="请选择账户"
           :check-strictly="false" />
       </el-form-item>
-      <el-form-item v-if="moreCdn==true" label="收入类型" prop="type">
+      <el-form-item v-show="moreCdn==true" label="收入类型" prop="type">
         <el-select
           v-model="queryParams.type"
           placeholder="状态"
@@ -44,7 +44,7 @@
             :value="dict.id" />
         </el-select>
       </el-form-item>
-      <el-form-item v-if="moreCdn==true" label="收入状态" prop="status">
+      <el-form-item v-show="moreCdn==true" label="收入状态" prop="status">
         <el-select
           v-model="queryParams.status"
           placeholder="状态"

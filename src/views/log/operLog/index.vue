@@ -20,7 +20,7 @@
           style="width: 240px"
           @keyup.enter.native="handleQuery" />
       </el-form-item>
-      <el-form-item v-if="moreCdn==true" label="关联类名" prop="beanName">
+      <el-form-item v-show="moreCdn==true" label="关联类名" prop="beanName">
         <el-select
           v-model="queryParams.beanName"
           placeholder="关联类名"
@@ -34,7 +34,7 @@
             :value="dict.id" />
         </el-select>
       </el-form-item>
-      <el-form-item v-if="moreCdn==true" label="功能选择" prop="funcId">
+      <el-form-item v-show="moreCdn==true" label="功能选择" prop="funcId">
         <el-tree-select
           v-model="queryParams.funcId"
           style="width: 240px"
@@ -45,7 +45,7 @@
           check-strictly
           clearable />
       </el-form-item>
-      <el-form-item v-if="moreCdn==true" label="功能类型" prop="funcType">
+      <el-form-item v-show="moreCdn==true" label="功能类型" prop="funcType">
         <el-select
           v-model="queryParams.funcType"
           placeholder="功能类型"
@@ -59,7 +59,7 @@
             :value="dict.id" />
         </el-select>
       </el-form-item>
-      <el-form-item v-if="moreCdn==true" label="主键编号" prop="idValue">
+      <el-form-item v-show="moreCdn==true" label="主键编号" prop="idValue">
         <el-input
           v-model="queryParams.idValue"
           placeholder="请输入名称"

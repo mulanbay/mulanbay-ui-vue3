@@ -33,10 +33,10 @@
           style="width: 240px"
           @keyup.enter.native="handleQuery" />
       </el-form-item>
-      <el-form-item v-if="moreCdn==true" label="筛选最佳" prop="containBest">
+      <el-form-item v-show="moreCdn==true" label="筛选最佳" prop="containBest">
         <el-switch v-model="queryParams.containBest" @change="handleQuery"></el-switch>
       </el-form-item>
-      <el-form-item v-if="moreCdn==true" label="排序方式" prop="sortField">
+      <el-form-item v-show="moreCdn==true" label="排序方式" prop="sortField">
         <el-select
           v-model="queryParams.sortField"
           placeholder="排序方式"

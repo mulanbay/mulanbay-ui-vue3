@@ -39,7 +39,7 @@
             :value="dict.id" />
         </el-select>
       </el-form-item>
-      <el-form-item v-if="moreCdn==true" label="商品类型" prop="goodsTypeId">
+      <el-form-item v-show="moreCdn==true" label="商品类型" prop="goodsTypeId">
         <el-tree-select
           v-model="queryParams.goodsTypeId"
           style="width: 240px"
@@ -50,7 +50,7 @@
           check-strictly
           clearable />
       </el-form-item>
-      <el-form-item v-if="moreCdn==true" label="购买来源" prop="sourceId">
+      <el-form-item v-show="moreCdn==true" label="购买来源" prop="sourceId">
         <el-select
           v-model="queryParams.sourceId"
           placeholder="购买来源"
@@ -63,7 +63,7 @@
             :value="dict.id" />
         </el-select>
       </el-form-item>
-      <el-form-item v-if="moreCdn==true" label="消费类型" prop="consumeType">
+      <el-form-item v-show="moreCdn==true" label="消费类型" prop="consumeType">
         <el-select
           v-model="queryParams.consumeType"
           placeholder="方式"
@@ -87,7 +87,7 @@
             :value="dict.id" />
         </el-select>
       </el-form-item>
-      <el-form-item v-if="moreCdn==true" label="价格区间">
+      <el-form-item v-show="moreCdn==true" label="价格区间">
         <el-input-number v-model="queryParams.startTotalPrice" clearable :min="0" label="最低价格" style="width: 120px"></el-input-number>
         <el-input-number v-model="queryParams.endTotalPrice" clearable :min="0" label="最高价格" style="width: 120px"></el-input-number>
       </el-form-item>

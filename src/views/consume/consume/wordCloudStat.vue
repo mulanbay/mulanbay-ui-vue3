@@ -12,7 +12,7 @@
           end-placeholder="结束日期"
           :shortcuts="datePickerOptions"></el-date-picker>
       </el-form-item>
-      <el-form-item v-if="moreCdn==true" label="名称检索" prop="roleName">
+      <el-form-item v-show="moreCdn==true" label="名称检索" prop="roleName">
         <el-input
           v-model="queryParams.name"
           placeholder="请输入名称"
@@ -20,7 +20,7 @@
           style="width: 240px"
           @keyup.enter.native="handleQuery" />
       </el-form-item>
-      <el-form-item v-if="moreCdn==true" label="商品类型" prop="goodsTypeId">
+      <el-form-item v-show="moreCdn==true" label="商品类型" prop="goodsTypeId">
         <el-tree-select
           v-model="queryParams.goodsTypeId"
           style="width: 240px"
@@ -31,7 +31,7 @@
           check-strictly
           clearable />
       </el-form-item>
-      <el-form-item v-if="moreCdn==true" label="购买来源" prop="sourceId">
+      <el-form-item v-show="moreCdn==true" label="购买来源" prop="sourceId">
         <el-select
           v-model="queryParams.sourceId"
           placeholder="购买来源"
@@ -71,7 +71,7 @@
       <el-form-item label="忽略短语" prop="ignoreShort">
         <el-switch v-model="queryParams.ignoreShort" @change="handleQuery"></el-switch>
       </el-form-item>
-      <el-form-item v-if="moreCdn==true" label="商品标签" prop="tags">
+      <el-form-item v-show="moreCdn==true" label="商品标签" prop="tags">
         <el-select
           v-model="queryParams.tags"
           placeholder="商品标签"

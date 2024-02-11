@@ -20,7 +20,7 @@
           style="width: 240px"
           @keyup.enter.native="handleQuery" />
       </el-form-item>
-      <el-form-item v-if="moreCdn==true" label="日志级别" prop="logLevel">
+      <el-form-item v-show="moreCdn==true" label="日志级别" prop="logLevel">
         <el-select
           v-model="queryParams.logLevel"
           placeholder="日志级别"
@@ -34,7 +34,7 @@
             :value="dict.id" />
         </el-select>
       </el-form-item>
-      <el-form-item v-if="moreCdn==true" label="功能选择" prop="funcId">
+      <el-form-item v-show="moreCdn==true" label="功能选择" prop="funcId">
         <el-tree-select
           v-model="queryParams.funcId"
           style="width: 240px"
@@ -45,7 +45,7 @@
           check-strictly
           clearable />
       </el-form-item>
-      <el-form-item v-if="moreCdn==true" label="错误代码" prop="errorCode">
+      <el-form-item v-show="moreCdn==true" label="错误代码" prop="errorCode">
         <el-input
           v-model="queryParams.errorCode"
           placeholder="错误代码"

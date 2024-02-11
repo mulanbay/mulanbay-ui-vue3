@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryRef" :inline="true">
-      <el-form-item v-if="moreCdn==true" label="起止日期" style="width: 308px">
+      <el-form-item v-show="moreCdn==true" label="起止日期" style="width: 308px">
         <el-date-picker
           v-model="dateRange"
           unlink-panels
@@ -36,7 +36,7 @@
             :value="dict.id" />
         </el-select>
       </el-form-item>
-      <el-form-item v-if="moreCdn==true" label="业务类型" prop="bussType">
+      <el-form-item v-show="moreCdn==true" label="业务类型" prop="bussType">
         <el-select
           v-model="queryParams.bussType"
           placeholder="业务类型"
@@ -49,7 +49,7 @@
             :value="dict.id" />
         </el-select>
       </el-form-item>
-      <el-form-item v-if="moreCdn==true" label="名称检索" prop="name">
+      <el-form-item v-show="moreCdn==true" label="名称检索" prop="name">
         <el-input
           v-model="queryParams.name"
           placeholder="请输入名称"

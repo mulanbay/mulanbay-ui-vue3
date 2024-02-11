@@ -39,7 +39,7 @@
             :value="dict.id" />
         </el-select>
       </el-form-item>
-      <el-form-item v-if="moreCdn==true" label="用户筛选" prop="username">
+      <el-form-item v-show="moreCdn==true" label="用户筛选" prop="username">
         <el-input
           v-model="queryParams.username"
           placeholder="请输入用户名或者手机号"

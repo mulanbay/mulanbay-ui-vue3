@@ -12,7 +12,7 @@
           end-placeholder="结束日期"
           :shortcuts="datePickerOptions"></el-date-picker>
       </el-form-item>
-      <el-form-item v-if="moreCdn==true" label="菜单类型" prop="funcDataType">
+      <el-form-item v-show="moreCdn==true" label="菜单类型" prop="funcDataType">
         <el-select
           v-model="queryParams.funcDataType"
           placeholder="菜单类型"
@@ -26,7 +26,7 @@
             :value="dict.id" />
         </el-select>
       </el-form-item>
-      <el-form-item v-if="moreCdn==true" label="功能类型" prop="funcType">
+      <el-form-item v-show="moreCdn==true" label="功能类型" prop="funcType">
         <el-select
           v-model="queryParams.funcType"
           placeholder="功能类型"
@@ -40,7 +40,7 @@
             :value="dict.id" />
         </el-select>
       </el-form-item>
-      <el-form-item v-if="moreCdn==true" label="用户筛选" prop="username">
+      <el-form-item v-show="moreCdn==true" label="用户筛选" prop="username">
         <el-input
           v-model="queryParams.username"
           placeholder="请输入用户名或者手机号"

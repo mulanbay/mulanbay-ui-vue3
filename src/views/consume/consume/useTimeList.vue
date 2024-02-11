@@ -21,7 +21,7 @@
           style="width: 240px"
           @keyup.enter.native="handleQuery" />
       </el-form-item>
-      <el-form-item v-if="moreCdn==true" label="商品类型" prop="goodsTypeId">
+      <el-form-item v-show="moreCdn==true" label="商品类型" prop="goodsTypeId">
         <el-tree-select
           v-model="queryParams.goodsTypeId"
           style="width: 240px"
@@ -32,7 +32,7 @@
           check-strictly
           clearable />
       </el-form-item>
-      <el-form-item v-if="moreCdn==true" label="购买来源" prop="sourceId">
+      <el-form-item v-show="moreCdn==true" label="购买来源" prop="sourceId">
         <el-select
           v-model="queryParams.sourceId"
           placeholder="购买来源"
@@ -69,7 +69,7 @@
             :value="dict.id" />
         </el-select>
       </el-form-item>
-      <el-form-item v-if="moreCdn==true" label="是否二手" prop="secondhand">
+      <el-form-item v-show="moreCdn==true" label="是否二手" prop="secondhand">
         <el-select
           v-model="queryParams.secondhand"
           placeholder="二手类型"

@@ -48,7 +48,7 @@
             :value="dict.id" />
         </el-select>
       </el-form-item>
-      <el-form-item v-if="moreCdn==true" label="商品类型" prop="goodsTypeId">
+      <el-form-item v-show="moreCdn==true" label="商品类型" prop="goodsTypeId">
         <el-tree-select
           v-model="queryParams.goodsTypeId"
           style="width: 240px"

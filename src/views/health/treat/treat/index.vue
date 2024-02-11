@@ -20,7 +20,7 @@
           style="width: 240px"
           @keyup.enter.native="handleQuery" />
       </el-form-item>
-      <el-form-item v-if="moreCdn==true" label="是否有病" prop="sick">
+      <el-form-item v-show="moreCdn==true" label="是否有病" prop="sick">
         <el-select
           v-model="queryParams.sick"
           placeholder="是否有病"
@@ -33,7 +33,7 @@
             :value="dict.id" />
         </el-select>
       </el-form-item>
-      <el-form-item v-if="moreCdn==true" label="疾病标签" prop="tags">
+      <el-form-item v-show="moreCdn==true" label="疾病标签" prop="tags">
         <el-select
           v-model="queryParams.tags"
           placeholder="疾病标签"
@@ -46,7 +46,7 @@
             :value="dict.id" />
         </el-select>
       </el-form-item>
-      <el-form-item v-if="moreCdn==true" label="看病类型" prop="treatType">
+      <el-form-item v-show="moreCdn==true" label="看病类型" prop="treatType">
         <el-select
           v-model="queryParams.treatType"
           placeholder="看病类型"
@@ -59,7 +59,7 @@
             :value="dict.id" />
         </el-select>
       </el-form-item>
-      <el-form-item v-if="moreCdn==true" label="门诊阶段" prop="stage">
+      <el-form-item v-show="moreCdn==true" label="门诊阶段" prop="stage">
         <el-select
           v-model="queryParams.stage"
           placeholder="门诊阶段"

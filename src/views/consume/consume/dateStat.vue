@@ -26,7 +26,7 @@
             :value="dict.id" />
         </el-select>
       </el-form-item>
-      <el-form-item v-if="moreCdn==true" label="价格类型" prop="groupType">
+      <el-form-item v-show="moreCdn==true" label="价格类型" prop="groupType">
         <el-select
           v-model="queryParams.groupType"
           placeholder="价格类型"
@@ -39,7 +39,7 @@
             :value="dict.id" />
         </el-select>
       </el-form-item>
-      <el-form-item v-if="moreCdn==true" label="名称检索" prop="roleName">
+      <el-form-item v-show="moreCdn==true" label="名称检索" prop="roleName">
         <el-input
           v-model="queryParams.name"
           placeholder="请输入名称"
@@ -47,7 +47,7 @@
           style="width: 240px"
           @keyup.enter.native="handleQuery" />
       </el-form-item>
-      <el-form-item v-if="moreCdn==true" label="商品类型" prop="goodsTypeId">
+      <el-form-item v-show="moreCdn==true" label="商品类型" prop="goodsTypeId">
         <el-tree-select
           v-model="queryParams.goodsTypeId"
           style="width: 240px"
@@ -58,7 +58,7 @@
           check-strictly
           clearable />
       </el-form-item>
-      <el-form-item v-if="moreCdn==true" label="购买来源" prop="sourceId">
+      <el-form-item v-show="moreCdn==true" label="购买来源" prop="sourceId">
         <el-select
           v-model="queryParams.sourceId"
           placeholder="购买来源"
