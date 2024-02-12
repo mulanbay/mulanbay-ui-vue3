@@ -3,7 +3,15 @@
   <el-dialog :title="title" v-model="open" width="900px" append-to-body>
     <div class="app-container">
       <el-form ref="queryRef" :model="queryParams" label-width="80px" :inline="true">
-        <el-form-item label="用药日期" style="width: 308px">
+        <el-form-item label="检验项目" prop="name">
+          <el-input
+            v-model="queryParams.name"
+            placeholder="请输入检验项目"
+            clearable
+            style="width: 120px"
+            @keyup.enter.native="handleQuery" />
+        </el-form-item>
+        <el-form-item label="检测日期" style="width: 308px">
           <el-date-picker
             v-model="dateRange"
             unlink-panels
@@ -14,34 +22,24 @@
             end-placeholder="结束日期"
             :shortcuts="datePickerOptions"></el-date-picker>
         </el-form-item>
-        <el-form-item label="合并药名" prop="mergeSameName">
-          <el-switch v-model="queryParams.mergeSameName" @change="handleQuery"></el-switch>
-          <el-tooltip class="box-item" effect="dark" content="合并相同药名：多次看病记录有相同药品名称的药合并在一起统计。否则只统计该次看病记录中该药品的记录" placement="top">
-            <span>
-              <el-icon>
-                <QuestionFilled />
-              </el-icon>
-            </span>
-          </el-tooltip>
-        </el-form-item>
         <el-form-item>
-          <el-button type="primary" icon="TrendCharts" @click="handleQuery" v-hasPermi="['health:treat:treatDrugDetail:timeStat']">统计</el-button>
+          <el-button type="primary" icon="TrendCharts" @click="handleQuery" v-hasPermi="['health:treat:treatTest:stat']">统计</el-button>
           <el-button icon="refresh" @click="resetQuery">重置</el-button>
         </el-form-item>
       </el-form>
 
       <!--图表数据-->
       <div ref="statChart" :style="{height:height,margin:0 }" />
-
+      
     </div>
   </el-dialog>
 
 </template>
 
-<script setup name="TreatDrugDetailTimeStat">
-  import { getTreatDrugDetailTimeStat } from "@/api/health/treat/treatDrugDetail";
+<script setup name="TreatTestStat">
+  import { getTreatTestStat } from "@/api/health/treat/treatTest";
   import * as echarts from 'echarts';
-  import { createChart, createScatterChartOption } from "@/utils/mulanbay_echarts";
+  import { createChart, createLineChartOption,createPieChartOption } from "@/utils/mulanbay_echarts";
 
   const { proxy } = getCurrentInstance();
   //图形实例
@@ -53,17 +51,16 @@
   const height = ref((document.body.clientHeight - 300).toString() + 'px');
 
   //可执行时间段
-  const title = ref('时间点统计');
+  const title = ref('统计');
   const open = ref(false);
   const formRef = ref();
 
   //日期范围快速选择
   const datePickerOptions = ref(proxy.datePickerOptions);
   const dateRange = ref([]);
-
+  
   const data = reactive({
     queryParams: {
-      mergeSameName: false
     },
     rules: {}
   });
@@ -74,16 +71,16 @@
   const emit = defineEmits(['success']);
 
   /** 打开弹窗 */
-  const showData = async (drugId, drugName) => {
+  const showData = async (name) => {
     open.value = true;
-    title.value = '[' + drugName + ']用药日历统计';
-    queryParams.value.drugId = drugId;
-    //解决在dialog里面打开echarts报：Initialize failed: invalid dom
+    title.value = '[' + name + ']检测结果统计';
+    queryParams.value.name = name;
     proxy.$nextTick(()=>{
       if(!chartInited.value){
         statChartIns = echarts.init(statChart.value, "macarons");
         chartInited.value = true;
       }
+      handleQuery();
     });
   }
 
@@ -104,7 +101,7 @@
   // 表单重置
   function resetForm() {
     queryParams.value = {
-      drugId: undefined
+      
     };
     proxy.resetForm("queryRef");
   }
@@ -112,9 +109,18 @@
   /** 图表 */
   function initChart() {
     proxy.$modal.loading("正在加载数据，请稍候！");
-    getTreatDrugDetailTimeStat(proxy.addDateRange(queryParams.value, dateRange.value)).then(response => {
+    getTreatTestStat(proxy.addDateRange(queryParams.value, dateRange.value)).then(response => {
       proxy.$modal.closeLoading();
-      let option = createScatterChartOption(response);
+      //组装chart数据
+      let chartType=response.chartType;
+      let option={};
+      if(chartType=='LINE'){
+        let minValue = response.minValue== null ? 0 : response.minValue;
+        let maxValue = response.maxValue== null ? 0 : response.maxValue;
+        option = createLineChartOption(response.chartData,minValue,maxValue);
+      }else{
+        option = createPieChartOption(response.chartData);
+      }
       createChart(option, statChartIns);
     });
   }

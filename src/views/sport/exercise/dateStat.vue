@@ -61,7 +61,7 @@
   </div>
 </template>
 
-<script setup name="exerciseDateStat">
+<script setup name="ExerciseDateStat">
   import { getExerciseDateStat } from "@/api/sport/exercise";
   import { getSportTree } from "@/api/sport/sport";
   import * as echarts from 'echarts';

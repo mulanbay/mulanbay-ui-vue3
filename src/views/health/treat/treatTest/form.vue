@@ -115,6 +115,9 @@
       ],
       value: [
         { required: true, message: "检查结果不能为空", trigger: "blur" }
+      ],
+      testTime: [
+        { required: true, message: "检查时间不能为空", trigger: "blur" }
       ]
     }
   });
@@ -166,9 +169,13 @@
     getLastTreatTest(newVal).then(response => {
       if (response != null) {
         const date = form.value.testTime;
-        copyObject(response, form.value);
-        form.value.operationId = queryParams.value.operationId;
+        form.value.operationId = response.operation.operationId;
         form.value.testTime = date;
+        form.value.name = response.name;
+        form.value.unit = response.unit;
+        form.value.minValue = response.minValue;
+        form.value.maxValue = response.maxValue;
+        form.value.referScope = response.referScope;
         form.value.testId = undefined;
         form.value.result = undefined;
         form.value.value = undefined;
@@ -204,7 +211,7 @@
             proxy.$modal.msgSuccess("修改成功");
             if (ca == true) {
               const date = form.value.testTime;
-              handleCreate();
+              resetForm();
               form.value.testTime = date;
             } else {
               open.value = false;
@@ -217,7 +224,7 @@
             proxy.$modal.msgSuccess("新增成功");
             if (ca == true) {
               const date = form.value.testTime;
-              handleCreate();
+              resetForm();
               form.value.testTime = date;
             } else {
               open.value = false;

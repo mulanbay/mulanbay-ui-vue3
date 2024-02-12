@@ -64,6 +64,8 @@
   const statChart = ref(null);
   //echarts实例
   let statChartIns = ref(null);
+  //是否初始化
+  let chartInited = ref(false);
   const height = ref((document.body.clientHeight - 300).toString() + 'px');
 
   //可执行时间段
@@ -101,7 +103,10 @@
     title.value = '[' + drugName + ']用药日历统计';
     queryParams.value.drugId = drugId;
     proxy.$nextTick(()=>{
-      statChartIns = echarts.init(statChart.value, "macarons");
+      if(!chartInited.value){
+        statChartIns = echarts.init(statChart.value, "macarons");
+        chartInited.value = true;
+      }
     });
     //initChart();
   }

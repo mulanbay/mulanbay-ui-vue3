@@ -31,7 +31,7 @@
           filterable
           clearable
           default-first-option
-          style="width: 120px">
+          style="width: 240px">
           <el-option
             v-for="dict in resultOptions"
             :key="dict.id"
@@ -42,35 +42,9 @@
       <el-form-item>
         <el-button type="primary" icon="search" @click="handleQuery" v-hasPermi="['health:treat:treatTest:list']">搜索</el-button>
         <el-button icon="refresh" @click="resetQuery">重置</el-button>
+        <el-button type="primary" icon="plus" v-if="queryParams.operationId!=null" @click="handleCreate" v-hasPermi="['health:treat:treatTest:create']">新增</el-button>
       </el-form-item>
     </el-form>
-
-    <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button
-          type="primary"
-          icon="plus"
-          v-if="queryParams.operationId!=null"
-          @click="handleCreate"
-          v-hasPermi="['health:treat:treatTest:create']">新增</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          icon="edit"
-          :disabled="single"
-          @click="handleEdit"
-          v-hasPermi="['health:treat:treatTest:edit']">修改</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="danger"
-          icon="delete"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['health:treat:treatTest:delete']">删除</el-button>
-      </el-col>
-    </el-row>
 
     <!--列表数据-->
     <el-table v-loading="loading" :data="testList" @selection-change="handleSelectionChange">
@@ -81,10 +55,12 @@
       </el-table-column>
       <el-table-column label="检测项" min-width="160px" :show-overflow-tooltip="true">
         <template #default="scope">
+          <el-tooltip class="box-item" effect="dark" content="只看该检查项" placement="top">
+            <span class="link-type" @click="handleFiterName(scope.row)">
+              <el-icon color="red"><Filter /></el-icon>
+            </span>
+          </el-tooltip>
           <span class="link-type" @click="handleEdit(scope.row)">{{ scope.row.name }}</span>&nbsp;
-          <span class="link-type" @click="handleFiterName(scope.row)">
-            <el-icon color="red"><Filter /></el-icon>
-          </span>
         </template>
       </el-table-column>
       <el-table-column label="手术/检查项目" min-width="160px" :show-overflow-tooltip="true">
@@ -182,6 +158,10 @@
 
     <!-- 表单 -->
     <TreatTestForm ref="formRef" @success="getList" />
+    
+    <!-- 统计 -->
+    <TreatTestStat ref="statRef" />
+    
   </div>
 </template>
 
@@ -189,10 +169,12 @@
   import { fetchList, deleteTreatTest } from "@/api/health/treat/treatTest";
   import { formatDays, getHourDesc } from "@/utils/datetime";
   import TreatTestForm from './form.vue'
+  import TreatTestStat from './stat.vue'
 
   const { proxy } = getCurrentInstance();
 
   const formRef = ref();
+  const statRef = ref();
 
   const testList = ref([]);
   // 遮罩层
@@ -271,11 +253,7 @@
 
   /** 检验项目操作 */
   function handleStat(row) {
-    this.statTitle = "统计";
-    this.statVisible = true;
-    this.statTreatTestData = Object.assign({}, this.statTreatTestData, {
-      name: row.name
-    });
+    statRef.value.showData(row.name);
   }
 
   /** 新增按钮操作 */
