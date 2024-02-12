@@ -73,6 +73,20 @@
           @click="handleCopyDetail"
           v-hasPermi="['health:treat:treatDrugDetail:copy']">复制明细</el-button>
       </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="primary"
+          icon="TrendCharts"
+          @click="handleStat"
+          v-hasPermi="['health:treat:treatDrugDetail:stat']">统计</el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="primary"
+          icon="TrendCharts"
+          @click="handleCalendar"
+          v-hasPermi="['health:treat:treatDrug:calendar']">用药日历</el-button>
+      </el-col>
     </el-row>
 
     <!--列表数据-->
@@ -258,6 +272,12 @@
     <!-- 时间点统计 -->
     <TreatDrugDetailTimeStat ref="treatDrugDetailTimeStatRef" />
 
+    <!-- 统计 -->
+    <TreatDrugDetailStat ref="treatDrugDetailStatRef" />
+    
+    <!-- 用药日历 -->
+    <TreatDrugCalendar ref="treatDrugCalendarRef" />
+    
   </div>
 </template>
 
@@ -271,6 +291,8 @@
   import TreatDrugDetailCopyForm from '../treatDrugDetail/copyForm.vue'
   import TreatDrugDetailCalendarStat from '../treatDrugDetail/calendarStat.vue'
   import TreatDrugDetailTimeStat from '../treatDrugDetail/timeStat.vue'
+  import TreatDrugDetailStat from '../treatDrugDetail/stat.vue'
+  import TreatDrugCalendar from './calendar.vue'
 
   const { proxy } = getCurrentInstance();
   const formRef = ref();
@@ -279,6 +301,8 @@
   const treatDrugDetailCopyFormRef = ref();
   const treatDrugDetailCalendarStatRef = ref();
   const treatDrugDetailTimeStatRef = ref();
+  const treatDrugDetailStatRef = ref();
+  const treatDrugCalendarRef = ref();
 
   // 遮罩层
   const loading = ref(true);
@@ -317,8 +341,9 @@
   const { queryParams } = toRefs(data);
 
   /** 显示数据 */
-  const showData = async (treatId) => {
+  const showData = async (treatId,tags) => {
     queryParams.value.treatId = treatId;
+    queryParams.value.tags = tags;
     fp.value = true;
     handleQuery();
   }
@@ -403,6 +428,16 @@
   /** 明细列表按钮操作 */
   function handleDetailList(row) {
     treatDrugDetailRef.value.showData(row.drugId);
+  }
+  
+  /** 统计 */
+  function handleStat(){
+    treatDrugDetailStatRef.value.showData();
+  }
+  
+  /** 用药日历 */
+  function handleCalendar(){
+    treatDrugCalendarRef.value.showData();
   }
 
   /** 新增按钮操作 */

@@ -118,6 +118,16 @@
     <!-- 分析 -->
     <FullStatAnalyse ref="fullStatAnalyseRef" />
     
+    <!-- 药品列表页面 -->
+    <el-dialog :title="treatDrugTitle" width="900px" v-model="treatDrugOpen" append-to-body>
+      <TreatDrug ref="treatDrugRef" />
+    </el-dialog>
+    
+    <!-- 手术列表页面 -->
+    <el-dialog :title="treatOperationTitle" width="900px" v-model="treatOperationOpen" append-to-body>
+      <TreatOperation ref="treatOperationRef" />
+    </el-dialog>
+    
   </div>
 </template>
 
@@ -126,6 +136,8 @@
   import {formatDays} from "@/utils/datetime";
   import FullStatFeeDetail from './fullStatFeeDetail.vue'
   import FullStatAnalyse from './fullStatAnalyse.vue'
+  import TreatDrug from '../treatDrug/index.vue';
+  import TreatOperation from '../treatOperation/index.vue';
   
   const { proxy } = getCurrentInstance();
   const fullStatFeeDetailRef = ref();;
@@ -148,6 +160,16 @@
   const datePickerOptions = ref(proxy.datePickerOptions);
   const dateRange = ref([]);
 
+  //药品列表
+  const treatDrugTitle = ref('药品列表');
+  const treatDrugOpen = ref(false);
+  const treatDrugRef = ref();
+  
+  //手术列表
+  const treatOperationTitle = ref('手术列表');
+  const treatOperationOpen = ref(false);
+  const treatOperationRef = ref();
+  
   // 弹出层标题
   const title = ref("");
   // 是否显示弹出层
@@ -192,6 +214,24 @@
   function showRelation(row){
     //路由定向
     proxy.$router.push({name:'TreatRelation',query: {tags:row.tags}})
+  }
+  
+  /** 药品列表 */
+  function handleDrugList(row) {
+    treatDrugTitle.value = '[' + row.tags + ']药品列表';
+    treatDrugOpen.value = true;
+    proxy.$nextTick(()=>{
+      treatDrugRef.value.showData(null,row.tags);
+    });
+  }
+  
+  /** 手术列表 */
+  function handleOperationList(row) {
+    treatOperationTitle.value = '[' + row.tags + ']手术列表';
+    treatOperationOpen.value = true;
+    proxy.$nextTick(()=>{
+      treatOperationRef.value.showData(null,row.tags);
+    });
   }
   
   /** 查询列表 */

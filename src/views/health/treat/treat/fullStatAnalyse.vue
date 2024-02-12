@@ -79,7 +79,7 @@
   /** 打开弹窗 */
   const showData = async (sd) => {
     open.value = true;
-    title.value = '[' + sd.tags + ']费用统计';
+    title.value = '[' + sd.tags + ']分析';
     statData.value = sd;
     proxy.$nextTick(() => {
       if (!chartInited.value) {
@@ -114,8 +114,8 @@
         //组装chart数据
         response.chartType='PIE';
         response.title ='医院分析';
-        let option = createChartOption(response);
-        createChart(option, statChartIns);
+        let option = createPieChartOption(response);
+        createChart(option, hospitalStatChartIns);
       }
     );
   }
@@ -134,8 +134,8 @@
         //组装chart数据
         response.chartType='PIE';
         response.title ='科室分析';
-        let option = createChartOption(response);
-        createChart(option, statChartIns);
+        let option = createPieChartOption(response);
+        createChart(option, departmentStatChartIns);
       }
     );
   }
@@ -154,8 +154,8 @@
         //组装chart数据
         response.chartType='PIE';
         response.title ='器官分析';
-        let option = createChartOption(response);
-        createChart(option, statChartIns);
+        let option = createPieChartOption(response);
+        createChart(option, organStatChartIns);
       }
     );
   }
@@ -164,7 +164,7 @@
   function initOsChart(tags) {
     let paras= {
       tags: tags,
-      groupField:'os_name',
+      groupField:'os',
       groupType:'COUNT',
       feeField:'total_fee',
       chartType:'PIE',
@@ -174,8 +174,8 @@
         //组装chart数据
         response.chartType='PIE';
         response.title ='门诊分析';
-        let option = createChartOption(response);
-        createChart(option, statChartIns);
+        let option = createPieChartOption(response);
+        createChart(option, osStatChartIns);
       }
     );
   }

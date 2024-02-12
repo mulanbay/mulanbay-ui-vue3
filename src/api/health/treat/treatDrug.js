@@ -63,7 +63,7 @@ export function getTreatDrugCateTree(groupField,needRoot) {
   })
 }
 
-export function calendar(query) {
+export function getCalendar(query) {
   return request({
     url: '/treatDrug/calendar',
     method: 'get',

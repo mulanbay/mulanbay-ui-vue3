@@ -65,6 +65,13 @@
           @click="handleDelete"
           v-hasPermi="['health:treat:treatOperation:delete']">删除</el-button>
       </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="primary"
+          icon="TrendCharts"
+          @click="handleStat"
+          v-hasPermi="['health:treat:treatOperation:stat']">统计</el-button>
+      </el-col>
     </el-row>
 
     <!--列表数据-->
@@ -208,6 +215,9 @@
       <TreatTest ref="treatTestRef" />
     </el-dialog>
     
+    <!-- 统计 -->
+    <TreatOperationStat ref="treatOperationStatRef" />
+    
   </div>
 </template>
 
@@ -217,6 +227,7 @@
   import { getDay, getDayByDate, getNowDateString,formatDays } from "@/utils/datetime";
   import TreatOperationForm from './form.vue'
   import TreatTest from '../treatTest/index.vue'
+  import TreatOperationStat from './stat.vue'
 
   const { proxy } = getCurrentInstance();
   const formRef = ref();
@@ -225,6 +236,7 @@
   const treatTestTitle = ref('检验结果');
   const treatTestOpen = ref(false);
   const treatTestRef = ref();
+  const treatOperationStatRef = ref();
 
   // 遮罩层
   const loading = ref(true);
@@ -263,8 +275,9 @@
   const { queryParams } = toRefs(data);
 
   /** 显示数据 */
-  const showData = async (treatId) => {
+  const showData = async (treatId,tags) => {
     queryParams.value.treatId = treatId;
+    queryParams.value.tags = tags;
     fp.value = true;
     handleQuery();
   }
@@ -281,6 +294,11 @@
       moreCdn.value = true;
       cdnTitle.value = '取消';
     }
+  }
+  
+  /** 统计 */
+  function handleStat(){
+    treatOperationStatRef.value.showData();
   }
 
   /** 查询列表 */

@@ -338,18 +338,18 @@
   function handleDrugList(row) {
     treatDrugTitle.value = '[' + row.disease + ']药品列表';
     treatDrugOpen.value = true;
-    setTimeout(function() {
-      treatDrugRef.value.showData(row.treatId);
-    }, 500);
+    proxy.$nextTick(()=>{
+      treatDrugRef.value.showData(row.treatId,null);
+    });
   }
   
   /** 手术列表 */
   function handleOperationList(row) {
     treatOperationTitle.value = '[' + row.disease + ']手术列表';
     treatOperationOpen.value = true;
-    setTimeout(function() {
-      treatOperationRef.value.showData(row.treatId);
-    }, 500);
+    proxy.$nextTick(()=>{
+      treatOperationRef.value.showData(row.treatId,null);
+    });
   }
 
   //刷新
