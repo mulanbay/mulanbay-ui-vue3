@@ -275,7 +275,7 @@ export function getHourDesc(date) {
   var h =parseInt(hs);
   if (0<=h&&h<11) {
     return '上午';
-  }else if(11<=h&&h<12){
+  }else if(11<=h&&h<=12){
     return '中午';
   }else if(12<h&&h<=17){
     return '下午';

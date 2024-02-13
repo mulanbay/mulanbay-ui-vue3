@@ -352,11 +352,12 @@
     });
   }
 
-  //刷新
+  /** 身体分析 */
   function showBodyAnalyse(name, groupField) {
-    refreshRef.value.openRefresh();
+    //路由定向
+    proxy.$router.push({name:'BodyAbnormalAnalyse',query: {name:name,groupField:groupField}})
   }
-
+  
   /** 统计 */
   function handleMultiStat() {
     multiStatRef.value.openForm();

@@ -112,9 +112,10 @@
   const emit = defineEmits(['success']);
 
   /** 打开弹窗 */
-  const showData = async () => {
+  const showData = async (startDate,endDate) => {
     open.value = true;
     title.value = '用药统计';
+    dateRange.value = [startDate,endDate];
     getList();
   }
 
