@@ -892,7 +892,6 @@ export function createCalanderChartOption(data) {
   
   let option = {
     backgroundColor: '#404a59',
-  
     title: {
       top: 10,
       text: data.title,
@@ -1124,6 +1123,7 @@ export function createCalenderHeatMapChartOption(data, echarts) {
   }
 
   let option = {
+    //backgroundColor: '#1f294e',
     title: {
       top: 0,
       left: 'center',
