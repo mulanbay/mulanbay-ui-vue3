@@ -2,17 +2,17 @@ import request from '@/utils/request'
 
 export function fetchList(query) {
   return request({
-    url: '/sleep/getData',
+    url: '/sleep/list',
     method: 'get',
     params: query
   })
 }
 
-export function getSleep(id) {
+export function getSleep(sleepId) {
   return request({
     url: '/sleep/get',
     method: 'get',
-    params: { id }
+    params: { sleepId }
   })
 }
 
@@ -24,7 +24,7 @@ export function createSleep(data) {
   })
 }
 
-export function updateSleep(data) {
+export function editSleep(data) {
   return request({
     url: '/sleep/edit',
     method: 'post',
