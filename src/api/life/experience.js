@@ -43,13 +43,11 @@ export function deleteExperience(ids) {
 }
 
 
-export function getExperienceTree(needRoot) {
+export function getExperienceTree(query) {
   return request({
     url: '/experience/tree',
     method: 'get',
-    params: {
-      needRoot:needRoot
-    }
+    params: query
   })
 }
 

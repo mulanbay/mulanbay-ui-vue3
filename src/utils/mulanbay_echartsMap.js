@@ -20,7 +20,7 @@ export function createMapChart(option, myChart) {
  * @param {Object} mapData
  * @param {Object} myChart
  */
-export function createDefaultMapChart(mapData, myChart, echarts) {
+export function createDefaultMapChartOption(mapData, myChart, echarts) {
   var mapName = mapData.mapName;
   var data = mapData.dataList;
   var geoCoordMap = {};
@@ -219,7 +219,7 @@ export function createDefaultMapChart(mapData, myChart, echarts) {
       },
     ]
   };
-  createMapChart(option, myChart);
+  return option;
 }
 
 /**
@@ -228,7 +228,7 @@ export function createDefaultMapChart(mapData, myChart, echarts) {
  * @param {Object} mapData
  * @param {Object} myChart
  */
-export function createWorldMapChart(mapData, myChart, echarts) {
+export function createWorldMapChartOption(mapData, myChart, echarts) {
   // 飞线颜色
   var flyLineColor = "yellow";
   //线条颜色
@@ -387,7 +387,7 @@ export function createWorldMapChart(mapData, myChart, echarts) {
     },
     series: series
   };
-  createMapChart(option, myChart);
+  return option;
 }
 
 export function randomColor() {
@@ -403,7 +403,7 @@ export function randomColor() {
  * @param {Object} mapData
  * @param {Object} myChart
  */
-export function createChinaTransferMapChart(mapData, myChart) {
+export function createChinaTransferMapChartOption(mapData, myChart) {
   const unit = mapData.unit == null ? '' : mapData.unit;
   var geoCoordMap = mapData.geoCoordMapData;
   var planePath =
@@ -544,7 +544,7 @@ export function createChinaTransferMapChart(mapData, myChart) {
     },
     series: series
   };
-  createMapChart(option, myChart);
+  return option;
 }
 
 /**
@@ -553,7 +553,7 @@ export function createChinaTransferMapChart(mapData, myChart) {
  * @param {Object} mapData
  * @param {Object} myChart
  */
-export function createWorldTransferMapChart(mapData, myChart) {
+export function createWorldTransferMapChartOption(mapData, myChart) {
   // 飞线颜色
   var flyLineColor = "yellow";
   //线条颜色
@@ -832,7 +832,7 @@ export function createWorldTransferMapChart(mapData, myChart) {
 
     series: series
   };
-  createMapChart(option, myChart);
+  return option;
 }
 
 /**
@@ -840,7 +840,7 @@ export function createWorldTransferMapChart(mapData, myChart) {
  * @param {Object} mapData
  * @param {Object} myChart
  */
-export function createLocationMapChart(mapData, myChart) {
+export function createLocationMapChartOption(mapData, myChart) {
   let geoCoordMap = mapData.geoCoordMapData;
   let data = mapData.dataList;
   let convertData = function(data) {
@@ -979,5 +979,5 @@ export function createLocationMapChart(mapData, myChart) {
       }
     ]
   };
-  createMapChart(option, myChart);
+  return option;
 }

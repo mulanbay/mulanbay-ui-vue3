@@ -70,23 +70,23 @@ export function getDomainClassList(needRoot) {
   })
 }
 
-export function getAllProvince() {
+export function getCountryTree() {
   return request({
-    url: '/province/getAll',
+    url: '/country/tree',
     method: 'get'
   })
 }
 
-export function getAllCountry() {
+export function getProvinceTree() {
   return request({
-    url: '/country/getAll',
+    url: '/province/tree',
     method: 'get'
   })
 }
 
-export function getCityList(provinceId) {
+export function getCityTree(provinceId) {
   return request({
-    url: '/city/getCityList',
+    url: '/city/tree',
     method: 'get',
     params: {
       provinceId:provinceId
@@ -94,9 +94,9 @@ export function getCityList(provinceId) {
   })
 }
 
-export function getDistrictList(cityId) {
+export function getDistrictTree(cityId) {
   return request({
-    url: '/district/getDistrictList',
+    url: '/district/tree',
     method: 'get',
     params: {
       cityId:cityId

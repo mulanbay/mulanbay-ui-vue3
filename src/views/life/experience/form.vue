@@ -125,15 +125,20 @@
       </div>
     </template>
   </el-dialog>
-
+  
+  <!-- 地理选择 -->
+  <LocationSelect ref="locationSelectRef" @confirmLocation="setLocation" />
+  
 </template>
 
 <script setup name="ExperienceForm">
   import { createExperience, editExperience, getExperience } from "@/api/life/experience";
   import {dateDiff} from "@/utils/datetime";
   import { appendTagToOptions } from "@/utils/tagUtils";
+  import LocationSelect from './locationSelect.vue';
 
   const { proxy } = getCurrentInstance();
+  const locationSelectRef = ref();
 
   //可执行时间段
   const title = ref('人生经历');
@@ -235,6 +240,19 @@
   }
   /** 标签处理 end */
 
+  /** 地理位置确定 */
+  function setLocation(data){
+    
+  }
+  
+  /** 选择地理位置 */
+  function handleMapLocation(){
+    if(form.value.lcName==null){
+      proxy.$modal.msgError("请先输入地点名称");
+      return;
+    }
+    locationSelectRef.value.openForm(form.value.lcName,form.value.location);
+  }
   
   //计算时长
   function calculateMinutes(){

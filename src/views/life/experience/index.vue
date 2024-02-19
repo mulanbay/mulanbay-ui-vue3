@@ -13,7 +13,7 @@
           :shortcuts="datePickerOptions">
         </el-date-picker>
       </el-form-item>
-      <el-form-item label="名称" prop="name">
+      <el-form-item label="名称检索" prop="name">
         <el-input
           v-model="queryParams.name"
           placeholder="请输入名称"
@@ -21,7 +21,7 @@
           style="width: 240px"
           @keyup.enter.native="handleQuery" />
       </el-form-item>
-      <el-form-item label="类型" prop="types">
+      <el-form-item label="经历类型" prop="types">
         <el-select
           v-model="queryParams.types"
           placeholder="类型"
@@ -81,11 +81,22 @@
           <span class="link-type" @click="handleEdit(scope.row)">{{ scope.row.expName }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="旅行地图" align="center">
+      <el-table-column label="统计" width="80" align="center">
         <template #default="scope">
-          <span class="link-type" @click="handleTransferMapStat(scope.row)"><el-icon>
-              <MapLocation />
-            </el-icon></span>
+          <el-tooltip class="box-item" effect="dark" content="旅行地图" placement="top">
+            <span class="link-type" @click="handleTransferMapStat(scope.row)">
+              <el-icon>
+                <Compass />
+              </el-icon>
+            </span>
+          </el-tooltip>
+          <el-divider direction="vertical"></el-divider>
+          <el-tooltip class="box-item" effect="dark" content="花费统计" placement="top">
+            <span class="link-type" @click="handleCostStat(scope.row)"><el-icon>
+                <Money />
+              </el-icon>
+            </span>
+          </el-tooltip>
         </template>
       </el-table-column>
       <el-table-column label="类型" align="center" width="95">
@@ -93,24 +104,23 @@
           <span>{{ scope.row.typeName }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="天数" align="center" width="95">
+      <el-table-column label="天数" align="center" width="80">
         <template #default="scope">
           <span>{{ scope.row.days }}</span>
         </template>
       </el-table-column>
       <el-table-column label="行程明细" width="100" align="center">
         <template #default="scope">
-          <span class="link-type" @click="handleDetailList(scope.row)"><el-icon>
+          <span class="link-type" @click="handleDetailList(scope.row)">
+            <el-icon>
               <Grid />
-            </el-icon></span>
+            </el-icon>
+          </span>
         </template>
       </el-table-column>
       <el-table-column label="花费" align="center" width="120">
         <template #default="scope">
           <span>{{ formatMoney(scope.row.cost) }}</span>
-          <span class="link-type" @click="handleCostStat(scope.row)"><el-icon>
-              <Money />
-            </el-icon></span>
         </template>
       </el-table-column>
       <el-table-column label="开始日期" align="center" width="120">
@@ -123,7 +133,7 @@
           <span>{{ scope.row.endDate }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" width="210" fixed="right" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" width="140" fixed="right" class-name="small-padding fixed-width">
         <template #default="scope">
           <el-button
             link
@@ -153,6 +163,15 @@
     <!-- 表单 -->
     <ExperienceForm ref="formRef" @success="getList" />
 
+    <!-- 明细列表 -->
+    <ExperienceDetailList ref="experienceDetailListRef"/>
+    
+    <!-- 旅行地图 -->
+    <TransferDetailMap ref="transferDetailMapRef"/>
+    
+    <!-- 花费统计 -->
+    <CostStat ref="costStatRef"/>
+    
   </div>
 </template>
 
@@ -160,11 +179,17 @@
   import { fetchList, deleteExperience } from "@/api/life/experience";
   import {deepClone} from "@/utils/index";
   import ExperienceForm from './form.vue';
+  import TransferDetailMap from './transferDetailMap.vue';
+  import CostStat from './costStat.vue';
+  import ExperienceDetailList from '../experienceDetail/index.vue';
   import { getHourDesc } from "@/utils/datetime";
 
   const { proxy } = getCurrentInstance();
   const formRef = ref();
-
+  const experienceDetailListRef = ref();
+  const transferDetailMapRef = ref();
+  const costStatRef = ref();
+  
   // 遮罩层
   const loading = ref(true);
   // 选中数组
@@ -194,29 +219,17 @@
 
   /** 花费统计 */
   function handleCostStat(row) {
-    this.costStatTitle = '花费统计';
-    this.costStatVisible = true;
-    this.lifeExpData = Object.assign({}, this.lifeExpData, {
-      lifeExperienceId: row.id
-    });
+    costStatRef.value.showData(row.expId,row.expName);
   }
 
   /** 地图统计 */
   function handleTransferMapStat(row) {
-    this.transferMapStatTitle = '花费统计';
-    this.transferMapStatVisible = true;
-    this.lifeExpData = Object.assign({}, this.lifeExpData, {
-      lifeExperienceId: row.id
-    });
+    transferDetailMapRef.value.showData(row.expId);
   }
 
   /** 明细列表 */
   function handleDetailList(row) {
-    this.detailListTitle = '[' + row.name + ']明细列表';
-    this.detailListVisible = true;
-    this.lifeExpData = Object.assign({}, this.lifeExpData, {
-      lifeExperienceId: row.id
-    });
+    experienceDetailListRef.value.showData(row.expId);
   }
 
   /** 查询列表 */
