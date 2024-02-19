@@ -2160,6 +2160,7 @@ export function createGaugeChartOption(data) {
 }
 
 export function createShadowChartOption(data) {
+  const unit = data.unit == null ? '' : data.unit;
   let series = new Array();
   for (let i = 0; i < data.series.length; i++) {
     let serie = {
@@ -2167,7 +2168,7 @@ export function createShadowChartOption(data) {
       type: 'line',
       stack: data.series[i].stack,
       areaStyle: {
-        normal: {}
+        
       },
       data: data.series[i].data
     };
@@ -2214,7 +2215,10 @@ export function createShadowChartOption(data) {
       data: data.yaxisData
     }],
     yAxis: [{
-      type: 'value'
+      type: 'value',
+      axisLabel: {
+        formatter: '{value}' + unit
+      }
     }],
     series: series
   };

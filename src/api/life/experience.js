@@ -110,7 +110,7 @@ export function getExperienceTransferMapStat(query) {
   })
 }
 
-export function getExperienceWouldCloudStat(query) {
+export function getExperienceWordCloudStat(query) {
   return request({
     url: '/experience/wordCloudStat',
     method: 'get',
