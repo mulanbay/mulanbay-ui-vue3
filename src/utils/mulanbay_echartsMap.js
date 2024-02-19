@@ -204,7 +204,9 @@ export function createDefaultMapChartOption(mapData, myChart, echarts) {
         rippleEffect: {
           brushType: 'stroke'
         },
-        hoverAnimation: true,
+        emphasis:{
+          scale: true
+        },
         label: {
           formatter: '{b}',
           position: 'right',
@@ -606,10 +608,8 @@ export function createWorldTransferMapChartOption(mapData, myChart) {
           "color": flyLineColor
         },
         "lineStyle": {
-          "normal": {
-            "width": 0,
-            "curveness": 0.2
-          }
+          "width": 0,
+          "curveness": 0.2
         },
         "data": convertData(item[1])
       }, {
@@ -813,8 +813,8 @@ export function createWorldTransferMapChartOption(mapData, myChart) {
     geo: {
       show: false,
       map: "world",
-      label: {
-        emphasis: {
+      emphasis:{
+        label: {
           show: false
         }
       },
@@ -909,24 +909,19 @@ export function createLocationMapChartOption(mapData, myChart) {
     },
     geo: {
       map: 'china',
-      label: {
-        show: true,
-        emphasis: {
-          show: true
-        }
-      },
       roam: true,
       emphasis: {
         itemStyle: {
           areaColor: '#ffffff'
+        },
+        label:{
+          show: true
         }
       },
       itemStyle: {
-        normal: {
-          //地图的背景颜色
-          areaColor: '#323c48',
-          borderColor: '#111'
-        }
+        //地图的背景颜色
+        areaColor: '#323c48',
+        borderColor: '#111'
       }
     },
     series: [{
@@ -963,7 +958,9 @@ export function createLocationMapChartOption(mapData, myChart) {
         rippleEffect: {
           brushType: 'stroke'
         },
-        hoverAnimation: true,
+        emphasis:{
+          scale: true
+        },
         label: {
           formatter: '{b}',
           position: 'right',
