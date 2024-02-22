@@ -200,14 +200,24 @@
         </el-col>
       </el-row>
       <el-row>
-        <el-col :span="12">
+        <el-col :span="8">
           <el-form-item label="记录日志" prop="loggable">
             <el-switch v-model="form.loggable"></el-switch>
           </el-form-item>
         </el-col>
-        <el-col :span="12">
+        <el-col :span="8">
           <el-form-item label="消息提醒" prop="notifiable">
             <el-switch v-model="form.notifiable"></el-switch>
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
+          <el-form-item label="未做检查" prop="undoCheck">
+            <el-switch v-model="form.undoCheck"></el-switch>
+            <el-tooltip content="设置未做检查,则系统自动按照运营日检查且执行没有做的任务." effect="dark" placement="top">
+              <el-icon>
+                <QuestionFilled />
+              </el-icon>
+            </el-tooltip>
           </el-form-item>
         </el-col>
       </el-row>
@@ -287,6 +297,9 @@
       redoType: [
         { required: true, message: "重做类型不能为空", trigger: "blur" }
       ],
+      undoCheck: [
+        { required: true, message: "未做检查不能为空", trigger: "blur" }
+      ],
       triggerInterval: [
         { required: true, message: "调度周期不能为空", trigger: "blur" }
       ],
@@ -347,6 +360,7 @@
       timeout: 60,
       distriable: true,
       redoType: 'MUNUAL_REDO',
+      undoCheck: false,
       allowedRedoTimes: 5,
       triggerInterval: 1,
       triggerType: 'HOUR',

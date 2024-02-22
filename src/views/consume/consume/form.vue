@@ -80,7 +80,7 @@
               v-if="inputVisible"
               v-model="inputValue"
               ref="saveTagInput"
-              size="small"
+              style="width: 120px"
               @keyup.enter.native="handleTagInputConfirm"
               @blur="handleTagInputConfirm">
             </el-input>
@@ -95,7 +95,7 @@
                 {{tag.text}}
               </el-tag>
               <div style="text-align: right; margin: 0">
-                <el-button size="small" type="success" icon="CircleCheckFilled" @click="tagsPopOpen = false">确定</el-button>
+                <el-button size="small" type="danger" icon="CircleClose" @click="tagsPopOpen = false">关闭</el-button>
               </div>
               <template #reference>
                 <el-button @click="tagsPopOpen = true" type="success" icon="Share">选择</el-button>
