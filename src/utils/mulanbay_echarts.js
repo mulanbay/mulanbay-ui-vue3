@@ -12,12 +12,12 @@ const colorList = ['#284554', '#61a0a8', '#d48265', '#c23531', '#8B0A50', '#91c7
  * @param {Object} option
  * @param {Object} instance
  */
-export function createChart(option,instance){
-	instance.clear();
-	instance.setOption(option);
-	window.addEventListener("resize", () => {
-	  instance.resize();
-	});
+export function createChart(option, instance) {
+  instance.clear();
+  instance.setOption(option);
+  window.addEventListener("resize", () => {
+    instance.resize();
+  });
 }
 
 /**
@@ -36,7 +36,7 @@ export function createBarChartOption(data) {
   let showToolbox = true;
   const ln = data.xdata.length;
   //根据x轴长度动态显示
-  if(ln>20){
+  if (ln > 20) {
     showItemStyle = false;
   }
   let showLegend = data.showLegend == null ? true : data.showLegend;
@@ -73,7 +73,7 @@ export function createBarChartOption(data) {
       label: {
         show: showItemStyle, //开启显示
         position: 'top', //在上方显示
-        color: 'black',//数值样式
+        color: 'black', //数值样式
         fontSize: 16
       },
       markPoint: markPoint,
@@ -119,10 +119,10 @@ export function createBarChartOption(data) {
     },
     tooltip: {
       trigger: 'axis',
-      formatter: function (params) {
+      formatter: function(params) {
         var relVal = params[0].name
         for (var i = 0, l = params.length; i < l; i++) {
-          relVal += '<br/>' + params[i].seriesName +":"+ params[i].data +data.ydata[i].unit
+          relVal += '<br/>' + params[i].seriesName + ":" + params[i].data + data.ydata[i].unit
         }
         return relVal
       }
@@ -132,7 +132,7 @@ export function createBarChartOption(data) {
       orient: 'horizontal',
       x: 'center',
       y: 'bottom',
-      padding:[100,0,0,0]
+      padding: [100, 0, 0, 0]
     },
     toolbox: {
       show: false,
@@ -182,7 +182,7 @@ export function createLineChartOption(data) {
   let showToolbox = true;
   const ln = data.xdata.length;
   //根据x轴长度动态显示
-  if(ln>20){
+  if (ln > 20) {
     showItemStyle = false;
   }
   let showLegend = data.showLegend == null ? true : data.showLegend;
@@ -225,7 +225,7 @@ export function createLineChartOption(data) {
       label: {
         show: showItemStyle, //开启显示
         position: 'top', //在上方显示
-        color: 'black',//数值样式
+        color: 'black', //数值样式
         fontSize: 16
       },
       data: data.ydata[i].data,
@@ -245,10 +245,10 @@ export function createLineChartOption(data) {
     },
     tooltip: {
       trigger: 'axis',
-      formatter: function (params) {
+      formatter: function(params) {
         var relVal = params[0].name
         for (var i = 0, l = params.length; i < l; i++) {
-          relVal += '<br/>' + params[i].seriesName +": &nbsp;&nbsp;&nbsp;"+ params[i].data +data.ydata[i].unit
+          relVal += '<br/>' + params[i].seriesName + ": &nbsp;&nbsp;&nbsp;" + params[i].data + data.ydata[i].unit
         }
         return relVal
       },
@@ -262,7 +262,7 @@ export function createLineChartOption(data) {
       orient: 'horizontal',
       x: 'center',
       y: 'bottom',
-      padding:[100,0,0,0]
+      padding: [100, 0, 0, 0]
     },
     grid: { //四周的宽度
       left: '2%',
@@ -394,7 +394,7 @@ export function createMixLineBarChartOption(data) {
   let showToolbox = true;
   const ln = data.xdata.length;
   //根据x轴长度动态显示
-  if(ln>20){
+  if (ln > 20) {
     showItemStyle = false;
   }
   let showLegend = data.showLegend == null ? true : data.showLegend;
@@ -434,14 +434,14 @@ export function createMixLineBarChartOption(data) {
     ya0Unit = data.yaxis[0].unit;
     ya1Name = data.yaxis[1].name;
     ya1Unit = data.yaxis[1].unit;
-  }else{
+  } else {
     //可以去data.ydata里面获取
   }
   let series = new Array();
   //图例类型，默认是柱状图和折线图
   let serieTypes = data.serieTypes;
-  if(serieTypes==null){
-    serieTypes=['bar','line']
+  if (serieTypes == null) {
+    serieTypes = ['bar', 'line']
   }
   let n = data.ydata.length;
   for (let i = 0; i < n; i++) {
@@ -460,7 +460,7 @@ export function createMixLineBarChartOption(data) {
       label: {
         show: showItemStyle, //开启显示
         position: 'top', //在上方显示
-        color: 'black',//数值样式
+        color: 'black', //数值样式
         fontSize: 16
       },
       markPoint: markPoint,
@@ -482,10 +482,10 @@ export function createMixLineBarChartOption(data) {
     },
     tooltip: {
       trigger: 'axis',
-      formatter: function (params) {
+      formatter: function(params) {
         var relVal = params[0].name
         for (var i = 0, l = params.length; i < l; i++) {
-          relVal += '<br/>' + params[i].seriesName +": &nbsp;&nbsp;&nbsp;"+ params[i].data + data.ydata[i].unit
+          relVal += '<br/>' + params[i].seriesName + ": &nbsp;&nbsp;&nbsp;" + params[i].data + data.ydata[i].unit
         }
         return relVal
       },
@@ -526,7 +526,7 @@ export function createMixLineBarChartOption(data) {
       orient: 'horizontal',
       x: 'center',
       y: 'bottom',
-      padding:[100,0,0,0]   //可设定图例[距上方距离，距右方距离，距下方距离，距左方距离]
+      padding: [100, 0, 0, 0] //可设定图例[距上方距离，距右方距离，距下方距离，距左方距离]
     },
     grid: { //四周的宽度
       left: '2%',
@@ -737,13 +737,13 @@ export function createCalanderChartOption(data) {
     });
     links.pop();
   }
-  
+
   let minValue = data.minValue;
   let maxValue = data.maxValue;
   //最大值最小值分成3分
   let peace = (maxValue - minValue) / 5;
-  
-  
+
+
   // 获取每个格子的点的大小，数值为2,4,6,8,10
   function getSymbolSize(value) {
     if (1 == 1) {
@@ -760,56 +760,66 @@ export function createCalanderChartOption(data) {
     }
     return v;
   }
-  
+  let legendData = new Array();
   let seriesData = new Array();
-  let serie = {
-    type: 'graph',
-    edgeSymbol: ['none', 'arrow'],
-    coordinateSystem: 'calendar',
-    links: links,
-    symbolSize: 15,
-    calendarIndex: 0,
-    itemStyle: {
-      color: 'green',
-      shadowBlue: 9,
-      shadowOffsetX: 1.5,
-      shadowOffsetY: 3,
-      shadowColor: '#555'
-    },
-    lineStyle: {
-      color: '#D10E00',
-      width: 1,
-      opacity: 1
-    },
-    data: data.graphData,
-    z: 20
-  };
-  seriesData.push(serie);
-  serie = {
-    type: 'graph',
-    edgeSymbol: ['none', 'arrow'],
-    coordinateSystem: 'calendar',
-    links: links,
-    symbolSize: 15,
-    calendarIndex: 1,
-    itemStyle: {
-      color: 'green',
-      shadowBlue: 9,
-      shadowOffsetX: 1.5,
-      shadowOffsetY: 3,
-      shadowColor: '#555'
-    },
-    lineStyle: {
-      color: '#D10E00',
-      width: 1,
-      opacity: 1
-    },
-    data: data.graphData,
-    z: 20
-  };
-  seriesData.push(serie);
-  serie = {
-    name: data.legendData[0],
+  //线路图
+  if (data.graphData != null && data.graphData.length > 0) {
+    let graphName = data.graphName == null ? '线路图' : data.graphName;
+    legendData.push(graphName);
+    let serieG0 = {
+      name: graphName,
+      type: 'graph',
+      edgeSymbol: ['none', 'arrow'],
+      coordinateSystem: 'calendar',
+      links: links,
+      symbolSize: 15,
+      calendarIndex: 0,
+      itemStyle: {
+        color: 'green',
+        shadowBlue: 9,
+        shadowOffsetX: 1.5,
+        shadowOffsetY: 3,
+        shadowColor: '#555'
+      },
+      lineStyle: {
+        color: '#D10E00',
+        width: 1,
+        opacity: 1
+      },
+      data: data.graphData,
+      z: 20
+    };
+    seriesData.push(serieG0);
+    let serieG1 = {
+      name: graphName,
+      type: 'graph',
+      edgeSymbol: ['none', 'arrow'],
+      coordinateSystem: 'calendar',
+      links: links,
+      symbolSize: 15,
+      calendarIndex: 1,
+      itemStyle: {
+        color: 'green',
+        shadowBlue: 9,
+        shadowOffsetX: 1.5,
+        shadowOffsetY: 3,
+        shadowColor: '#555'
+      },
+      lineStyle: {
+        color: '#D10E00',
+        width: 1,
+        opacity: 1
+      },
+      data: data.graphData,
+      z: 20
+    };
+    seriesData.push(serieG1);
+  }
+  //第一个
+  let seriesName = data.seriesName == null ? '系列1' : data.seriesName;
+  legendData.push(seriesName);
+  let serieL00 = {
+    name: seriesName,
     type: 'scatter',
     coordinateSystem: 'calendar',
     data: data.series,
@@ -818,12 +828,14 @@ export function createCalanderChartOption(data) {
       return getSymbolSize(val);
     },
     itemStyle: {
-      color: 'red'
+      color: 'green',
+      shadowBlur: 10,
+      shadowColor: '#333'
     }
   };
-  seriesData.push(serie);
-  serie = {
-    name: data.legendData[0],
+  seriesData.push(serieL00);
+  let serieL01 = {
+    name: seriesName,
     type: 'scatter',
     coordinateSystem: 'calendar',
     calendarIndex: 1,
@@ -833,13 +845,55 @@ export function createCalanderChartOption(data) {
       return getSymbolSize(val);
     },
     itemStyle: {
-      color: 'red'
+      color: 'green',
+      shadowBlur: 10,
+      shadowColor: '#333'
     }
   };
-  seriesData.push(serie);
+  seriesData.push(serieL01);
+  if (data.series2 != null && data.series2.length > 0) {
+    let series2Name = data.series2Name == null ? '系列2' : data.series2Name;
+    legendData.push(series2Name);
+    //第二个
+    let serieL20 = {
+      name: series2Name,
+      type: 'scatter',
+      coordinateSystem: 'calendar',
+      calendarIndex: 0,
+      data: data.series2,
+      symbolSize: function(val) {
+        return getSymbolSize(val);
+      },
+      itemStyle: {
+        color: 'red',
+        shadowBlur: 10,
+        shadowColor: '#333'
+      }
+    };
+    seriesData.push(serieL20);
+    let serieL21 = {
+      name: series2Name,
+      type: 'scatter',
+      coordinateSystem: 'calendar',
+      calendarIndex: 1,
+      data: data.series2,
+      symbolSize: function(val) {
+        return getSymbolSize(val);
+      },
+      itemStyle: {
+        color: 'red',
+        shadowBlur: 10,
+        shadowColor: '#333'
+      }
+    };
+    seriesData.push(serieL21);
+  }
+  //数值最高的
   if (data.top && data.top > 0) {
-    serie = {
-      name: data.legendData[1],
+    let topName = '前' + data.top + '项';
+    legendData.push(topName);
+    let serieT0 = {
+      name: topName,
       type: 'effectScatter',
       coordinateSystem: 'calendar',
       calendarIndex: 1,
@@ -862,9 +916,9 @@ export function createCalanderChartOption(data) {
       },
       zlevel: 1
     };
-    seriesData.push(serie);
-    serie = {
-      name: data.legendData[1],
+    seriesData.push(serieT0);
+    let serieT1 = {
+      name: topName,
       type: 'effectScatter',
       coordinateSystem: 'calendar',
       data: data.series.sort(function(a, b) {
@@ -886,10 +940,10 @@ export function createCalanderChartOption(data) {
       },
       zlevel: 1
     };
-    seriesData.push(serie);
+    seriesData.push(serieT1);
   }
-  
-  
+
+
   let option = {
     backgroundColor: '#404a59',
     title: {
@@ -911,7 +965,7 @@ export function createCalanderChartOption(data) {
     legend: {
       top: '30',
       left: '100',
-      data: data.legendData,
+      data: legendData,
       textStyle: {
         color: '#fff'
       }
@@ -975,44 +1029,30 @@ export function createCalanderChartOption(data) {
  * @param {Object} data
  * @param {Object} echarts
  */
-export function createCalanderPieChartOption(data,myChart,echarts) {
+export function createCalanderPieChartOption(data, myChart, echarts) {
   const unit = data.unit == null ? '' : data.unit;
-  let cellSizeValue = data.cellSize ==null ? 100:data.cellSize;
+  let cellSizeValue = data.cellSize == null ? 80 : data.cellSize;
   let cellSize = [cellSizeValue, cellSizeValue];
-  let pieRadius = data.pieRadius ==null ? 30:data.pieRadius;
+  let pieRadius = data.pieRadius == null ? 30 : data.pieRadius;
   let app = {};
   let seriesData = data.seriesData;
   let scatterData = data.scatterData;
 
-  function getPieSeries(scatterData, chart) {
-    return echarts.util.map(scatterData, function(item, index) {
-      let center = chart.convertToPixel('calendar', item);
-      return {
-        id: index + 'pie',
-        type: 'pie',
-        center: center,
-        label: {
-          formatter: '{c}',
-          position: 'inside'
-        },
-        radius: pieRadius,
-        data: seriesData[item[0]]
-      };
-    });
-  }
-
-  function getPieSeriesUpdate(scatterData, chart) {
-    return echarts.util.map(scatterData, function(item, index) {
-      let center = chart.convertToPixel('calendar', item);
-      return {
-        id: index + 'pie',
-        center: center
-      };
-    });
-  }
-
+  const pieSeries = scatterData.map(function(item, index) {
+    return {
+      type: 'pie',
+      id: 'pie-' + index,
+      center: item[0],
+      radius: pieRadius,
+      coordinateSystem: 'calendar',
+      label: {
+        formatter: '{c}',
+        position: 'inside'
+      },
+      data: seriesData[item[0]]
+    };
+  });
   let option = {
-
     title: {
       show: true,
       top: 'auto',
@@ -1034,11 +1074,10 @@ export function createCalanderPieChartOption(data,myChart,echarts) {
     },
     legend: {
       data: data.legendData,
-      bottom:'10',
-      top: '25'
+      bottom: 20
     },
     calendar: {
-      top: 100,
+      top: 'middle',
       left: 'center',
       orient: 'vertical',
       cellSize: cellSize,
@@ -1057,41 +1096,23 @@ export function createCalanderPieChartOption(data,myChart,echarts) {
       range: data.range
     },
     series: [{
-      id: 'label',
-      type: 'scatter',
-      name: '用药',
-      coordinateSystem: 'calendar',
-      symbolSize: 1,
-      label: {
-        show: true,
-        formatter: function(params) {
-          return echarts.format.formatTime('dd', params.value[0])+'号';
+        id: 'label',
+        type: 'scatter',
+        coordinateSystem: 'calendar',
+        symbolSize: 0,
+        label: {
+          show: true,
+          formatter: function(params) {
+            return echarts.time.format(params.value[0], '{dd}', false);
+          },
+          offset: [-cellSize[0] / 2 + 10, -cellSize[1] / 2 + 10],
+          fontSize: 14
         },
-        offset: [-cellSize[0] / 2 + 10, -cellSize[1] / 2 + 10],
-        color: '#000',
-        fontSize: 12
+        data: scatterData
       },
-      data: data.scatterData
-    }]
+      ...pieSeries
+    ]
   };
-
-  if (!app.inNode) {
-    let pieInitialized;
-    setTimeout(function() {
-      pieInitialized = true;
-      myChart.setOption({
-        series: getPieSeries(scatterData, myChart)
-      });
-    }, 10);
-
-    app.onresize = function() {
-      if (pieInitialized) {
-        myChart.setOption({
-          series: getPieSeriesUpdate(scatterData, myChart)
-        });
-      }
-    };
-  }
   return option;
 }
 
@@ -1152,65 +1173,65 @@ export function createCalenderHeatMapChartOption(data, echarts) {
 
 //将hex表示方式转换为rgb表示方式(这里返回rgb数组模式)
 function colorRgb(sColor) {
-    let reg = /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/;
-    sColor = sColor.toLowerCase();
-    if (sColor && reg.test(sColor)) {
-        if (sColor.length === 4) {
-            let sColorNew = "#";
-            for (let i = 1; i < 4; i += 1) {
-                sColorNew += sColor.slice(i, i + 1).concat(sColor.slice(i, i + 1));
-            }
-            sColor = sColorNew;
-        }
-        //处理六位的颜色值
-        let sColorChange = [];
-        for (let i = 1; i < 7; i += 2) {
-            sColorChange.push(parseInt("0x" + sColor.slice(i, i + 2)));
-        }
-        return sColorChange;
-    } else {
-        return sColor;
+  let reg = /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/;
+  sColor = sColor.toLowerCase();
+  if (sColor && reg.test(sColor)) {
+    if (sColor.length === 4) {
+      let sColorNew = "#";
+      for (let i = 1; i < 4; i += 1) {
+        sColorNew += sColor.slice(i, i + 1).concat(sColor.slice(i, i + 1));
+      }
+      sColor = sColorNew;
     }
+    //处理六位的颜色值
+    let sColorChange = [];
+    for (let i = 1; i < 7; i += 2) {
+      sColorChange.push(parseInt("0x" + sColor.slice(i, i + 2)));
+    }
+    return sColorChange;
+  } else {
+    return sColor;
+  }
 };
 
 //渐变色算法例子
 function colorHex(rgb) {
-    let _this = rgb;
-    let reg = /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/;
-    if (/^(rgb|RGB)/.test(_this)) {
-        let aColor = _this.replace(/(?:\(|\)|rgb|RGB)*/g, "").split(",");
-        let strHex = "#";
-        for (let i = 0; i < aColor.length; i++) {
-            let hex = Number(aColor[i]).toString(16);
-            hex = hex < 10 ? 0 + '' + hex : hex;// 保证每个rgb的值为2位
-            if (hex === "0") {
-                hex += hex;
-            }
-            strHex += hex;
-        }
-        if (strHex.length !== 7) {
-            strHex = _this;
-        }
-        return strHex;
-    } else if (reg.test(_this)) {
-        let aNum = _this.replace(/#/, "").split("");
-        if (aNum.length === 6) {
-            return _this;
-        } else if (aNum.length === 3) {
-            let numHex = "#";
-            for (let i = 0; i < aNum.length; i += 1) {
-                numHex += (aNum[i] + aNum[i]);
-            }
-            return numHex;
-        }
-    } else {
-        return _this;
+  let _this = rgb;
+  let reg = /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/;
+  if (/^(rgb|RGB)/.test(_this)) {
+    let aColor = _this.replace(/(?:\(|\)|rgb|RGB)*/g, "").split(",");
+    let strHex = "#";
+    for (let i = 0; i < aColor.length; i++) {
+      let hex = Number(aColor[i]).toString(16);
+      hex = hex < 10 ? 0 + '' + hex : hex; // 保证每个rgb的值为2位
+      if (hex === "0") {
+        hex += hex;
+      }
+      strHex += hex;
     }
+    if (strHex.length !== 7) {
+      strHex = _this;
+    }
+    return strHex;
+  } else if (reg.test(_this)) {
+    let aNum = _this.replace(/#/, "").split("");
+    if (aNum.length === 6) {
+      return _this;
+    } else if (aNum.length === 3) {
+      let numHex = "#";
+      for (let i = 0; i < aNum.length; i += 1) {
+        numHex += (aNum[i] + aNum[i]);
+      }
+      return numHex;
+    }
+  } else {
+    return _this;
+  }
 };
 
 //渐变颜色
-export function getGradualColor(v,step,maxValue,startColor,endColor) {
-  let startRGB = colorRgb(startColor);//转换为rgb数组模式
+export function getGradualColor(v, step, maxValue, startColor, endColor) {
+  let startRGB = colorRgb(startColor); //转换为rgb数组模式
   let startR = startRGB[0];
   let startG = startRGB[1];
   let startB = startRGB[2];
@@ -1220,15 +1241,15 @@ export function getGradualColor(v,step,maxValue,startColor,endColor) {
   let endG = endRGB[1];
   let endB = endRGB[2];
 
-  let sR = (endR - startR) / step;//总差值
+  let sR = (endR - startR) / step; //总差值
   let sG = (endG - startG) / step;
   let sB = (endB - startB) / step;
 
   let i = v * step / maxValue;
 
   //计算hex值
-  let hex = colorHex('rgb('+ parseInt((sR * i + startR))+ ',' + parseInt((sG * i + startG))+ ',' +
-      parseInt((sB * i + startB)) + ')');
+  let hex = colorHex('rgb(' + parseInt((sR * i + startR)) + ',' + parseInt((sG * i + startG)) + ',' +
+    parseInt((sB * i + startB)) + ')');
   return hex;
 }
 
@@ -1239,15 +1260,16 @@ export function getGradualColor(v,step,maxValue,startColor,endColor) {
  * @param {Object} echarts
  */
 export function createHeatMapChartOption(data, echarts) {
-  let showLabel = data.showLabel ==null ? true : data.showLabel;
-  let showXLabel = data.xdata.length >31 ? false : true;
-  let step = (data.maxValue - data.minValue)/5;
-  if(step<=0){
-    step=1;
+  let showLabel = data.showLabel == null ? true : data.showLabel;
+  let showXLabel = data.xdata.length > 31 ? false : true;
+  let step = (data.maxValue - data.minValue) / 5;
+  if (step <= 0) {
+    step = 1;
   }
+
   function setColors(val, index) {
     let obj = {};
-    let color = getGradualColor(val,step,data.maxValue,"#15B1F4","#D1621D");
+    let color = getGradualColor(val, step, data.maxValue, "#15B1F4", "#D1621D");
     if (color != null) {
       obj = {
         color: color
@@ -1259,7 +1281,7 @@ export function createHeatMapChartOption(data, echarts) {
   for (let i = 0; i < data.series.length; i++) {
     let sd = data.series[i];
     let serieDetails = new Array();
-    for (let j = 0; j < sd.data.length; j++){
+    for (let j = 0; j < sd.data.length; j++) {
       let elv = sd.data[j];
       let itemStyle = setColors(elv[2], j);
       let obj = {};
@@ -1310,7 +1332,7 @@ export function createHeatMapChartOption(data, echarts) {
       formatter: function(params) {
         //console.log(params)
         return (
-          params.seriesName +':<br/>'+params.name+': ' +
+          params.seriesName + ':<br/>' + params.name + ': ' +
           params.value[2] + params.value[3]
         );
       }
@@ -2168,7 +2190,7 @@ export function createShadowChartOption(data) {
       type: 'line',
       stack: data.series[i].stack,
       areaStyle: {
-        
+
       },
       data: data.series[i].data
     };
@@ -2180,10 +2202,10 @@ export function createShadowChartOption(data) {
     },
     tooltip: {
       trigger: 'axis',
-      formatter: function (params) {
+      formatter: function(params) {
         var relVal = params[0].name
         for (var i = 0, l = params.length; i < l; i++) {
-          relVal += '<br/>' + params[i].seriesName +": &nbsp;&nbsp;&nbsp;"+ params[i].data +data.series[i].unit
+          relVal += '<br/>' + params[i].seriesName + ": &nbsp;&nbsp;&nbsp;" + params[i].data + data.series[i].unit
         }
         return relVal
       },
@@ -2255,12 +2277,12 @@ export function createSunburstChartOption(chartData) {
         var val = Number(currName);
         var vv = val % 7;
         var style;
-        if(vv<=7){
+        if (vv <= 7) {
           bookScoreId = vv;
-          style = {color:colors[vv]};
-        }else{
+          style = { color: colors[vv] };
+        } else {
           bookScoreId = 0;
-          style = {color:colors[5]};
+          style = { color: colors[5] };
         }
         block[star].label = {
           color: style.color,

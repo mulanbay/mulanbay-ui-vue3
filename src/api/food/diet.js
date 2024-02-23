@@ -93,17 +93,17 @@ export function getFoodsAvgSim(query) {
   })
 }
 
-export function statSimLog(query) {
+export function getDietSimLogStat(query) {
   return request({
-    url: '/diet/statSimLog',
+    url: '/diet/simLogStat',
     method: 'get',
     params: query
   })
 }
 
-export function statDietWordCloud(query) {
+export function getDietWordCloudStat(query) {
   return request({
-    url: '/diet/statWordCloud',
+    url: '/diet/wordCloudStat',
     method: 'get',
     params: query
   })
