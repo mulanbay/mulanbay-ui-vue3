@@ -42,3 +42,19 @@ export function deleteBusinessTrip(ids) {
     data
   })
 }
+
+export function getBusinessTripDateStat(query) {
+  return request({
+    url: '/businessTrip/dateStat',
+    method: 'get',
+    params: query
+  })
+}
+
+export function getBusinessTripMapStat(query) {
+  return request({
+    url: '/businessTrip/mapStat',
+    method: 'get',
+    params: query
+  })
+}

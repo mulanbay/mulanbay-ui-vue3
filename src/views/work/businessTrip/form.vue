@@ -28,7 +28,7 @@
         <el-select
           v-model="form.countryId"
           placeholder="所在国家"
-          clearable
+          :style="{width: '100%'}"
           filterable
           @change="handleCountryChange">
           <el-option
