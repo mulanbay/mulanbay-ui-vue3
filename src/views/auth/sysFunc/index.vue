@@ -708,9 +708,9 @@
     open.value = true;
     title.value = "复制";
     if (row != null && row.funcId) {
-      this.form.parentId = row.parentId;
+      form.value.parentId = row.parentId;
     } else {
-      this.form.parentId = 0;
+      form.value.parentId = 0;
     }
     getSysFunc(row.funcId).then(response => {
       form.value = response;
@@ -729,7 +729,7 @@
       open.value = true;
       title.value = "修改(ID:" + id + ")";
       //设置oldPid
-      oldPid.value = form.parentId;
+      oldPid.value = form.value.parentId;
       form.value.parent = null;
     });
   }

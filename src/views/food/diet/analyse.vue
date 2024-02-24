@@ -99,19 +99,18 @@
         <el-button type="primary" icon="TrendCharts" @click="handleQuery" v-hasPermi="['food:diet:analyse']">统计</el-button>
         <el-button icon="refresh" @click="resetQuery">重置</el-button>
         <el-button type="warning" icon="more" @click="handleMoreCdn">{{cdnTitle}}</el-button>
+        <el-button type="success" icon="HomeFilled" @click="gotoMain" v-hasPermi="['food:diet:analyse']">首页</el-button>
+        <el-button type="success" icon="DArrowLeft" :disabled="queryParams.page==1" @click="gotoNextPage(-1)" v-hasPermi="['food:diet:analyse']">上一页</el-button>
+        <el-button type="success" icon="DArrowRight" @click="gotoNextPage(1)" v-hasPermi="['food:diet:analyse']">下一页</el-button>
+      </el-form-item>
+      <el-form-item label="每页数量">
+          <el-input-number v-model="queryParams.pageSize" clearable :min="0" label="" style="width: 120px"></el-input-number>
       </el-form-item>
     </el-form>
 
     <!--图表数据-->
     <div ref="analyseChart" :style="{height:height,margin:0 }" />
-    
-    <pagination
-      v-show="total > 0"
-      :total="total"
-      v-model:page="queryParams.page"
-      v-model:limit="queryParams.pageSize"
-      @pagination="initChart" />
-    
+
   </div>
 </template>
 
@@ -128,8 +127,6 @@
   let analyseChartIns = ref(null);
   
   const height = ref((document.body.clientHeight - 240).toString() + 'px');
-  // 总条数(目前写死只能显示前200条)
-  const total = ref(200);
 
   const foodTypeOptions = ref([]);
   const dietTypeOptions = ref([]);
@@ -198,6 +195,18 @@
     });
   }
   
+  /** 首页 */
+  function gotoMain(){
+    queryParams.value.page = 1;
+    initChart();
+  }
+  
+  /** 上一页/下一页 */
+  function gotoNextPage(p){
+    queryParams.value.page += p;
+    initChart();
+  }
+  
   /** 修改图表类型 */
   function changeChartType(newVal) {
     if (newVal == 'TREE_MAP') {
@@ -208,6 +217,7 @@
   
   /** 搜索按钮操作 */
   function handleQuery() {
+    queryParams.value.page = 1;
     initChart();
   }
 
@@ -223,6 +233,7 @@
       response => {
         proxy.$modal.closeLoading();
         if(response.xdata.length<=0){
+          queryParams.value.page = 1;
           proxy.$modal.msgError("无更多数据");
           return;
         }

@@ -1,30 +1,39 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryRef" :inline="true">
-      <el-form-item label="名称检索" prop="name">
-        <el-input
-          v-model="queryParams.name"
-          placeholder="请输入名称"
-          clearable
-          style="width: 240px"
-          @keyup.enter.native="handleQuery" />
-      </el-form-item>
-      <el-form-item label="状态" prop="status">
+      <el-form-item label="所在公司" prop="companyId">
         <el-select
-          v-model="queryParams.status"
-          placeholder="状态"
+          v-model="queryParams.companyId"
+          placeholder="公司"
           clearable
           style="width: 240px">
           <el-option
-            v-for="dict in commonStatusOptions"
+            v-for="dict in companyOptions"
             :key="dict.id"
             :label="dict.text"
             :value="dict.id" />
         </el-select>
       </el-form-item>
+      <el-form-item label="起止日期" style="width: 308px">
+        <el-date-picker
+          v-model="dateRange"
+          unlink-panels
+          value-format="YYYY-MM-DD"
+          type="daterange"
+          range-separator="-"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          :shortcuts="datePickerOptions"></el-date-picker>
+      </el-form-item>
+      <el-form-item v-if="moreCdn==true" label="加班时长">
+        <el-input-number v-model="queryParams.minHours" clearable :min="0" label="%" style="width: 120px"></el-input-number>
+        <el-input-number v-model="queryParams.maxHours" clearable :min="0" label="%" style="width: 120px"></el-input-number>
+        小时
+      </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="search" @click="handleQuery" v-hasPermi="['consume:consumeSource:list']">搜索</el-button>
+        <el-button type="primary" icon="search" @click="handleQuery" v-hasPermi="['work:workOvertime:list']">搜索</el-button>
         <el-button icon="refresh" @click="resetQuery">重置</el-button>
+        <el-button type="warning" icon="more" @click="handleMoreCdn">{{cdnTitle}}</el-button>
       </el-form-item>
     </el-form>
 
@@ -34,7 +43,7 @@
           type="primary"
           icon="plus"
           @click="handleCreate"
-          v-hasPermi="['consume:consumeSource:create']">新增</el-button>
+          v-hasPermi="['work:workOvertime:create']">新增</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -42,7 +51,7 @@
           icon="edit"
           :disabled="single"
           @click="handleEdit"
-          v-hasPermi="['consume:consumeSource:edit']">修改</el-button>
+          v-hasPermi="['work:workOvertime:edit']">修改</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -50,36 +59,36 @@
           icon="delete"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['consume:consumeSource:delete']">删除</el-button>
+          v-hasPermi="['work:workOvertime:delete']">删除</el-button>
       </el-col>
     </el-row>
 
     <!--列表数据-->
-    <el-table v-loading="loading" :data="consumeSourceList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="workOvertimeList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="ID" fixed="left" prop="sourceId" sortable="custom" align="center" width="120">
+      <el-table-column label="ID" fixed="left" prop="overtimeId" sortable="custom" align="center" width="90">
         <template #default="scope">
-          <span>{{ scope.row.sourceId }}</span>
+          <span>{{ scope.row.overtimeId }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="名称" fixed="left" min-width="200px" :show-overflow-tooltip="true">
+      <el-table-column label="公司" fixed="left" min-width="200px" :show-overflow-tooltip="true">
         <template #default="scope">
-          <span class="link-type" @click="handleEdit(scope.row)">{{ scope.row.sourceName }}</span>
+          <span>{{ scope.row.company.companyName }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="状态" align="center" width="100">
+      <el-table-column label="加班日期" min-width="120px">
         <template #default="scope">
-          <el-switch v-model="scope.row.status" active-value="ENABLE" inactive-value="DISABLE" disabled></el-switch>
+          <span class="link-type" @click="handleEdit(scope.row)">{{ scope.row.workDate }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="排序号" align="center">
+      <el-table-column label="加班时间" align="center" width="200">
         <template #default="scope">
-          <span>{{ scope.row.orderIndex }}</span>
+          <span>{{ formatWorkTimeRange(scope.row)}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="创建时间" align="center" width="180">
+      <el-table-column label="加班时长(小时)" align="center" width="120">
         <template #default="scope">
-          <span>{{ scope.row.createdTime }}</span>
+          <span>{{ scope.row.hours }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" width="140" fixed="right" class-name="small-padding fixed-width">
@@ -89,14 +98,14 @@
             type="success"
             icon="edit"
             @click="handleEdit(scope.row)"
-            v-hasPermi="['consume:consumeSource:edit']">修改
+            v-hasPermi="['work:workOvertime:edit']">修改
           </el-button>
           <el-button
             link
             type="danger"
             icon="delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['consume:consumeSource:delete']">删除
+            v-hasPermi="['work:workOvertime:delete']">删除
           </el-button>
         </template>
       </el-table-column>
@@ -110,14 +119,16 @@
       @pagination="getList" />
 
     <!-- 表单 -->
-    <ConsumeSourceForm ref="formRef" @success="getList" />
+    <WorkOvertimeForm ref="formRef" @success="getList" />
 
   </div>
 </template>
 
-<script setup name="ConsumeSource">
-  import { fetchList, deleteConsumeSource } from "@/api/consume/consumeSource";
-  import ConsumeSourceForm from './form.vue'
+<script setup name="WorkOvertime">
+  import { fetchList, deleteWorkOvertime } from "@/api/work/workOvertime";
+  import { getCompanyTree } from "@/api/work/company";
+  import { formatDays } from "@/utils/datetime";
+  import WorkOvertimeForm from './form.vue'
 
   const { proxy } = getCurrentInstance();
   const formRef = ref();
@@ -133,7 +144,12 @@
   // 总条数
   const total = ref(0);
   // 查询列表数据
-  const consumeSourceList = ref([]);
+  const workOvertimeList = ref([]);
+  const companyOptions = ref([]);
+
+  //日期范围快速选择
+  const datePickerOptions = ref(proxy.datePickerOptions);
+  const dateRange = ref([]);
 
   const data = reactive({
     queryParams: {
@@ -144,13 +160,34 @@
 
   const { queryParams } = toRefs(data);
 
+  //查询条件更多属性 start
+  const cdnTitle = ref("更多");
+  const moreCdn = ref(false);
+
+  /** 更多查询条件处理 */
+  function handleMoreCdn() {
+    if (moreCdn.value == true) {
+      moreCdn.value = false;
+      cdnTitle.value = '更多';
+    } else {
+      moreCdn.value = true;
+      cdnTitle.value = '取消';
+    }
+  }
+  
+  /** 时间区间 */
+  function formatWorkTimeRange(row) {
+    let s = row.startTime.substr(11, 5) + '~~' + row.endTime.substr(11, 5);
+    return s;
+  }
+
   /** 查询列表 */
   function getList() {
     loading.value = true;
-    consumeSourceList.value = [];
-    fetchList(queryParams.value).then(
+    workOvertimeList.value = [];
+    fetchList(proxy.addDateRange(queryParams.value, dateRange.value)).then(
       response => {
-        consumeSourceList.value = response.rows;
+        workOvertimeList.value = response.rows;
         total.value = response.total;
         loading.value = false;
       }
@@ -176,19 +213,19 @@
 
   /** 修改按钮操作 */
   function handleEdit(row) {
-    const id = row.sourceId || ids.value.join(",");
+    const id = row.overtimeId || ids.value.join(",");
     formRef.value.openForm(id, 'edit');
   }
 
   /** 删除按钮操作 */
   function handleDelete(row) {
-    const deleteIds = row.sourceId || ids.value.join(",");
+    const deleteIds = row.overtimeId || ids.value.join(",");
     proxy.$confirm('是否确认删除编号为"' + deleteIds + '"的数据项?', "警告", {
       confirmButtonText: "确定",
       cancelButtonText: "取消",
       type: "warning"
     }).then(function() {
-      return deleteConsumeSource(deleteIds);
+      return deleteWorkOvertime(deleteIds);
     }).then(() => {
       proxy.$modal.msgSuccess("删除成功");
       getList();
@@ -197,7 +234,7 @@
 
   // 多选框选中数据
   function handleSelectionChange(selection) {
-    ids.value = selection.map(item => item.sourceId)
+    ids.value = selection.map(item => item.overtimeId)
     single.value = selection.length != 1
     multiple.value = !selection.length
   }
@@ -205,5 +242,8 @@
   /** 初始化 **/
   onMounted(() => {
     getList();
+    getCompanyTree().then(response => {
+      companyOptions.value = response;
+    });
   })
 </script>
