@@ -47,15 +47,6 @@ import DictTag from '@/components/DictTag'
 
 const app = createApp(App)
 
-import BaiduMap from 'vue-baidu-map-3x';
-//百度地图
-app.use(BaiduMap, {
-  // ak 是在百度地图开发者平台申请的密钥 详见 http://lbsyun.baidu.com/apiconsole/key */
-  ak: 'key',
-  // v:'2.0',  // 默认使用3.0
-  // type: 'WebGL' // ||API 默认API  (使用此模式 BMap=BMapGL)
-});
-
 app.config.globalProperties.parseTime = parseTime
 app.config.globalProperties.handleTree = handleTree
 

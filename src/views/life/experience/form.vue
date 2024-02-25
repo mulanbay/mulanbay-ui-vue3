@@ -126,20 +126,15 @@
       </div>
     </template>
   </el-dialog>
-  
-  <!-- 地理选择 -->
-  <LocationSelect ref="locationSelectRef" @confirmLocation="setLocation" />
-  
+
 </template>
 
 <script setup name="ExperienceForm">
   import { createExperience, editExperience, getExperience } from "@/api/life/experience";
   import {dateDiff} from "@/utils/datetime";
   import { appendTagToOptions } from "@/utils/tagUtils";
-  import LocationSelect from './locationSelect.vue';
 
   const { proxy } = getCurrentInstance();
-  const locationSelectRef = ref();
 
   //可执行时间段
   const title = ref('人生经历');

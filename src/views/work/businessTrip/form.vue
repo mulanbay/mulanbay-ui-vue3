@@ -126,15 +126,6 @@
       countryId: [
         { required: true, message: "国家不能为空", trigger: "blur" }
       ],
-      provinceId: [
-        { required: true, message: "省份不能为空", trigger: "blur" }
-      ],
-      cityId: [
-        { required: true, message: "城市不能为空", trigger: "blur" }
-      ],
-      districtId: [
-        { required: true, message: "县不能为空", trigger: "blur" }
-      ]
     }
   });
 
@@ -150,7 +141,6 @@
       companyOptions.value = response;
     });
     getCountryTreeSelect();
-    getProvinceTreSelect();
   }
   
   /** 国家列表 */
@@ -161,17 +151,15 @@
   }
   
   /** 国家变化 */
-  function handleCountryChange() {
-    proxy.$forceUpdate();
-  }
-  
-  /** 查询省份下拉树结构 */
-  function getProvinceTreSelect() {
-    getProvinceTree().then(response => {
+  function handleCountryChange(countryId) {
+    if(countryId==null){
+      return;
+    }
+    getProvinceTree(countryId).then(response => {
       provinceOptions.value = response;
     });
   }
-  
+
   /** 查询城市下拉树结构 */
   function handleProvinceChange(provinceId) {
     if(provinceId==null){
@@ -214,6 +202,7 @@
           form.value.city = null;
           form.value.districtId = response.district==null ? null:response.district.districtId;
           form.value.district = null;
+          handleCountryChange(form.value.countryId);
           handleProvinceChange(form.value.provinceId);
           handleCityChange(form.value.cityId);
         });
@@ -222,6 +211,8 @@
       }
     } else {
       title.value = "新增";
+      form.value.countryId = 290;
+      handleCountryChange(form.value.countryId);
     }
   }
 
@@ -233,7 +224,7 @@
     form.value = {
       overtimeId: undefined,
       companyId: undefined,
-      countryId: 290,
+      countryId: undefined,
       days:1,
       startTime: undefined,
       endTime: undefined

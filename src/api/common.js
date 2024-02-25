@@ -77,10 +77,13 @@ export function getCountryTree() {
   })
 }
 
-export function getProvinceTree() {
+export function getProvinceTree(countryId) {
   return request({
     url: '/province/tree',
-    method: 'get'
+    method: 'get',
+    params: {
+      countryId:countryId
+    }
   })
 }
 
