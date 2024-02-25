@@ -76,9 +76,14 @@
           <span>{{ scope.row.expId }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="名称" min-width="200px" :show-overflow-tooltip="true">
+      <el-table-column label="名称" fixed="left" min-width="200px" :show-overflow-tooltip="true">
         <template #default="scope">
           <span class="link-type" @click="handleEdit(scope.row)">{{ scope.row.expName }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="位置" align="center" min-width="180px" :show-overflow-tooltip="true">
+        <template #default="scope">
+          <span>{{ formatLocation(scope.row) }}</span>
         </template>
       </el-table-column>
       <el-table-column label="统计" width="80" align="center">
@@ -230,6 +235,21 @@
   /** 明细列表 */
   function handleDetailList(row) {
     experienceDetailListRef.value.showData(row.expId);
+  }
+  
+  /** 位置信息 */
+  function formatLocation(row) {
+    let name ='';
+    if(row.province!=null){
+      name+=row.province.provinceName+'-';
+    }
+    if(row.city!=null){
+      name+=row.city.cityName+'-';
+    }
+    if(row.district!=null){
+      name+=row.district.districtName;
+    }
+    return name;
   }
 
   /** 查询列表 */

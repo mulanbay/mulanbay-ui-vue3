@@ -1,4 +1,4 @@
-const colorList = ['#284554', '#61a0a8', '#d48265', '#c23531', '#8B0A50', '#91c7ae', '#749f83',
+const colorList = ['#d48265', '#c23531', '#8B0A50','#284554', '#61a0a8',  '#91c7ae', '#749f83',
   '#ca8622', '#bda29a', '#6e7074', '#546570',
   '#080808', '#800000', '#006400', '#191970'
 ];
@@ -75,8 +75,8 @@ export function createDefaultMapChartOption(mapData, myChart, echarts) {
       formatter: function(params) {
         if (params.data != null && params.data.days != null) {
           var toolTiphtml = params.data.name +
-            '<br>天数:' + params.data.days + '天' + 
-            '<br>次数:' + params.data.counts + '次' + 
+            '<br>天数:' + params.data.days + '天' +
+            '<br>次数:' + params.data.counts + '次' +
             '<br>花费:' + params.data.cost + '元'
           return toolTiphtml;
         } else {
@@ -204,7 +204,7 @@ export function createDefaultMapChartOption(mapData, myChart, echarts) {
         rippleEffect: {
           brushType: 'stroke'
         },
-        emphasis:{
+        emphasis: {
           scale: true
         },
         label: {
@@ -431,7 +431,8 @@ export function createChinaTransferMapChartOption(mapData, myChart) {
   var series = [];
   for (let i = 0; i < mapData.detailDataList.length; i++) {
     var item = mapData.detailDataList[i];
-    var seColor = randomColor();
+    //var seColor = randomColor();
+    var seColor = colorList[i%10]
     var seName = item.name;
     series.push({
       name: seName,
@@ -482,7 +483,7 @@ export function createChinaTransferMapChartOption(mapData, myChart) {
         show: true,
         position: 'right',
         formatter: '{b}',
-        color: seColor,//字体颜色
+        color: seColor, //字体颜色
       },
       symbolSize: function(val) {
         return 10;
@@ -498,6 +499,7 @@ export function createChinaTransferMapChartOption(mapData, myChart) {
 
   let option = {
     backgroundColor: '#404a59',
+    color: colorList,
     title: {
       text: mapData.title,
       subtext: mapData.subTitle,
@@ -511,9 +513,9 @@ export function createChinaTransferMapChartOption(mapData, myChart) {
       formatter: function(params, ticket, callback) {
         //console.log(params)
         if (params.seriesType == "effectScatter") {
-          return params.seriesName+":" + params.data.name + " " + params.data.value[2]+unit;
+          return params.seriesName + ":" + params.data.name + " " + params.data.value[2] + unit;
         } else if (params.seriesType == "lines") {
-          return params.seriesName+"线路: "+params.data.fromName + ">" + params.data.toName + "<br />" + params.data.value+unit;
+          return params.seriesName + "线路: " + params.data.fromName + ">" + params.data.toName + "<br />" + params.data.value + unit;
         } else {
           return params.name;
         }
@@ -813,7 +815,7 @@ export function createWorldTransferMapChartOption(mapData, myChart) {
     geo: {
       show: false,
       map: "world",
-      emphasis:{
+      emphasis: {
         label: {
           show: false
         }
@@ -864,22 +866,73 @@ export function createLocationMapChartOption(mapData, myChart) {
   let caleSize = function(v) {
     if (mm == 0) {
       //都是一样的
-      return nn <= 10 ? 15 : 10;
+      return 5;
     }
     var s = (parseInt(v) - min) / mm * 20 + 5;
     return Math.round(s);
   };
   //最高的
-  let topSize = 0;
-  let ds = mapData.dataList.length;
-  if (ds == 0) {
-    topSize = 0;
-  } else if (ds <= 3) {
-    topSize = 1;
-  } else if (ds <= 5) {
-    topSize = 3;
-  } else {
-    topSize = 5;
+  let topSize = mapData.top==null ? 1: mapData.top;
+  let seriesData = new Array();
+  let legendData = new Array();
+  legendData.push(mapData.name);
+  let seriesMain = {
+    name: mapData.name,
+    type: 'scatter',
+    coordinateSystem: 'geo',
+    data: convertData(data),
+    symbolSize: function(val) {
+      //return caleSize(val[2]);
+      return 10;
+    },
+    label: {
+      formatter: '{b}',
+      position: 'right',
+      color: '#00c300',
+      show: true
+    },
+    emphasis: {
+      show: true
+    },
+    itemStyle: {
+      color: '#00c300'
+    }
+  };
+  seriesData.push(seriesMain);
+  if (topSize > 0) {
+    let topName = 'Top:'+topSize;
+    legendData.push(topName);
+    let seriesTop = {
+      name: topName,
+      type: 'effectScatter',
+      coordinateSystem: 'geo',
+      data: convertData(data.sort(function(a, b) {
+        return b.value - a.value;
+      }).slice(0, topSize)),
+      symbolSize: function(val) {
+        return caleSize(val[2]);
+      },
+      showEffectOn: 'render',
+      rippleEffect: {
+        brushType: 'stroke'
+      },
+      emphasis: {
+        scale: true
+      },
+      label: {
+        formatter: '{b}',
+        position: 'right',
+        color: '#f4e925',
+        show: true
+      },
+      itemStyle: {
+        color: '#f4e925',
+        shadowBlur: 10,
+        shadowColor: '#333'
+      },
+      zlevel: 1
+    };
+    seriesData.push(seriesTop);
   }
   let option = {
     backgroundColor: '#404a59',
@@ -902,7 +955,7 @@ export function createLocationMapChartOption(mapData, myChart) {
       orient: 'vertical',
       y: 'bottom',
       x: 'right',
-      data: [mapData.name],
+      data: legendData,
       textStyle: {
         color: '#fff'
       }
@@ -914,7 +967,7 @@ export function createLocationMapChartOption(mapData, myChart) {
         itemStyle: {
           areaColor: '#ffffff'
         },
-        label:{
+        label: {
           show: true
         }
       },
@@ -924,57 +977,7 @@ export function createLocationMapChartOption(mapData, myChart) {
         borderColor: '#111'
       }
     },
-    series: [{
-        name: mapData.name,
-        type: 'scatter',
-        coordinateSystem: 'geo',
-        data: convertData(data),
-        symbolSize: function(val) {
-          return caleSize(val[2]);
-        },
-        label: {
-          formatter: '{b}',
-          position: 'right',
-          show: false
-        },
-        emphasis: {
-          show: true
-        },
-        itemStyle: {
-          color: '#ddb926'
-        }
-      },
-      {
-        name: 'Top ' + topSize,
-        type: 'effectScatter',
-        coordinateSystem: 'geo',
-        data: convertData(data.sort(function(a, b) {
-          return b.value - a.value;
-        }).slice(0, 6)),
-        symbolSize: function(val) {
-          return caleSize(val[2]);
-        },
-        showEffectOn: 'render',
-        rippleEffect: {
-          brushType: 'stroke'
-        },
-        emphasis:{
-          scale: true
-        },
-        label: {
-          formatter: '{b}',
-          position: 'right',
-          color: '#f4e925',
-          show: true
-        },
-        itemStyle: {
-          color: '#f4e925',
-          shadowBlur: 10,
-          shadowColor: '#333'
-        },
-        zlevel: 1
-      }
-    ]
+    series: seriesData
   };
   return option;
 }

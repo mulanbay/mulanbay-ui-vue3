@@ -1,55 +1,123 @@
 <template>
 
   <!-- 表单编辑对话框 -->
-  <el-dialog :title="title" v-model="open" width="650px" append-to-body>
+  <el-dialog :title="title" v-model="open" width="600px" append-to-body>
     <el-form ref="formRef" :model="form" :rules="rules" v-loading="formLoading" label-width="80px">
       <el-row>
-        <el-col :span="10">
-          <el-form-item label="出发城市" prop="startCity">
-            <el-input v-model="form.startCity" placeholder="请输入城市" @blur="getStartCityLocation" />
-          </el-form-item>
-        </el-col>
-        <el-col :span="14">
-          <el-form-item label="地理坐标" prop="scLocation">
-            <el-input v-model="form.scLocation" placeholder="" style="width: 195px;" />
-            <el-button type="primary" @click="handleStartCityML">选择</el-button>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="10">
-          <el-form-item label="抵达城市" prop="arriveCity">
-            <el-input v-model="form.arriveCity" placeholder="请输入城市" @blur="getArriveCityLocation" />
-          </el-form-item>
-        </el-col>
-        <el-col :span="14">
-          <el-form-item label="地理坐标" prop="acLocation">
-            <el-input v-model="form.acLocation" placeholder="" style="width: 195px;" />
-            <el-button type="primary" @click="handleArriveCityML">选择</el-button>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="10">
-          <el-form-item label="所在国家" prop="countryId">
+        <el-col :span="24">
+          <el-form-item label="出发国家" prop="startCountryId">
             <el-select
-              v-model="form.countryId"
-              placeholder="所在国家"
-              clearable
+              v-model="form.startCountryId"
+              placeholder="出发国家"
+              :style="{width: '100%'}"
               filterable
-              @change="handleCountryChange">
+              @change="handleStartCountryChange">
               <el-option
-                v-for="dict in countryOptions"
+                v-for="dict in startCountryOptions"
                 :key="dict.id"
                 :label="dict.text"
                 :value="dict.id" />
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="14">
-          <el-form-item label="地理坐标" prop="countryLocation">
-            <el-input v-model="form.countryLocation" placeholder="" style="width: 195px;" />
-            <el-button type="primary" @click="handleCountryML">选择</el-button>
+      </el-row>
+      <el-row>
+        <el-col :span="24">
+          <el-form-item label="出发省市" prop="startProvinceId">
+            <el-select
+              v-model="form.startProvinceId"
+              placeholder="省份"
+              collapse-tags
+              :style="{width: '160px'}"
+              @change="handleStartProvinceChange">
+              <el-option
+                v-for="dict in startProvinceOptions"
+                :key="dict.id"
+                :label="dict.text"
+                :value="dict.id" />
+            </el-select>
+            <el-select
+              v-model="form.startCityId"
+              placeholder="城市"
+              collapse-tags
+              :style="{width: '160px'}"
+              @change="handleStartCityChange">
+              <el-option
+                v-for="dict in startCityOptions"
+                :key="dict.id"
+                :label="dict.text"
+                :value="dict.id" />
+            </el-select>
+            <el-select
+              v-model="form.startDistrictId"
+              placeholder="县城"
+              collapse-tags
+              :style="{width: '160px'}">
+              <el-option
+                v-for="dict in startDistrictOptions"
+                :key="dict.id"
+                :label="dict.text"
+                :value="dict.id" />
+            </el-select>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="24">
+          <el-form-item label="抵达国家" prop="arriveCountryId">
+            <el-select
+              v-model="form.arriveCountryId"
+              placeholder="抵达国家"
+              :style="{width: '100%'}"
+              filterable
+              @change="handleArriveCountryChange">
+              <el-option
+                v-for="dict in arriveCountryOptions"
+                :key="dict.id"
+                :label="dict.text"
+                :value="dict.id" />
+            </el-select>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="24">
+          <el-form-item label="抵达省市" prop="arriveProvinceId">
+            <el-select
+              v-model="form.arriveProvinceId"
+              placeholder="省份"
+              collapse-tags
+              :style="{width: '160px'}"
+              @change="handleArriveProvinceChange">
+              <el-option
+                v-for="dict in arriveProvinceOptions"
+                :key="dict.id"
+                :label="dict.text"
+                :value="dict.id" />
+            </el-select>
+            <el-select
+              v-model="form.arriveCityId"
+              placeholder="城市"
+              collapse-tags
+              :style="{width: '160px'}"
+              @change="handleArriveCityChange">
+              <el-option
+                v-for="dict in arriveCityOptions"
+                :key="dict.id"
+                :label="dict.text"
+                :value="dict.id" />
+            </el-select>
+            <el-select
+              v-model="form.arriveDistrictId"
+              placeholder="县城"
+              collapse-tags
+              :style="{width: '160px'}">
+              <el-option
+                v-for="dict in arriveDistrictOptions"
+                :key="dict.id"
+                :label="dict.text"
+                :value="dict.id" />
+            </el-select>
           </el-form-item>
         </el-col>
       </el-row>
@@ -74,47 +142,6 @@
       </el-row>
       <el-row>
         <el-col :span="24">
-          <el-form-item label="省市信息" prop="provinceId" v-if="form.international==false">
-            <el-select
-              v-model="form.provinceId"
-              placeholder="省份"
-              collapse-tags
-              :style="{width: '170px'}"
-              @change="handleProvinceChange">
-              <el-option
-                v-for="dict in provinceOptions"
-                :key="dict.id"
-                :label="dict.text"
-                :value="dict.id" />
-            </el-select>
-            <el-select
-              v-model="form.cityId"
-              placeholder="城市"
-              collapse-tags
-              :style="{width: '175px'}"
-              @change="handleCityChange">
-              <el-option
-                v-for="dict in cityOptions"
-                :key="dict.id"
-                :label="dict.text"
-                :value="dict.id" />
-            </el-select>
-            <el-select
-              v-model="form.districtId"
-              placeholder="县城"
-              collapse-tags
-              :style="{width: '175px'}">
-              <el-option
-                v-for="dict in districtOptions"
-                :key="dict.id"
-                :label="dict.text"
-                :value="dict.id" />
-            </el-select>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="24">
           <el-form-item label="备注信息" prop="remark">
             <el-input v-model="form.remark" type="textarea" placeholder="请输入内容"></el-input>
           </el-form-item>
@@ -133,7 +160,7 @@
 </template>
 
 <script setup name="ExperienceDetailForm">
-  import { createExperienceDetail, editExperienceDetail, getExperienceDetail, getCountryLocation, getCityLocation } from "@/api/life/experienceDetail";
+  import { createExperienceDetail, editExperienceDetail, getExperienceDetail, getLastExperienceDetail } from "@/api/life/experienceDetail";
   import { getCountryTree, getProvinceTree, getCityTree, getDistrictTree } from "@/api/common";
   const { proxy } = getCurrentInstance();
 
@@ -142,17 +169,27 @@
   const open = ref(false);
   const formLoading = ref(false);
   const formRef = ref();
-  const countryOptions = ref([]);
-  const provinceOptions = ref([]);
-  const cityOptions = ref([]);
-  const districtOptions = ref([]);
+  //出发信息
+  const startCountryOptions = ref([]);
+  const startProvinceOptions = ref([]);
+  const startCityOptions = ref([]);
+  const startDistrictOptions = ref([]);
+
+  //抵达信息
+  const arriveCountryOptions = ref([]);
+  const arriveProvinceOptions = ref([]);
+  const arriveCityOptions = ref([]);
+  const arriveDistrictOptions = ref([]);
 
   const data = reactive({
     form: {},
     // 表单校验
     rules: {
-      countryId: [
-        { required: true, message: "国家不能为空", trigger: "blur" }
+      startCountryId: [
+        { required: true, message: "出发国家不能为空", trigger: "blur" }
+      ],
+      arriveCountryId: [
+        { required: true, message: "抵达国家不能为空", trigger: "blur" }
       ],
       // provinceId: [
       //   { required: true, message: "省份不能为空", trigger: "blur" }
@@ -162,18 +199,6 @@
       // ],
       occurDate: [
         { required: true, message: "出发日期不能为空", trigger: "blur" }
-      ],
-      startCity: [
-        { required: true, message: "出发城市不能为空", trigger: "blur" }
-      ],
-      arriveCity: [
-        { required: true, message: "抵达城市不能为空", trigger: "blur" }
-      ],
-      scLocation: [
-        { required: true, message: "出发城市地理坐标不能为空", trigger: "blur" }
-      ],
-      acLocation: [
-        { required: true, message: "抵达城市地理坐标不能为空", trigger: "blur" }
       ],
       mapStat: [
         { required: true, message: "请选择是否加入地图统计", trigger: "blur" }
@@ -190,7 +215,7 @@
   const emit = defineEmits(['success']);
 
   /** 打开弹窗 */
-  const openForm = async (id,Type,expId) => {
+  const openForm = async (id, Type, expId) => {
     open.value = true;
     resetForm();
     initOptions();
@@ -200,14 +225,39 @@
       getExperienceDetail(id).then(response => {
         formLoading.value = false;
         form.value = response;
-        handleProvinceChange(response.provinceId);
-        handleCityChange(response.cityId);
+        //出发地理位置
+        form.value.startCountryId = response.startCountry == null ? null : response.startCountry.countryId;
+        form.value.startCountry = null;
+        form.value.startProvinceId = response.startProvince == null ? null : response.startProvince.provinceId;
+        form.value.startProvince = null;
+        form.value.startCityId = response.startCity == null ? null : response.startCity.cityId;
+        form.value.startCity = null;
+        form.value.startDistrictId = response.startDistrict == null ? null : response.startDistrict.districtId;
+        form.value.startDistrict = null;
+        handleStartCountryChange(form.value.startCountryId);
+        handleStartProvinceChange(form.value.startProvinceId);
+        handleStartCityChange(form.value.startCityId);
+
+        //抵达地理位置
+        form.value.arriveCountryId = response.arriveCountry == null ? null : response.arriveCountry.countryId;
+        form.value.arriveCountry = null;
+        form.value.arriveProvinceId = response.arriveProvince == null ? null : response.arriveProvince.provinceId;
+        form.value.arriveProvince = null;
+        form.value.arriveCityId = response.arriveCity == null ? null : response.arriveCity.cityId;
+        form.value.arriveCity = null;
+        form.value.arriveDistrictId = response.arriveDistrict == null ? null : response.arriveDistrict.districtId;
+        form.value.arriveDistrict = null;
+        handleArriveCountryChange(form.value.arriveCountryId);
+        handleArriveProvinceChange(form.value.arriveProvinceId);
+        handleArriveCityChange(form.value.arriveCityId);
+
         form.value.expId = response.experience.expId;
         form.value.experience = null;
       });
     } else {
       title.value = "新增";
       form.value.expId = expId;
+      initCreate();
     }
   }
 
@@ -216,112 +266,115 @@
 
   /** 初始化下拉树结构 */
   function initOptions() {
-    getCountryTreeSelect();
-    getProvinceTreSelect();
+    getStartCountryTreeSelect();
+    getArriveCountryTreeSelect();
   }
+  
+  /** 新增初始化 */
+  function initCreate() {
+    //把上一次最近的抵达城市作为下一个的出发城市
+    getLastExperienceDetail(form.value.expId).then(response => {
+      if(response!=null){
+        form.value.startCountryId = response.arriveCountry == null ? null : response.arriveCountry.countryId;
+        form.value.startProvinceId = response.arriveProvince == null ? null : response.arriveProvince.provinceId;
+        form.value.startCityId = response.arriveCity == null ? null : response.arriveCity.cityId;
+        form.value.startDistrictId = response.arriveDistrict == null ? null : response.arriveDistrict.districtId;
+      }
+      handleStartCountryChange(form.value.startCountryId);
+      handleStartProvinceChange(form.value.startProvinceId);
+      handleStartCityChange(form.value.startCityId);
+    });
+  }
+  
 
+  /** 出发 start */
   /** 国家列表 */
-  function getCountryTreeSelect() {
+  function getStartCountryTreeSelect() {
     getCountryTree().then(response => {
-      countryOptions.value = response;
+      startCountryOptions.value = response;
     });
   }
 
   /** 国家变化 */
-  function handleCountryChange() {
-    proxy.$forceUpdate();
-    if (form.value.countryId != 290) {
-      form.value.international = true;
+  function handleStartCountryChange(countryId) {
+    if (countryId == null) {
+      return;
     }
-    getCountryLocation(form.value.countryId).then(
-      response => {
-        if (response != null) {
-          form.value.countryLocation = response;
-        }
-      }
-    );
-  }
-
-  /** 查询省份下拉树结构 */
-  function getProvinceTreSelect() {
-    getProvinceTree().then(response => {
-      provinceOptions.value = response;
+    getProvinceTree(countryId).then(response => {
+      startProvinceOptions.value = response;
     });
   }
 
   /** 查询城市下拉树结构 */
-  function handleProvinceChange(provinceId) {
-    districtOptions.value = [];
+  function handleStartProvinceChange(provinceId) {
+    if (provinceId == null) {
+      return;
+    }
+    startDistrictOptions.value = [];
     getCityTree(provinceId).then(response => {
-      cityOptions.value = response;
+      startCityOptions.value = response;
     });
   }
 
   /** 查询县级下拉树结构 */
-  function handleCityChange(cityId) {
+  function handleStartCityChange(cityId) {
+    if (cityId == null) {
+      return;
+    }
     getDistrictTree(cityId).then(response => {
-      districtOptions.value = response;
+      startDistrictOptions.value = response;
+    });
+  }
+  /** 出发 end */
+
+  /** 抵达 arrive */
+  /** 国家列表 */
+  function getArriveCountryTreeSelect() {
+    getCountryTree().then(response => {
+      arriveCountryOptions.value = response;
     });
   }
 
-  /** 地理位置确定 */
-  function setLocation(data) {
-
-  }
-
-  /** 自动获取出发城市的地理位置 */
-  function getStartCityLocation() {
-    if(form.value.startCity==null){
+  /** 国家变化 */
+  function handleArriveCountryChange(countryId) {
+    if (countryId == null) {
       return;
     }
-    getCityLocation(form.value.startCity).then(
-      response => {
-        if (response != null) {
-          form.value.scLocation = response;
-        }
-      }
-    );
+    getProvinceTree(countryId).then(response => {
+      arriveProvinceOptions.value = response;
+    });
   }
 
-  /** 自动获取抵达城市的地理位置 */
-  function getArriveCityLocation() {
-    if(form.value.arriveCity==null){
+  /** 查询城市下拉树结构 */
+  function handleArriveProvinceChange(provinceId) {
+    if (provinceId == null) {
       return;
     }
-    getCityLocation(form.value.arriveCity).then(
-      response => {
-        if (response != null) {
-          form.value.acLocation = response;
-        }
-      }
-    );
+    arriveDistrictOptions.value = [];
+    getCityTree(provinceId).then(response => {
+      arriveCityOptions.value = response;
+    });
   }
 
-  /** 开始城市地理位置选择 */
-  function handleStartCityML() {
-
+  /** 查询县级下拉树结构 */
+  function handleArriveCityChange(cityId) {
+    if (cityId == null) {
+      return;
+    }
+    getDistrictTree(cityId).then(response => {
+      arriveDistrictOptions.value = response;
+    });
   }
-
-  /** 抵达城市地理位置选择 */
-  function handleArriveCityML() {
-
-  }
-
-  /** 国家地理位置选择 */
-  function handleCountryML() {
-
-  }
+  /** 抵达 end */
 
   // 表单重置
   function resetForm() {
     form.value = {
       detailId: undefined,
-      countryId: 290,
-      countryLocation: '116.266206,41.034901',
-      mapStat:true,
-      international:false,
-      scLocation:undefined,
-      acLocation:undefined
+      startCountryId: 290,
+      arriveCountryId: 290,
+      mapStat: true,
+      international: false
     };
     proxy.resetForm("formRef");
   }
@@ -351,6 +404,6 @@
 
   /** 初始化 **/
   onMounted(() => {
-    
+
   })
 </script>

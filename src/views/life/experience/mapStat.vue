@@ -12,52 +12,54 @@
           end-placeholder="结束日期"
           :shortcuts="datePickerOptions"></el-date-picker>
       </el-form-item>
-      <el-form-item v-if="moreCdn==true" label="所呆天数">
-        <el-input-number v-model="queryParams.minDays" clearable :min="0" label="" style="width: 120px">
-        </el-input-number>
-        <el-input-number v-model="queryParams.maxDays" clearable :min="0" label="" style="width: 120px">
-        </el-input-number>
-      </el-form-item>
-      <el-form-item v-if="moreCdn==true&&'LC_NAME'==queryParams.mapType" label="经历类型" prop="types">
+      <el-form-item label="所属国家" prop="countryId">
         <el-select
-          v-model="queryParams.types"
-          placeholder="类型"
+          v-model="queryParams.countryId"
+          placeholder="所在国家"
           clearable
-          multiple
-          collapse-tags
-          style="width: 240px">
+          style="width: 240px"
+          filterable
+          @change="handleCountryChange">
           <el-option
-            v-for="dict in typesOptions"
+            v-for="dict in countryOptions"
             :key="dict.id"
             :label="dict.text"
             :value="dict.id" />
         </el-select>
       </el-form-item>
-      <el-form-item label="地图类型" prop="mapType">
+      <el-form-item label="统计维度" prop="field">
         <el-select
-          v-model="queryParams.mapType"
-          placeholder="地图类型"
+          v-model="queryParams.field"
+          placeholder="统计维度"
           style="width: 115px"
-          @change="handleQuery">
+          @change="handleFieldChange">
           <el-option
-            v-for="dict in mapTypeOptions"
+            v-for="dict in fieldOptions"
             :key="dict.id"
             :label="dict.text"
             :value="dict.id" />
         </el-select>
       </el-form-item>
-      <el-form-item label="统计类型" prop="statType">
+      <el-form-item label="统计类型" prop="groupType">
         <el-select
-          v-model="queryParams.statType"
+          v-model="queryParams.groupType"
           placeholder="统计类型"
           style="width: 115px"
           @change="handleQuery">
           <el-option
-            v-for="dict in statTypeOptions"
+            v-for="dict in groupTypeOptions"
             :key="dict.id"
             :label="dict.text"
             :value="dict.id" />
         </el-select>
+      </el-form-item>
+      <el-form-item v-if="queryParams.field=='CITY'||queryParams.field=='DISTRICT'" label="使用明细" prop="ud">
+        <el-switch v-model="queryParams.ud" ></el-switch>
+        <el-tooltip content="使用明细则按照经历列表来显示,每次经历显示一个点" effect="dark" placement="top">
+          <el-icon>
+            <QuestionFilled />
+          </el-icon>
+        </el-tooltip>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="TrendCharts" @click="handleQuery" v-hasPermi="['life:experience:mapStat']">统计</el-button>
@@ -74,6 +76,7 @@
 
 <script setup name="ExperienceMapStat">
   import { getExperienceMapStat } from "@/api/life/experience";
+  import { getCountryTree } from "@/api/common";
   import { deepClone } from "@/utils/index";
   import * as echarts from 'echarts';
   import '@/components/echarts/map/china.js';
@@ -88,9 +91,9 @@
 
   const height = ref((document.body.clientHeight - 240).toString() + 'px');
 
-  const typesOptions = ref([]);
-  const mapTypeOptions = ref([]);
-  const statTypeOptions = ref([{
+  const countryOptions = ref([]);
+  const fieldOptions = ref([]);
+  const groupTypeOptions = ref([{
       id: 'DAYS',
       text: '天数'
     },
@@ -110,8 +113,10 @@
 
   const data = reactive({
     queryParams: {
-      mapType: 'CHINA',
-      statType: 'COUNT'
+      field: 'PROVINCE',
+      groupType: 'DAYS',
+      countryId:290,
+      ud:false
     }
   });
 
@@ -131,14 +136,28 @@
       cdnTitle.value = '取消';
     }
   }
+  
+  /** 国家变化操作 */
+  function handleCountryChange(countryId){
+    if(countryId==null){
+      queryParams.value.field = 'COUNTRY';
+    }
+  }
+  
+  /** 统计维度操作 */
+  function handleFieldChange(field){
+    if(field=='COUNTRY'){
+      queryParams.value.countryId=null;
+    }
+  }
 
   /** 下拉框加载 */
   function loadOptions() {
-    proxy.getDictItemTree('STAT_MAP_TYPE', false).then(response => {
-      mapTypeOptions.value = response;
+    proxy.getEnumDict('MapField', 'FIELD', false).then(response => {
+      fieldOptions.value = response;
     });
-    proxy.getEnumDict('ExperienceType', 'ORDINAL', false).then(response => {
-      typesOptions.value = response;
+    getCountryTree().then(response => {
+      countryOptions.value = response;
     });
   }
 
@@ -154,25 +173,24 @@
   }
 
   function initChart() {
-    proxy.$modal.loading("正在加载数据，请稍候！");
-    let qp = proxy.addDateRange(queryParams.value, dateRange.value);
-    let acQueryParams = deepClone(qp);
-    if (acQueryParams.types != null) {
-      acQueryParams.types = acQueryParams.types.join(',');
+    const field = queryParams.value.field;
+    if(field!='COUNTRY'&&proxy.isEmpty(queryParams.value.countryId)){
+      proxy.$modal.msgError("不以国家维度来统计时必须需要选择一个国家");
+      return;
     }
-    getExperienceMapStat(acQueryParams).then(
+    proxy.$modal.loading("正在加载数据，请稍候！");
+    getExperienceMapStat(proxy.addDateRange(queryParams.value, dateRange.value)).then(
       response => {
         proxy.$modal.closeLoading();
         //组装chart数据
         let option = null;
-        const mapType = queryParams.value.mapType;
-        if (mapType == 'LOCATION' || mapType == 'LC_NAME') {
+        if (field == 'PROVINCE') {
+          option = createDefaultMapChartOption(response, mapStatChartIns, echarts);
+        }else if (field == 'CITY' || field == 'DISTRICT') {
           option = createLocationMapChartOption(response, mapStatChartIns);
-        } else if (mapType == 'WORLD') {
+        }else {
           echarts.registerMap('world', worldMap, {});
           option = createWorldMapChartOption(response, mapStatChartIns, echarts);
-        } else {
-          option = createDefaultMapChartOption(response, mapStatChartIns, echarts);
         }
         createMapChart(option, mapStatChartIns);
       }

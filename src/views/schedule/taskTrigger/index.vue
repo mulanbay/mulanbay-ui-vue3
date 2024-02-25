@@ -122,9 +122,7 @@
       <el-table-column label="名称" fixed="left" min-width="200px" :show-overflow-tooltip="true">
         <template #default="scope">
           <span v-if="scope.row.triggerStatus=='DISABLE'">
-            <el-icon>
-              <WarnTriangleFilled />
-            </el-icon>
+            <el-icon color="red"><CircleCloseFilled /></el-icon>
           </span>
           <span v-if="scope.row.executing==true" class="link-type" @click="handleUpdate(scope.row)" style="color:red ;">
             <i class="el-icon-loading"></i> {{ scope.row.triggerName+'[执行中]' }}

@@ -14,6 +14,21 @@
             :value="dict.id" />
         </el-select>
       </el-form-item>
+      <el-form-item label="所属国家" prop="countryId">
+        <el-select
+          v-model="queryParams.countryId"
+          placeholder="所在国家"
+          clearable
+          style="width: 240px"
+          filterable
+          @change="handleCountryChange">
+          <el-option
+            v-for="dict in countryOptions"
+            :key="dict.id"
+            :label="dict.text"
+            :value="dict.id" />
+        </el-select>
+      </el-form-item>
       <el-form-item label="起止日期" style="width: 308px">
         <el-date-picker
           v-model="dateRange"
@@ -25,12 +40,12 @@
           end-placeholder="结束日期"
           :shortcuts="datePickerOptions"></el-date-picker>
       </el-form-item>
-      <el-form-item label="地图类型" prop="field">
+      <el-form-item label="统计维度" prop="field">
         <el-select
           v-model="queryParams.field"
-          placeholder="地图类型"
-          style="width: 115px"
-          @change="handleQuery">
+          placeholder="统计维度"
+          style="width: 240px"
+          @change="handleFieldChange">
           <el-option
             v-for="dict in fieldOptions"
             :key="dict.id"
@@ -42,7 +57,7 @@
         <el-select
           v-model="queryParams.groupType"
           placeholder="统计类型"
-          style="width: 115px"
+          style="width: 240px"
           @change="handleQuery">
           <el-option
             v-for="dict in groupTypeOptions"
@@ -50,6 +65,14 @@
             :label="dict.text"
             :value="dict.id" />
         </el-select>
+      </el-form-item>
+      <el-form-item v-if="queryParams.field=='CITY'||queryParams.field=='DISTRICT'" label="使用明细" prop="ud">
+        <el-switch v-model="queryParams.ud" ></el-switch>
+        <el-tooltip content="使用明细则按照出差列表来显示,每次出差显示一个点" effect="dark" placement="top">
+          <el-icon>
+            <QuestionFilled />
+          </el-icon>
+        </el-tooltip>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="TrendCharts" @click="handleQuery" v-hasPermi="['work:businessTrip:mapStat']">统计</el-button>
@@ -66,6 +89,7 @@
 <script setup name="BusinessTripMapStat">
   import { getBusinessTripMapStat } from "@/api/work/businessTrip";
   import { getCompanyTree } from "@/api/work/company";
+  import { getCountryTree } from "@/api/common";
   import { deepClone } from "@/utils/index";
   import * as echarts from 'echarts';
   import '@/components/echarts/map/china.js';
@@ -81,6 +105,7 @@
   const height = ref((document.body.clientHeight - 240).toString() + 'px');
 
   const companyOptions = ref([]);
+  const countryOptions = ref([]);
   const fieldOptions = ref([]);
   const groupTypeOptions = ref([{
       id: 'VALUE',
@@ -99,7 +124,9 @@
   const data = reactive({
     queryParams: {
       field: 'PROVINCE',
-      groupType: 'VALUE'
+      groupType: 'VALUE',
+      countryId:290,
+      ud:false
     }
   });
 
@@ -125,9 +152,29 @@
     getCompanyTree().then(response => {
       companyOptions.value = response;
     });
+    getCountryTree().then(response => {
+      countryOptions.value = response;
+    });
     proxy.getEnumDict('MapField', 'FIELD', false).then(response => {
       fieldOptions.value = response;
     });
+    // proxy.getDictItemTree('MAP_STAT_FIELD', false).then(response => {
+    //   fieldOptions.value = response;
+    // });
+  }
+  
+  /** 国家变化操作 */
+  function handleCountryChange(countryId){
+    if(countryId==null){
+      queryParams.value.field = 'COUNTRY';
+    }
+  }
+  
+  /** 统计维度操作 */
+  function handleFieldChange(field){
+    if(field=='COUNTRY'){
+      queryParams.value.countryId=null;
+    }
   }
 
   /** 搜索按钮操作 */
@@ -142,18 +189,17 @@
   }
 
   function initChart() {
-    proxy.$modal.loading("正在加载数据，请稍候！");
-    let qp = proxy.addDateRange(queryParams.value, dateRange.value);
-    let acQueryParams = deepClone(qp);
-    if (acQueryParams.types != null) {
-      acQueryParams.types = acQueryParams.types.join(',');
+    const field = queryParams.value.field;
+    if(field!='COUNTRY'&&proxy.isEmpty(queryParams.value.countryId)){
+      proxy.$modal.msgError("不以国家维度来统计时必须需要选择一个国家");
+      return;
     }
-    getBusinessTripMapStat(acQueryParams).then(
+    proxy.$modal.loading("正在加载数据，请稍候！");
+    getBusinessTripMapStat(proxy.addDateRange(queryParams.value, dateRange.value)).then(
       response => {
         proxy.$modal.closeLoading();
         //组装chart数据
         let option = null;
-        const field = queryParams.value.field;
         if (field == 'PROVINCE') {
           option = createDefaultMapChartOption(response, mapStatChartIns, echarts);
         }else if (field == 'CITY' || field == 'DISTRICT') {

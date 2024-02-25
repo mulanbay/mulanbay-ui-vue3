@@ -37,14 +37,19 @@
           <span>{{ scope.row.detailId }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="出发城市" align="center" width="120" :show-overflow-tooltip="true">
+      <el-table-column label="日期" align="center" width="120">
         <template #default="scope">
-          <span class="link-type" @click="handleEdit(scope.row)">{{ scope.row.startCity }}</span>
+          <span class="link-type" @click="handleEdit(scope.row)">{{ scope.row.occurDate }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="抵达城市" align="center" :show-overflow-tooltip="true">
+      <el-table-column label="出发位置" align="center" min-width="180px" :show-overflow-tooltip="true">
         <template #default="scope">
-          <span>{{ scope.row.arriveCity }}</span>
+          <span>{{ formatStartLocation(scope.row) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="抵达位置" align="center" min-width="180px" :show-overflow-tooltip="true">
+        <template #default="scope">
+          <span>{{ formatArriveLocation(scope.row) }}</span>
         </template>
       </el-table-column>
       <el-table-column label="花费" align="center" width="140">
@@ -71,14 +76,8 @@
           </span>
         </template>
       </el-table-column>
-      <el-table-column label="日期" align="center" width="110">
-        <template #default="scope">
-          <span>{{ scope.row.occurDate }}</span>
-        </template>
-      </el-table-column>
       <el-table-column label="操作" align="center" width="80" fixed="right" class-name="small-padding fixed-width">
         <template #default="scope">
-
           <el-button
             link
             type="danger"
@@ -165,6 +164,36 @@
   /** 消费明细列表操作 */
   function handleConsumeList(row){
     experienceConsumeListRef.value.showData(row.detailId);
+  }
+  
+  /** 出发位置信息 */
+  function formatStartLocation(row) {
+    let name ='';
+    if(row.startProvince!=null){
+      name+=row.startProvince.provinceName+'-';
+    }
+    if(row.startCity!=null){
+      name+=row.startCity.cityName+'-';
+    }
+    if(row.startDistrict!=null){
+      name+=row.startDistrict.districtName;
+    }
+    return name;
+  }
+  
+  /** 抵达位置信息 */
+  function formatArriveLocation(row) {
+    let name ='';
+    if(row.arriveProvince!=null){
+      name+=row.arriveProvince.provinceName+'-';
+    }
+    if(row.arriveCity!=null){
+      name+=row.arriveCity.cityName+'-';
+    }
+    if(row.arriveDistrict!=null){
+      name+=row.arriveDistrict.districtName;
+    }
+    return name;
   }
   
   /** 搜索按钮操作 */

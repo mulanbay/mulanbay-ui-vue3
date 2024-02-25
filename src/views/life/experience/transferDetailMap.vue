@@ -2,22 +2,28 @@
   <!-- 刷新对话框 -->
   <el-dialog :title="title" v-model="open" width="900px" append-to-body>
     <div class="app-container">
-
-      <!--图表数据-->
-      <div ref="statChart" :style="{height:height,margin:0 }" />
-      <br>
-      <el-row :gutter="20">
-        <el-col :span="4">
-          <div class="grid-content ep-bg-purple" />
-        </el-col>
-        <el-col :span="14">
-          <div class="grid-content ep-bg-purple" />
-        </el-col>
-        <el-col :span="6">
+      <el-form :model="queryParams" ref="queryRef" :inline="true">
+        <el-form-item label="地图类型" prop="field">
+          <el-select
+            v-model="queryParams.field"
+            placeholder="地图类型"
+            style="width: 115px"
+            @change="handleQuery">
+            <el-option
+              v-for="dict in fieldOptions"
+              :key="dict.id"
+              :label="dict.text"
+              :value="dict.id" />
+          </el-select>
+        </el-form-item>
+        <el-form-item>
           <el-button type="primary" icon="refresh" @click="handleQuery" v-hasPermi="['life:experience:transferDetailMap']">刷新</el-button>
           <el-button type="danger" icon="Close" @click="open=false" >关闭</el-button>
-        </el-col>
-      </el-row>
+        </el-form-item>
+      </el-form>
+      
+      <!--图表数据-->
+      <div ref="statChart" :style="{height:height,margin:0 }" />
 
     </div>
   </el-dialog>
@@ -38,6 +44,7 @@
   //是否初始化
   let chartInited = ref(false);
   const height = ref((document.body.clientHeight - 250).toString() + 'px');
+  const fieldOptions = ref([]);
 
   //可执行时间段
   const title = ref('地图统计');
@@ -45,7 +52,9 @@
   const formRef = ref();
 
   const data = reactive({
-    queryParams: {},
+    queryParams: {
+      field: 'CITY',
+    },
     rules: {}
   });
 
@@ -72,7 +81,9 @@
 
   /** 初始化下拉树结构 */
   function initOptions() {
-
+    proxy.getEnumDict('MapField', 'FIELD', false).then(response => {
+      fieldOptions.value = response;
+    });
   }
 
   /** 搜索按钮操作 */

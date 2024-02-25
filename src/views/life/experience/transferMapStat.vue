@@ -12,29 +12,42 @@
           end-placeholder="结束日期"
           :shortcuts="datePickerOptions"></el-date-picker>
       </el-form-item>
-      <el-form-item label="经历类型" prop="types">
+      <el-form-item label="所属国家" prop="countryId">
         <el-select
-          v-model="queryParams.types"
-          placeholder="类型"
+          v-model="queryParams.countryId"
+          placeholder="所在国家"
           clearable
-          multiple
-          collapse-tags
-          style="width: 240px">
+          style="width: 240px"
+          filterable
+          @change="handleCountryChange">
           <el-option
-            v-for="dict in typesOptions"
+            v-for="dict in countryOptions"
             :key="dict.id"
             :label="dict.text"
             :value="dict.id" />
         </el-select>
       </el-form-item>
-      <el-form-item label="地图类型" prop="mapType">
+      <el-form-item label="统计维度" prop="field">
         <el-select
-          v-model="queryParams.mapType"
-          placeholder="地图类型"
+          v-model="queryParams.field"
+          placeholder="统计维度"
+          style="width: 115px"
+          @change="handleFieldChange">
+          <el-option
+            v-for="dict in fieldOptions"
+            :key="dict.id"
+            :label="dict.text"
+            :value="dict.id" />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="统计类型" prop="groupType">
+        <el-select
+          v-model="queryParams.groupType"
+          placeholder="统计类型"
           style="width: 115px"
           @change="handleQuery">
           <el-option
-            v-for="dict in mapTypeOptions"
+            v-for="dict in groupTypeOptions"
             :key="dict.id"
             :label="dict.text"
             :value="dict.id" />
@@ -55,6 +68,7 @@
 
 <script setup name="ExperienceTransferMapStat">
   import { getExperienceTransferMapStat } from "@/api/life/experience";
+  import { getCountryTree } from "@/api/common";
   import { deepClone } from "@/utils/index";
   import * as echarts from 'echarts';
   import '@/components/echarts/map/china.js';
@@ -68,16 +82,19 @@
   let mapStatChartIns = ref(null);
 
   const height = ref((document.body.clientHeight - 240).toString() + 'px');
-
-  const typesOptions = ref([]);
-  const mapTypeOptions = ref([
-    {
-      id: 'CHINA',
-      text: '中国'
+  const countryOptions = ref([]);
+  const fieldOptions = ref([]);
+  const groupTypeOptions = ref([{
+      id: 'DAYS',
+      text: '天数'
     },
     {
-      id: 'WORLD',
-      text: '世界'
+      id: 'COUNT',
+      text: '次数'
+    },
+    {
+      id: 'COST',
+      text: '花费'
     }
   ]);
   
@@ -87,7 +104,9 @@
 
   const data = reactive({
     queryParams: {
-      mapType: 'CHINA'
+      field: 'PROVINCE',
+      groupType: 'DAYS',
+      countryId:290
     }
   });
 
@@ -110,9 +129,26 @@
 
   /** 下拉框加载 */
   function loadOptions() {
-    proxy.getEnumDict('ExperienceType', 'ORDINAL', false).then(response => {
-      typesOptions.value = response;
+    proxy.getEnumDict('MapField', 'FIELD', false).then(response => {
+      fieldOptions.value = response;
     });
+    getCountryTree().then(response => {
+      countryOptions.value = response;
+    });
+  }
+  
+  /** 国家变化操作 */
+  function handleCountryChange(countryId){
+    if(countryId==null){
+      queryParams.value.field = 'COUNTRY';
+    }
+  }
+  
+  /** 统计维度操作 */
+  function handleFieldChange(field){
+    if(field=='COUNTRY'){
+      queryParams.value.countryId=null;
+    }
   }
 
   /** 搜索按钮操作 */
@@ -128,21 +164,16 @@
 
   function initChart() {
     proxy.$modal.loading("正在加载数据，请稍候！");
-    let qp = proxy.addDateRange(queryParams.value, dateRange.value);
-    let acQueryParams = deepClone(qp);
-    if (acQueryParams.types != null) {
-      acQueryParams.types = acQueryParams.types.join(',');
-    }
-    getExperienceTransferMapStat(acQueryParams).then(
+    getExperienceTransferMapStat(proxy.addDateRange(queryParams.value, dateRange.value)).then(
       response => {
         proxy.$modal.closeLoading();
         //组装chart数据
         let option = null;
-        const mapType = queryParams.value.mapType;
-        if (mapType == 'WORLD') {
+        const field = queryParams.value.field;
+        if (field == 'COUNTRY') {
           echarts.registerMap('world', worldMap, {});
           option = createWorldTransferMapChartOption(response, mapStatChartIns);
-        } else {
+        }else {
           option = createChinaTransferMapChartOption(response, mapStatChartIns);
         }
         createMapChart(option, mapStatChartIns);

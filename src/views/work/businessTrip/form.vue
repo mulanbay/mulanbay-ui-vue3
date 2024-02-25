@@ -125,7 +125,7 @@
       ],
       countryId: [
         { required: true, message: "国家不能为空", trigger: "blur" }
-      ],
+      ]
     }
   });
 

@@ -11,19 +11,6 @@
         </el-col>
       </el-row>
       <el-row>
-        <el-col :span="10">
-          <el-form-item label="地点名称" prop="lcName">
-           <el-input v-model="form.lcName" placeholder="请输入地点名称" />
-          </el-form-item>
-        </el-col>
-        <el-col :span="14">
-          <el-form-item label="地理坐标" prop="location">
-           <el-input v-model="form.location" placeholder="" style="width: 175px;"/>
-           <el-button type="primary" @click="handleMapLocation()" >选择</el-button>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
         <el-col :span="12">
           <el-form-item label="经历类型" prop="type">
             <el-select
@@ -38,6 +25,63 @@
                 :label="dict.text"
                 :value="dict.id"
               />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="所在国家" prop="countryId">
+            <el-select
+              v-model="form.countryId"
+              placeholder="所在国家"
+              :style="{width: '100%'}"
+              filterable
+              @change="handleCountryChange">
+              <el-option
+                v-for="dict in countryOptions"
+                :key="dict.id"
+                :label="dict.text"
+                :value="dict.id" />
+            </el-select>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="24">
+          <el-form-item label="省市信息" prop="provinceId">
+            <el-select
+              v-model="form.provinceId"
+              placeholder="省份"
+              collapse-tags
+              :style="{width: '160px'}"
+              @change="handleProvinceChange">
+              <el-option
+                v-for="dict in provinceOptions"
+                :key="dict.id"
+                :label="dict.text"
+                :value="dict.id" />
+            </el-select>
+            <el-select
+              v-model="form.cityId"
+              placeholder="城市"
+              collapse-tags
+              :style="{width: '160px'}"
+              @change="handleCityChange">
+              <el-option
+                v-for="dict in cityOptions"
+                :key="dict.id"
+                :label="dict.text"
+                :value="dict.id" />
+            </el-select>
+            <el-select
+              v-model="form.districtId"
+              placeholder="县城"
+              collapse-tags
+              :style="{width: '160px'}">
+              <el-option
+                v-for="dict in districtOptions"
+                :key="dict.id"
+                :label="dict.text"
+                :value="dict.id" />
             </el-select>
           </el-form-item>
         </el-col>
@@ -131,6 +175,7 @@
 
 <script setup name="ExperienceForm">
   import { createExperience, editExperience, getExperience } from "@/api/life/experience";
+  import { getCountryTree, getProvinceTree, getCityTree, getDistrictTree } from "@/api/common";
   import {dateDiff} from "@/utils/datetime";
   import { appendTagToOptions } from "@/utils/tagUtils";
 
@@ -143,6 +188,11 @@
   const formRef = ref();
   const typeOptions = ref([]);
   
+  const countryOptions = ref([]);
+  const provinceOptions = ref([]);
+  const cityOptions = ref([]);
+  const districtOptions = ref([]);
+  
   //标签属性 start
   const keywordsTags = ref([]);
   //已经保存过的标签
@@ -150,7 +200,6 @@
   const inputVisible = ref(false);
   const inputValue = ref('');
   const tagsPopOpen = ref(false);
-  
   //标签属性 end
   
   const data = reactive({
@@ -171,6 +220,9 @@
       ],
       days: [
         { required: true, message: "天数不能为空", trigger: "blur" }
+      ],
+      countryId: [
+        { required: true, message: "国家不能为空", trigger: "blur" }
       ]
     }
   });
@@ -196,6 +248,18 @@
         }else{
           keywordsTags.value = [];
         }
+        //地理位置
+        form.value.countryId = response.country==null ? null:response.country.countryId;
+        form.value.country = null;
+        form.value.provinceId = response.province==null ? null:response.province.provinceId;
+        form.value.province = null;
+        form.value.cityId = response.city==null ? null:response.city.cityId;
+        form.value.city = null;
+        form.value.districtId = response.district==null ? null:response.district.districtId;
+        form.value.district = null;
+        handleCountryChange(form.value.countryId);
+        handleProvinceChange(form.value.provinceId);
+        handleCityChange(form.value.cityId);
       });
     } else {
       title.value = "新增";
@@ -207,9 +271,47 @@
   
   /** 初始化下拉树结构 */
   function initOptions(){
-    
+    getCountryTreeSelect();
   }
   
+  
+  /** 国家列表 */
+  function getCountryTreeSelect() {
+    getCountryTree().then(response => {
+      countryOptions.value = response;
+    });
+  }
+  
+  /** 国家变化 */
+  function handleCountryChange(countryId) {
+    if(countryId==null){
+      return;
+    }
+    getProvinceTree(countryId).then(response => {
+      provinceOptions.value = response;
+    });
+  }
+  
+  /** 查询城市下拉树结构 */
+  function handleProvinceChange(provinceId) {
+    if(provinceId==null){
+      return;
+    }
+    districtOptions.value = [];
+    getCityTree(provinceId).then(response => {
+      cityOptions.value = response;
+    });
+  }
+  
+  /** 查询县级下拉树结构 */
+  function handleCityChange(cityId) {
+    if(cityId==null){
+      return;
+    }
+    getDistrictTree(cityId).then(response => {
+      districtOptions.value = response;
+    });
+  }
 
   /** 标签处理 start */
   function handleTagClose(tag) {
@@ -263,6 +365,7 @@
     form.value = {
       expId: undefined,
       expName: undefined,
+      countryId: undefined,
       orderIndex: 0,
       status: "ENABLE",
       stat:true,

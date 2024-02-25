@@ -16,6 +16,14 @@ export function getExperienceDetail(detailId) {
   })
 }
 
+export function getLastExperienceDetail(expId) {
+  return request({
+    url: '/experienceDetail/lastDetail',
+    method: 'get',
+    params: { expId }
+  })
+}
+
 export function createExperienceDetail(data) {
   return request({
     url: '/experienceDetail/create',
@@ -42,18 +50,3 @@ export function deleteExperienceDetail(ids) {
   })
 }
 
-export function getCountryLocation(countryId) {
-  return request({
-    url: '/experienceDetail/getCountryLocation',
-    method: 'get',
-    params: { countryId }
-  })
-}
-
-export function getCityLocation(city) {
-  return request({
-    url: '/experienceDetail/getCityLocation',
-    method: 'get',
-    params: { city }
-  })
-}
