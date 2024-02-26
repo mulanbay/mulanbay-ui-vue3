@@ -8,11 +8,11 @@ export function fetchList(query) {
   })
 }
 
-export function getScoreGroup(id) {
+export function getScoreGroup(groupId) {
   return request({
     url: '/scoreGroup/get',
     method: 'get',
-    params: { id }
+    params: { groupId }
   })
 }
 

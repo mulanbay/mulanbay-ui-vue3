@@ -2,17 +2,17 @@ import request from '@/utils/request'
 
 export function fetchList(query) {
   return request({
-    url: '/scoreConfig/getData',
+    url: '/scoreConfig/list',
     method: 'get',
     params: query
   })
 }
 
-export function getScoreConfig(id) {
+export function getScoreConfig(configId) {
   return request({
     url: '/scoreConfig/get',
     method: 'get',
-    params: { id }
+    params: { configId }
   })
 }
 
@@ -24,7 +24,7 @@ export function createScoreConfig(data) {
   })
 }
 
-export function updateScoreConfig(data) {
+export function editScoreConfig(data) {
   return request({
     url: '/scoreConfig/edit',
     method: 'post',
