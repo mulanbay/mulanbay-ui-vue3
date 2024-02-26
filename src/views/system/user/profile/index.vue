@@ -75,6 +75,9 @@
             <el-tab-pane label="修改密码" name="resetPwd">
               <ResetPwd :user="user" />
             </el-tab-pane>
+            <el-tab-pane label="用户设置" name="userSet">
+              <UserSet />
+            </el-tab-pane>
             <el-tab-pane label="快捷菜单" name="fastMenu">
               <FastMenu />
             </el-tab-pane>
@@ -96,6 +99,7 @@
   import ResetPwd from "./resetPwd.vue";
   import FastMenu from "./fastMenu.vue";
   import Archive from "./archive.vue";
+  import UserSet from "./userSet.vue";
 
   const archiveRef = ref();
   const activeTab = ref("userinfo");
