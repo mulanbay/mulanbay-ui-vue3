@@ -35,10 +35,21 @@ export function createDefaultMapChartOption(mapData, myChart, echarts) {
     geoCoordMap[name] = v.properties.cp;
 
   });
-  var max = mapData.maxValue;
+  //计算最大最小值
+  var max = 0;
   var min = 0;
-  var maxSize4Pin = 50,
-    minSize4Pin = 20;
+  let n = data.length;
+  for(var i=0;i<n;i++){
+    let vv = data[i].value;
+    if(vv<min){
+      min = vv;
+    }
+    if(vv>max){
+      max=vv;
+    }
+  }
+  var maxSize4Pin = 50;
+  var minSize4Pin = 20;
 
   var convertData = function(data) {
     var res = [];
@@ -859,8 +870,17 @@ export function createLocationMapChartOption(mapData, myChart) {
     return res;
   };
   const nn = data.length;
-  const min = mapData.min;
-  const max = mapData.max;
+  var max = 0;
+  var min = 0;
+  for(var i=0;i<nn;i++){
+    let vv = data[i].value;
+    if(vv<min){
+      min = vv;
+    }
+    if(vv>max){
+      max=vv;
+    }
+  }
   let mm = max - min;
   //计算图标大小,取5-25之间的值
   let caleSize = function(v) {
