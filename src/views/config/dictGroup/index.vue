@@ -82,9 +82,8 @@
       </el-table-column>
       <el-table-column label="字典项" width="100" align="center">
         <template #default="scope">
-          <span class="link-type" @click="handleItemList(scope.row)"><el-icon>
-              <Grid />
-            </el-icon></span>
+          <span class="link-type" @click="handleItemList(scope.row)">
+            <el-icon><Grid /></el-icon></span>
         </template>
       </el-table-column>
       <el-table-column label="代码" align="center" width="160" :show-overflow-tooltip="true">

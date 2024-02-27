@@ -35,6 +35,9 @@ export function generateFcRules(dataRules) {
       os.push(o);
     }
     selectData.options = os;
+    selectData.validate = [
+      { required: true, message: r.msg, trigger: 'blur' },
+    ]
     selectOptions.push(selectData);
   }
   return selectOptions;
@@ -46,6 +49,7 @@ export function generateFcRules(dataRules) {
  */
 export function getBindValues(fcObject) {
   let formData = fcObject.formData();
+  //console.log(JSON.stringify(fcObject.form))
   let values = new Array();
   for (let key in formData) {
     if (formData[key] != null) {
