@@ -13,23 +13,23 @@
               :props="{ value: 'id', label: 'text', children: 'children' }"
               value-key="id"
               placeholder="选择模版"
-              :check-strictly="false" 
+              :check-strictly="false"
               :disabled="form.templateId!=null"
-              @change="handleFromTemplateChange"/>
+              @change="handleFromTemplateChange" />
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="24">
           <el-form-item label="模板名称" prop="templateName">
-            <el-input v-model="form.templateName" style="width: 580px"  placeholder="" />
+            <el-input v-model="form.templateName" style="width: 580px" placeholder="" />
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="24">
           <el-form-item label="模板标题" prop="title">
-            <el-input v-model="form.title" style="width: 580px"  placeholder="" />
+            <el-input v-model="form.title" style="width: 580px" placeholder="" />
           </el-form-item>
         </el-col>
       </el-row>
@@ -41,8 +41,7 @@
                 v-for="dict in sqlTypeOptions"
                 :key="dict.id"
                 :label="dict.text"
-                :value="dict.id"
-              />
+                :value="dict.id" />
             </el-select>
           </el-form-item>
         </el-col>
@@ -53,8 +52,8 @@
                 v-for="dict in bussTypeOptions"
                 :key="dict.id"
                 :label="dict.text"
-                :value="dict.id"
-              />
+                :value="dict.id" 
+                @change="initOrderIndex"/>
             </el-select>
           </el-form-item>
         </el-col>
@@ -62,32 +61,30 @@
       <el-row>
         <el-col :span="24">
           <el-form-item label="查询语句" prop="sqlContent">
-            <el-input v-model="form.sqlContent" type="textarea" :rows="5"  style="width: 580px"  placeholder="请输入内容"></el-input>
+            <el-input v-model="form.sqlContent" type="textarea" :rows="5" style="width: 580px" placeholder="请输入内容"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="12">
-          <el-form-item label="返回类型" prop="resultType">
+          <el-form-item label="数据类型" prop="resultType">
             <el-select v-model="form.resultType" style="width: 230px" placeholder="请选择">
               <el-option
                 v-for="dict in resultTypeOptions"
                 :key="dict.id"
                 :label="dict.text"
-                :value="dict.id"
-              />
+                :value="dict.id" />
             </el-select>
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="返回类型" prop="valueType">
+          <el-form-item label="数据单位" prop="valueType">
             <el-select v-model="form.valueType" style="width: 230px" placeholder="请选择">
               <el-option
                 v-for="dict in valueTypeOptions"
                 :key="dict.id"
                 :label="dict.text"
-                :value="dict.id"
-              />
+                :value="dict.id" />
             </el-select>
           </el-form-item>
         </el-col>
@@ -104,8 +101,7 @@
               <el-radio
                 v-for="dict in commonStatusOptions"
                 :key="dict.id"
-                :label="dict.id"
-              >{{dict.text}}</el-radio>
+                :label="dict.id">{{dict.text}}</el-radio>
             </el-radio-group>
           </el-form-item>
         </el-col>
@@ -113,37 +109,26 @@
       <el-row>
         <el-col :span="12">
           <el-form-item label="显示顺序" prop="orderIndex">
-            <el-input-number v-model="form.orderIndex" style="width: 230px" controls-position="right" :min="0" :controls="true" :precision="0"/>
+            <el-input-number v-model="form.orderIndex" style="width: 230px" controls-position="right" :min="0" :controls="true" :precision="0" />
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="比较类型" prop="compareType">
-            <el-radio-group v-model="form.compareType" style="width: 230px">
-              <el-radio
-                v-for="dict in compareTypeOptions"
-                :key="dict.id"
-                :label="dict.id"
-              >{{dict.text}}</el-radio>
-            </el-radio-group>
+          <el-form-item label="模板等级" prop="level">
+            <el-input-number v-model="form.level" style="width: 230px" controls-position="right" :min="0" :controls="true" :precision="0" />
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="12">
-          <el-form-item label="模板等级" prop="level">
-            <el-input-number v-model="form.level" style="width: 230px" controls-position="right" :min="0" :controls="true" :precision="0"/>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
           <el-form-item label="积分奖励" prop="rewards">
-            <el-input-number v-model="form.rewards" style="width: 230px" controls-position="right" :min="0" :controls="true" :precision="0"/>
+            <el-input-number v-model="form.rewards" style="width: 230px" controls-position="right" :min="0" :controls="true" :precision="0" />
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="24">
           <el-form-item label="链接地址" prop="url">
-            <el-input v-model="form.url" style="width: 580px"  placeholder="" />
+            <el-input v-model="form.url" style="width: 580px" placeholder="" />
             <el-tooltip content="版本的路由跳转名称." effect="dark" placement="top">
               <el-icon>
                 <QuestionFilled />
@@ -155,7 +140,7 @@
       <el-row>
         <el-col :span="24">
           <el-form-item label="日历标题" prop="calendarTitle">
-            <el-input v-model="form.calendarTitle" style="width: 580px"  placeholder="" />
+            <el-input v-model="form.calendarTitle" style="width: 580px" placeholder="" />
             <el-tooltip content="显示在用户日历中的标题信息." effect="dark" placement="top">
               <el-icon>
                 <QuestionFilled />
@@ -167,14 +152,14 @@
       <el-row>
         <el-col :span="24">
           <el-form-item label="备注信息" prop="remark">
-            <el-input v-model="form.remark"  style="width: 580px"  type="textarea" placeholder="请输入内容"></el-input>
+            <el-input v-model="form.remark" style="width: 580px" type="textarea" placeholder="请输入内容"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row v-if="form.templateId == null&&form.fromTemplateId != null" >
+      <el-row v-if="form.templateId == null&&form.fromTemplateId != null">
         <el-col :span="24">
           <el-form-item label="附加选项" prop="copyItems">
-            <el-checkbox v-model="form.copyItems" @change="changeCopyItems()">同时复制配置项</el-checkbox>
+            <el-checkbox v-model="form.copyItems" >同时复制配置项</el-checkbox>
             <el-tooltip content="勾选则新增时同时复制模板的配置项列表." effect="dark" placement="top">
               <el-icon>
                 <QuestionFilled />
@@ -195,7 +180,7 @@
 </template>
 
 <script setup name="StatTemplateForm">
-  import { createStatTemplate, editStatTemplate, getStatTemplate,getStatTemplateTree } from "@/api/report/stat/statTemplate";
+  import { createStatTemplate, editStatTemplate, getStatTemplate, getStatTemplateTree, getNextOrderIndex } from "@/api/report/stat/statTemplate";
 
   const { proxy } = getCurrentInstance();
 
@@ -210,7 +195,6 @@
   const bussTypeOptions = ref([]);
   const resultTypeOptions = ref([]);
   const valueTypeOptions = ref([]);
-  const compareTypeOptions = ref([]);
 
   const data = reactive({
     form: {},
@@ -237,11 +221,17 @@
       valueType: [
         { required: true, message: "返回值类型不能为空", trigger: "blur" }
       ],
-      compareType: [
-        { required: true, message: "比较类型不能为空", trigger: "blur" }
-      ],
       bussKey: [
         { required: true, message: "业务KEY不能为空", trigger: "blur" }
+      ],
+      status: [
+        { required: true, message: "状态不能为空", trigger: "blur" }
+      ],
+      orderIndex: [
+        { required: true, message: "显示顺序不能为空", trigger: "blur" }
+      ],
+      level: [
+        { required: true, message: "模版等级不能为空", trigger: "blur" }
       ]
     }
   });
@@ -250,15 +240,18 @@
 
   // 定义 success 事件，用于操作成功后的回调
   const emit = defineEmits(['success']);
-  
+
   /** 来源模版变更 */
-  function handleFromTemplateChange(id){
-    if(form.value.templateId!=null){
+  function handleFromTemplateChange(id) {
+    if (form.value.templateId != null) {
       return;
     }
     getStatTemplate(id).then(response => {
+      response.fromTemplateId = form.value.fromTemplateId;
       form.value = response;
-      form.value.templateId=null;
+      form.value.templateId = null;
+      form.value.orderIndex = null;
+      initOrderIndex();
     });
   }
 
@@ -284,15 +277,15 @@
 
   // 提供 open 方法，用于打开弹窗
   defineExpose({ openForm });
-  
-  function loadOptions(){
+
+  function loadOptions() {
     getStatTemplateTree().then(response => {
       statTemplateOptions.value = response;
     });
   }
-  
+
   // 枚举类的下拉菜单
-  function loadTypeOptions(){
+  function loadTypeOptions() {
     proxy.getEnumDict('SqlType', 'FIELD', false).then(response => {
       sqlTypeOptions.value = response;
     });
@@ -302,14 +295,21 @@
     proxy.getEnumDict('ValueType', 'FIELD', false).then(response => {
       valueTypeOptions.value = response;
     });
-    proxy.getEnumDict('CompareType', 'FIELD', false).then(response => {
-      compareTypeOptions.value = response;
-    });
     proxy.getEnumDict('BussType', 'FIELD', false).then(response => {
       bussTypeOptions.value = response;
     });
   }
-  
+
+  // 获取下一个排序号
+  function initOrderIndex() {
+    if(form.value.orderIndex!=null){
+      return;
+    }
+    getNextOrderIndex(form.value.bussType).then(response => {
+      form.value.orderIndex = response;
+    });
+  }
+
   // 表单重置
   function resetForm() {
     form.value = {
@@ -318,13 +318,12 @@
       sqlType: 'SQL',
       resultType: 'DATE',
       valueType: 'DAY',
-      status:'ENABLE',
-      compareType: 'MORE',
-      level:3,
-      rewarda:0,
-      orderIndex :1,
-      fromTemplateId:undefined,
-      copyItems:true
+      status: 'ENABLE',
+      level: 3,
+      rewarda: 0,
+      orderIndex: undefined,
+      fromTemplateId: undefined,
+      copyItems: true
     };
     proxy.resetForm("formRef");
   }

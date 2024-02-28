@@ -23,27 +23,23 @@
 
       <div>
         <el-descriptions class="margin-top" :column="1" border v-loading="loading">
-          <el-descriptions-item width="80px">
+          <el-descriptions-item>
             <template #label>
               <div class="cell-item">
-                <el-icon>
-                  <Clock />
-                </el-icon>
-                统计值
+                <el-icon><InfoFilled /></el-icon>
+                {{ statData.title}}
               </div>
             </template>
-            {{ statTitle}}
+            {{ statData.valueDesc}}
           </el-descriptions-item>
           <el-descriptions-item>
             <template #label>
               <div class="cell-item">
-                <el-icon>
-                  <Clock />
-                </el-icon>
+                <el-icon><StarFilled /></el-icon>
                 统计信息
               </div>
             </template>
-            {{ statContent}}
+            {{ statData.statContent}}
           </el-descriptions-item>
         </el-descriptions>
       </div>
@@ -51,25 +47,13 @@
       <el-divider content-position="center">
         <span class="table-title">
           <svg-icon icon-class="budget" />
-          统计信息
+          比例
         </span>
       </el-divider>
 
-      <el-row>
-        <el-col :span="12">
-          <div class="chart-wrapper">
-            <!--图表数据-->
-            <div ref="warningStatChart" :style="{height:height,margin:0 }" />
-          </div>
-        </el-col>
-        <el-col :span="12">
-          <div class="chart-wrapper">
-            <!--图表数据-->
-            <div ref="alertStatChart" :style="{height:height,margin:0 }" />
-          </div>
-        </el-col>
-      </el-row>
-
+      <!--图表数据-->
+      <div ref="statChart" :style="{height:height,margin:0 }" />
+      
     </div>
   </el-dialog>
 
@@ -83,13 +67,9 @@
 
   const { proxy } = getCurrentInstance();
   //图形实例
-  const warningStatChart = ref(null);
+  const statChart = ref(null);
   //echarts实例
-  let warningStatChartIns = ref(null);
-  //图形实例
-  const alertStatChart = ref(null);
-  //echarts实例
-  let alertStatChartIns = ref(null);
+  let statChartIns = ref(null);
   //是否初始化
   let chartInited = ref(false);
   const height = ref('400px');
@@ -100,15 +80,14 @@
   const loading = ref(false);
   const formRef = ref();
   const userStatOptions = ref([]);
-  const statTitle = ref('');
-  const statContent = ref('');
 
   const data = reactive({
+    statData:{},
     queryParams: {},
     rules: {}
   });
 
-  const { queryParams, rules } = toRefs(data);
+  const { statData,queryParams, rules } = toRefs(data);
 
   // 定义 success 事件，用于操作成功后的回调
   const emit = defineEmits(['success']);
@@ -118,10 +97,10 @@
     open.value = true;
     title.value = '[' + name + ']统计';
     queryParams.value.statId = statId;
+    loadOptions();
     proxy.$nextTick(() => {
       if (!chartInited.value) {
-        warningStatChartIns = echarts.init(warningStatChart.value, "macarons");
-        alertStatChartIns = echarts.init(alertStatChart.value, "macarons");
+        statChartIns = echarts.init(statChart.value, "macarons");
         chartInited.value = true;
       }
       initChart();
@@ -134,6 +113,12 @@
   /** 用户统计变化 */
   function handleUserStatChange(statId) {
     handleQuery();
+  }
+  
+  function loadOptions(){
+    getUserStatTree().then(response => {
+      userStatOptions.value = response;
+    });
   }
 
   /** 搜索按钮操作 */
@@ -161,47 +146,29 @@
     getUserStatStat(queryParams.value).then(response => {
       proxy.$modal.closeLoading();
       if (response.userStat.template.resultType == 'DATE_NAME' || response.userStat.template.resultType == 'NUMBER_NAME') {
-        statContent.value = response.name + '，' + response.compareValue + response.userStat.template.valueTypeName;
+        statData.value.statContent = response.nameValue + '，' + response.statValue + response.userStat.template.valueTypeName;
       } else {
-        statContent.value = '';
+        statData.value.statContent = '';
       }
-      const unit = response.userStat.template.valueTypeName;
-      statTitle.value = response.compareValue + unit;
-
-      let warningOption = createGaugeChartOption(createWarningChartData(response));
-      createChart(warningOption, warningStatChartIns);
-
-      let alertOption = createGaugeChartOption(createAlertChartData(response));
-      createChart(alertOption, alertStatChartIns);
+      let unit = response.userStat.template.valueTypeName;
+      let valueDesc =  response.statValue + unit;
+      valueDesc += '   (期望值:'+response.userStat.compareTypeName+response.userStat.expectValue+unit+')'
+      statData.value.valueDesc = valueDesc;
+      statData.value.title = response.userStat.title;
+      
+      let chartData = {};
+      let percent = getPercent(response.statValue, response.userStat.expectValue);
+      chartData.value = percent.toFixed(0);
+      chartData.title = '实际/期望-比例';
+      chartData.name = "期望值:" + response.userStat.expectValue + unit;
+      
+      let option = createGaugeChartOption(chartData);
+      createChart(option, statChartIns);
     });
-  }
-
-  function createWarningChartData(response) {
-    let chartData = {};
-    let rateWarningPercent = getPercent(response.compareValue, response.userStat.warningValue);
-    const unit = response.userStat.template.valueTypeName;
-    chartData.value = rateWarningPercent.toFixed(0);
-    chartData.name = '';
-    chartData.title = '达到警告比例';
-    chartData.subTitle = "警告配置:" + response.userStat.warningValue + unit;
-    return chartData;
-  }
-
-  function createAlertChartData(response) {
-    let chartData = {};
-    let rateAlertPercent = getPercent(response.compareValue, response.userStat.alertValue);
-    const unit = response.userStat.template.valueTypeName;
-    chartData.value = rateAlertPercent.toFixed(0);
-    chartData.name = '';
-    chartData.title = '达到报警比例';
-    chartData.subTitle = "报警配置:" + response.userStat.alertValue + unit;
-    return chartData;
   }
 
   /** 初始化 **/
   onMounted(() => {
-    getUserStatTree().then(response => {
-      userStatOptions.value = response;
-    });
+    
   })
 </script>

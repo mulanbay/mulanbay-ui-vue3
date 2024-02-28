@@ -8,6 +8,14 @@ export function fetchList(query) {
   })
 }
 
+export function getNextOrderIndex(bussType) {
+  return request({
+    url: '/statTemplate/nextOrderIndex',
+    method: 'get',
+    params: { bussType }
+  })
+}
+
 export function getStatTemplate(templateId) {
   return request({
     url: '/statTemplate/get',

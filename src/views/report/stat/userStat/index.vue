@@ -1,6 +1,16 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryRef" :inline="true">
+      <el-form-item label="统计模板" prop="templateId">
+        <el-tree-select
+          v-model="queryParams.templateId"
+          style="width: 400px"
+          :data="statTemplateOptions"
+          :props="{ value: 'id', label: 'text', children: 'children' }"
+          value-key="id"
+          placeholder="选择模版"
+          :check-strictly="false"/>
+      </el-form-item>
       <el-form-item label="名称检索" prop="name">
         <el-input
           v-model="queryParams.name"
@@ -9,7 +19,7 @@
           style="width: 240px"
           @keyup.enter.native="handleQuery" />
       </el-form-item>
-      <el-form-item label="状态" prop="status">
+      <el-form-item label="选择状态" v-show="moreCdn==true"  prop="status">
         <el-select
           v-model="queryParams.status"
           placeholder="状态"
@@ -27,6 +37,7 @@
       <el-form-item>
         <el-button type="primary" icon="search" @click="handleQuery" v-hasPermi="['report:stat:userStat:list']">搜索</el-button>
         <el-button icon="refresh" @click="resetQuery">重置</el-button>
+        <el-button type="warning" icon="more" @click="handleMoreCdn">{{cdnTitle}}</el-button>
       </el-form-item>
     </el-form>
 
@@ -68,14 +79,14 @@
           <span class="link-type" @click="handleEdit(scope.row)">{{ scope.row.title }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="警告值" align="center" width="95">
+      <el-table-column label="期望值" align="center" width="140">
         <template #default="scope">
-          <span>{{ scope.row.warningValue+scope.row.unit }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="报警值" align="center" width="95">
-        <template #default="scope">
-          <span>{{ scope.row.alertValue+scope.row.unit }}</span>
+          <span v-if="scope.row.compareType=='MORE'">
+            {{ '>'+scope.row.expectValue+scope.row.unit }}
+          </span>
+          <span v-else>
+            {{ '<'+scope.row.expectValue+scope.row.unit }}
+          </span>
         </template>
       </el-table-column>
       <el-table-column label="排序号" width="80" align="center">
@@ -155,6 +166,7 @@
 
 <script setup name="UserStat">
   import { fetchList, deleteUserStat } from "@/api/report/stat/userStat";
+  import { getStatTemplateTree } from "@/api/report/stat/statTemplate";
   import UserStatForm from './form.vue'
   import UserStatRemindForm from '../userStatRemind/form.vue'
   import UserStatStat from './stat.vue'
@@ -163,6 +175,7 @@
   const formRef = ref();
   const userStatRemindFormRef = ref();
   const UserStatStatRef = ref();
+  const statTemplateOptions = ref();
 
   // 遮罩层
   const loading = ref(true);
@@ -186,6 +199,21 @@
   });
 
   const { queryParams } = toRefs(data);
+  
+  //查询条件更多属性 start
+  const cdnTitle = ref("更多");
+  const moreCdn = ref(false);
+  
+  /** 更多查询条件处理 */
+  function handleMoreCdn() {
+    if (moreCdn.value == true) {
+      moreCdn.value = false;
+      cdnTitle.value = '更多';
+    } else {
+      moreCdn.value = true;
+      cdnTitle.value = '取消';
+    }
+  }
   
   /** 统计 */
   function handleStat(row){
@@ -258,5 +286,8 @@
   /** 初始化 **/
   onMounted(() => {
     getList();
+    getStatTemplateTree().then(response => {
+      statTemplateOptions.value = response;
+    });
   })
 </script>

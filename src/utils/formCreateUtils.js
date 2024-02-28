@@ -12,29 +12,39 @@ export function generateFcRules(dataRules) {
   const n = dataRules.length;
   for (let i = 0; i < n; i++) {
     let r = dataRules[i];
+    let selectData=null;
+    //自定义类型
     if (r.list == null || r.list.length == 0) {
-      //this.msgError(r.promptMsg);
-      return new Array();
-    }
-    //field插件需要唯一
-    let selectData = {
-      type: "select",
-      field: "bindValue" + i,
-      title: r.name,
-      value: [],
-      options: [],
-      props: {
-        multiple: false
+      selectData = {
+        type: "input",
+        title: r.name,
+        field: "bindValue" + i,
+        value: "",
+        props: {
+          "type": "text",
+        }
       }
-    };
-    const ll = r.list.length;
-    let os = new Array();
-    for (let j = 0; j < ll; j++) {
-      let opData = r.list[j];
-      let o = { "value": opData.id, "label": opData.text, "disabled": false };
-      os.push(o);
+    }else{
+      //field插件需要唯一
+      selectData = {
+        type: "select",
+        field: "bindValue" + i,
+        title: r.name,
+        value: [],
+        options: [],
+        props: {
+          multiple: false
+        }
+      };
+      const ll = r.list.length;
+      let os = new Array();
+      for (let j = 0; j < ll; j++) {
+        let opData = r.list[j];
+        let o = { "value": opData.id, "label": opData.text, "disabled": false };
+        os.push(o);
+      }
+      selectData.options = os;
     }
-    selectData.options = os;
     selectData.validate = [
       { required: true, message: r.msg, trigger: 'blur' },
     ]

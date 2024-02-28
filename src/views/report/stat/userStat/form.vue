@@ -37,19 +37,22 @@
         </el-col>
       </el-row>
       <el-row>
-        <el-col :span="9">
-          <el-form-item :label="'警告值('+compareTypeName+')'" label-width="120px" prop="warningValue">
-            <el-input-number v-model="form.warningValue" style="width: 145px" controls-position="right" :min="0" :controls="true" :precision="0"/>
-          </el-form-item>
-        </el-col>
-        <el-col :span="9">
-          <el-form-item :label="'报警值('+compareTypeName+')'" label-width="120px" prop="alertValue">
-            <el-input-number v-model="form.alertValue" style="width: 145px" controls-position="right" :min="0" :controls="true" :precision="0"/>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="单位" prop="unit" label-width="65px">
-            <el-input v-model="form.unit" style="width: 75px"  placeholder="请输入单位" />
+        <el-col :span="24">
+          <el-form-item label="期望数值" prop="expectValue">
+            <el-select v-model="form.compareType" style="width: 100px" placeholder="请选择">
+              <el-option
+                v-for="dict in compareTypeOptions"
+                :key="dict.id"
+                :label="dict.text"
+                :value="dict.id"/>
+            </el-select>
+            <el-tooltip content="大于:统计的值需要比设置的期望值要大.<br>小于:统计的值需要比设置的期望值要小." raw-content effect="dark" placement="top">
+              <el-icon>
+                <QuestionFilled />
+              </el-icon>
+            </el-tooltip>
+            <el-input-number v-model="form.expectValue" style="width: 200px" controls-position="right" :min="0" :controls="true" :precision="0"/>
+            <el-input v-model="form.unit" style="width: 80px"  placeholder="请输入单位" />
           </el-form-item>
         </el-col>
       </el-row>
@@ -73,6 +76,14 @@
       </el-row>
       <el-row>
         <el-col :span="12">
+          <el-form-item label="消息提醒" prop="remind">
+            <el-switch v-model="form.remind"></el-switch>
+            <span v-if="form.statId!=null&&form.remind==true">
+              <el-button type="success" size="small" @click="showRemind()" icon="Tools" >设置</el-button>
+            </span>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
           <el-form-item label="日历时间" prop="calendarTime">
             <el-time-picker
                v-model="form.calendarTime"
@@ -82,14 +93,6 @@
                format="HH:mm" value-format="HH:mm"
                placeholder="任意时间点">
              </el-time-picker>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="消息提醒" prop="remind">
-            <el-switch v-model="form.remind"></el-switch>
-            <span v-if="form.statId!=null&&form.remind==true">
-              <el-button type="success" size="small" @click="showRemind()" icon="Tools" >设置</el-button>
-            </span>
           </el-form-item>
         </el-col>
       </el-row>
@@ -141,6 +144,7 @@
   const statusOptions = ref(proxy.commonStatusOptions);
   const statTemplateOptions = ref([]);
   const compareTypeName = ref('');
+  const compareTypeOptions = ref([]);
   
   const data = reactive({
     form: {},
@@ -155,11 +159,11 @@
       calendarTitle: [
         { required: true, message: "日历标题不能为空", trigger: "blur" }
       ],
-      warningValue: [
-        { required: true, message: "警告值不能为空", trigger: "blur" }
+      expectValue: [
+        { required: true, message: "期望值不能为空", trigger: "blur" }
       ],
-      alertValue: [
-        { required: true, message: "报警值不能为空", trigger: "blur" }
+      compareType: [
+        { required: true, message: "比较类型不能为空", trigger: "blur" }
       ],
       status: [
         { required: true, message: "状态不能为空", trigger: "blur" }
@@ -266,6 +270,9 @@
     getStatTemplateTree().then(response => {
       statTemplateOptions.value = response;
     });
+    proxy.getEnumDict('CompareType', 'FIELD', false).then(response => {
+      compareTypeOptions.value = response;
+    });
   }
 
   // 表单重置
@@ -274,6 +281,7 @@
       statId: undefined,
       status:'ENABLE',
       remind:false,
+      compareType: 'MORE',
       orderIndex :1,
       title:undefined,
       calendarTitle:undefined,

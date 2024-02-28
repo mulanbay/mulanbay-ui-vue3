@@ -6,7 +6,7 @@
       <el-row>
         <el-col :span="24">
           <el-form-item label="配置名称" prop="configName">
-            <el-input v-model="form.configName" style="width: 580px"  placeholder="" />
+            <el-input v-model="form.configName" style="width: 580px" @blur="setRemark" placeholder="" />
           </el-form-item>
         </el-col>
       </el-row>
@@ -29,15 +29,10 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item v-if="form.source == 'ENUM'" label="枚举字段" prop="enumIdType">
-            <el-select
-              v-model="form.enumIdType"
-              placeholder="枚举字段"
-              collapse-tags
-              style="width: 230px"
-            >
+          <el-form-item label="级联类型" prop="casCadeType">
+            <el-select v-model="form.casCadeType" style="width: 230px" placeholder="请选择">
               <el-option
-                v-for="dict in enumIdTypeOptions"
+                v-for="dict in casCadeTypeOptions"
                 :key="dict.id"
                 :label="dict.text"
                 :value="dict.id"
@@ -48,7 +43,7 @@
       </el-row>
       <el-row>
         <el-col :span="24">
-          <el-form-item label="配置值" prop="configValue">
+          <el-form-item v-if="form.source != 'ANY'" label="配置值" prop="configValue">
             <el-input v-model="form.configValue" type="textarea" :rows="5"  style="width: 580px"  placeholder="请输入内容"></el-input>
           </el-form-item>
         </el-col>
@@ -74,20 +69,25 @@
       </el-row>
       <el-row>
         <el-col :span="12">
-          <el-form-item label="级联类型" prop="casCadeType">
-            <el-select v-model="form.casCadeType" style="width: 230px" placeholder="请选择">
+          <el-form-item label="用户字段" v-if="form.source != 'ANY'" prop="userField">
+            <el-input v-model="form.userField" style="width: 230px" placeholder="" />
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item v-if="form.source == 'ENUM'" label="枚举字段" prop="enumIdType">
+            <el-select
+              v-model="form.enumIdType"
+              placeholder="枚举字段"
+              collapse-tags
+              style="width: 230px"
+            >
               <el-option
-                v-for="dict in casCadeTypeOptions"
+                v-for="dict in enumIdTypeOptions"
                 :key="dict.id"
                 :label="dict.text"
                 :value="dict.id"
               />
             </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="用户字段" prop="userField">
-            <el-input v-model="form.userField" style="width: 230px" placeholder="" />
           </el-form-item>
         </el-col>
       </el-row>
@@ -146,9 +146,6 @@
       fid:[
         { required: true, message: "业务外键不能为空", trigger: "blur" }
       ],
-      configValue: [
-        { required: true, message: "配置值不能为空", trigger: "blur" }
-      ],
       casCadeType: [
         { required: true, message: "级联类型不能为空", trigger: "blur" }
       ],
@@ -184,6 +181,12 @@
   // 提供 open 方法，用于打开弹窗
   defineExpose({ openForm });
 
+  // 设置备注
+  function setRemark(){
+    if(proxy.isEmpty(form.value.msg)){
+      form.value.msg='请选择'+form.value.configName;
+    }
+  }
   // 表单重置
   function resetForm() {
     form.value = {
@@ -193,7 +196,8 @@
       orderIndex:1,
       casCadeType:'NOT_CASCADE',
       source:'SQL',
-      userField:'user_id'
+      userField:'user_id',
+      msg:undefined
     };
     proxy.resetForm("formRef");
   }

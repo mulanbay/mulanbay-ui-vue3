@@ -9,12 +9,21 @@
           style="width: 240px"
           @keyup.enter.native="handleQuery" />
       </el-form-item>
-      <el-form-item label="状态" prop="status">
+      <el-form-item label="业务类型" prop="bussType">
+        <el-select v-model="queryParams.bussType" style="width: 120px" placeholder="请选择">
+          <el-option
+            v-for="dict in bussTypeOptions"
+            :key="dict.id"
+            :label="dict.text"
+            :value="dict.id"/>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="模版状态" prop="status">
         <el-select
           v-model="queryParams.status"
           placeholder="状态"
           clearable
-          style="width: 240px"
+          style="width: 120px"
         >
           <el-option
             v-for="dict in statusOptions"
@@ -63,12 +72,12 @@
           <span>{{ scope.row.templateId }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="名称" min-width="250" :show-overflow-tooltip="true">
+      <el-table-column label="名称" min-width="300" :show-overflow-tooltip="true">
         <template #default="scope">
           <span class="link-type" @click="handleEdit(scope.row)">{{ scope.row.templateName }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="标题" min-width="160" :show-overflow-tooltip="true">
+      <el-table-column label="标题" min-width="120" :show-overflow-tooltip="true">
         <template #default="scope">
           <span>{{ scope.row.title }}</span>
         </template>
@@ -88,12 +97,12 @@
           <span>{{ scope.row.sqlTypeName }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="返回结果" align="center" width="100">
+      <el-table-column label="数据类型" align="center" width="100">
         <template #default="scope">
           <span>{{ scope.row.resultTypeName }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="值单位" align="center">
+      <el-table-column label="数据单位" align="center">
         <template #default="scope">
           <span>{{ scope.row.valueTypeName }}</span>
         </template>
@@ -101,11 +110,6 @@
       <el-table-column label="排序号" align="center">
         <template #default="scope">
           <span>{{ scope.row.orderIndex }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="比较类型" align="center">
-        <template #default="scope">
-          <span>{{ scope.row.compareTypeName }}</span>
         </template>
       </el-table-column>
       <el-table-column label="等级" align="center">
@@ -201,6 +205,7 @@
   // 查询列表数据
   const statTemplateList = ref([]);
   const statusOptions = ref(proxy.commonStatusOptions);
+  const bussTypeOptions = ref([]);
   
   const data = reactive({
     queryParams: {
@@ -277,5 +282,8 @@
   /** 初始化 **/
   onMounted(() => {
     getList();
+    proxy.getEnumDict('BussType', 'FIELD', false).then(response => {
+      bussTypeOptions.value = response;
+    });
   })
 </script>

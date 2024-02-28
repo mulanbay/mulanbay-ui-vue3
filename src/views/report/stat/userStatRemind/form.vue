@@ -1,8 +1,8 @@
 <template>
 
   <!-- 表单编辑对话框 -->
-  <el-dialog :title="title" v-model="open" width="500px" append-to-body>
-    <el-form ref="formRef" :model="form" :rules="rules" v-loading="formLoading" label-width="150px">
+  <el-dialog :title="title" v-model="open" width="400px" append-to-body>
+    <el-form ref="formRef" :model="form" :rules="rules" v-loading="formLoading" label-width="80px">
       <el-form-item label="提醒周期" prop="triggerInterval">
         每
         <el-input-number v-model="form.triggerInterval" placeholder="" controls-position="right" :min="0" :controls="false" :precision="0" style="width: 100px" />
@@ -25,14 +25,13 @@
           v-model="form.remindTime"
           :picker-options="{selectableRange: '18:30:00 - 20:30:00'}"
           format="HH:mm" value-format="HH:mm"
+          style="width: 200px"
           placeholder="任意时间点">
         </el-time-picker>
       </el-form-item>
-      <el-form-item label="超过告警值时提醒" prop="owr">
-        <el-switch v-model="form.owr"></el-switch>
-      </el-form-item>
-      <el-form-item label="超过警报值时提醒" prop="oar">
-        <el-switch v-model="form.oar"></el-switch>
+      <el-form-item label="数据超过" prop="overRate">
+        <el-input-number v-model="form.overRate" style="width: 145px" controls-position="right" :min="0" :controls="true" :precision="0"/>
+        %时提醒
       </el-form-item>
       <el-form-item label="备注信息" prop="remark">
          <el-input type="textarea" style="width: 280px" v-model="form.remark"></el-input>
@@ -79,11 +78,8 @@
       remindTime: [
         { required: true, message: "提醒时间不能为空", trigger: "blur" }
       ],
-      owr: [
-        { required: true, message: "超过告警值时提醒不能为空", trigger: "blur" }
-      ],
-      oar: [
-        { required: true, message: "超过警报值时提醒不能为空", trigger: "blur" }
+      overRate: [
+        { required: true, message: "报警比例不能为空", trigger: "blur" }
       ],
       triggerInterval: [
         { required: true, message: "提醒周期不能为空", trigger: "blur" }
