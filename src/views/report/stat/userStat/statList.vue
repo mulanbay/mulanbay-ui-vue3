@@ -82,11 +82,13 @@
                   </el-descriptions-item>
                   <el-descriptions-item>
                     <template #label>
-                      <el-icon><Tools /></el-icon>
-                      配置
+                      <el-icon><Grid /></el-icon>
+                      操作选择
                     </template>
                     <div class="cell">
-                    <el-button link type="primary" @click="showRemindSet(item.userStat.statId)" size="small">配置提醒</el-button>
+                    <el-button link icon="tools" type="primary" @click="showRemindSet(item.userStat.statId)" size="small">配置提醒</el-button>
+                    <el-button link icon="refresh" type="primary" @click="refreshStat(item.userStat.statId)" v-hasPermi="['report:stat:userStat:deleteStatCache']" size="small">刷新</el-button>
+                    <el-button link icon="Promotion" type="primary" @click="handleDispatch(item.userStat.template.url)" v-hasPermi="['report:stat:userStat:list']" size="small">详情</el-button>
                     </div>
                   </el-descriptions-item>
                 </el-descriptions>
@@ -95,6 +97,10 @@
             <el-col :span="8">
               <table border="0" style="margin: auto" align="right">
                 <tbody>
+                  <tr>
+                    <td>
+                    </td>
+                  </tr>
                   <tr>
                     <td>
                       <span v-if="'MORE'==item.userStat.comapreType">
@@ -107,13 +113,10 @@
                   </tr>
                   <tr>
                     <td>
-                      <el-text class="mx-1" type="warning">统计值/期望值-比例</el-text>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td colspan="2">
-                      <el-button type="primary" icon="refresh" size="small" @click="refreshStat(item.userStat.statId)" v-hasPermi="['report:stat:userStat:deleteStatCache']">刷新</el-button>
-                      <el-button type="primary" icon="Promotion" size="small" @click="handleDispatch(item.userStat.template.url)" v-hasPermi="['report:stat:userStat:list']">详情</el-button>
+                      <el-text class="mx-1" type="warning">
+                        <br>
+                        统计值/期望值-比例
+                      </el-text>
                     </td>
                   </tr>
                 </tbody>

@@ -158,7 +158,7 @@
       
       let chartData = {};
       let percent = getPercent(response.statValue, response.userStat.expectValue);
-      chartData.value = percent.toFixed(0);
+      chartData.value = percent;
       chartData.title = '统计值/期望值-比例';
       chartData.name = "期望值:" + response.userStat.expectValue + unit;
       
