@@ -42,7 +42,6 @@
       <span class="table-title" @click="handleDispatch('Budget')">
         <svg-icon icon-class="budget" />
         预算列表
-        <i class="el-icon-s-promotion" />
       </span>
     </el-divider>
 

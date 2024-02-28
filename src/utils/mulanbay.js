@@ -169,7 +169,7 @@ export function getPercent(num1,num2) {
 	if(num2==null||num2==0){
 		return 'n/a';
 	}
-  return (Math.round(num1 / num2 * 10000) / 100.00);
+  return (Math.round(num1 / num2 * 10000) / 100.00).toFixed(0);
 }
 
 export function encodeJsonString(ss) {

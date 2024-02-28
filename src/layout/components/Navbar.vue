@@ -19,6 +19,12 @@
         <el-tooltip content="锁定系统" effect="dark" placement="bottom" >
           <MulanbayLock id="mulanbay-lock" class="right-menu-item hover-effect"/>
         </el-tooltip>
+        
+        <el-tooltip content="用户统计" effect="dark" placement="bottom">
+          <span class="right-menu-item hover-effect">
+            <svg-icon icon-class="notify" @click="dispatchFastMenu('UserStatStatList')"/>
+          </span>
+        </el-tooltip>
 
         <screenfull id="screenfull" class="right-menu-item hover-effect" />
 

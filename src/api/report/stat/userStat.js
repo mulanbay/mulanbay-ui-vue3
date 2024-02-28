@@ -60,9 +60,18 @@ export function getUserStatStat(query) {
   })
 }
 
-export function deleteUserStatStatCache() {
+export function getUserStatStatList(query) {
+  return request({
+    url: '/userStat/statList',
+    method: 'get',
+    params: query
+  })
+}
+
+export function deleteStatCache(data) {
   return request({
     url: '/userStat/deleteStatCache',
-    method: 'post'
+    method: 'post',
+    data
   })
 }
