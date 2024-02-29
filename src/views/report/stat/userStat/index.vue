@@ -159,7 +159,7 @@
     <UserStatRemindForm ref="userStatRemindFormRef" />
     
     <!-- 统计 -->
-    <UserStatStat ref="UserStatStatRef" />
+    <UserStatStat ref="userStatStatRef" />
     
   </div>
 </template>
@@ -174,7 +174,7 @@
   const { proxy } = getCurrentInstance();
   const formRef = ref();
   const userStatRemindFormRef = ref();
-  const UserStatStatRef = ref();
+  const userStatStatRef = ref();
   const statTemplateOptions = ref();
 
   // 遮罩层
@@ -217,7 +217,7 @@
   
   /** 统计 */
   function handleStat(row){
-    UserStatStatRef.value.showData(row.statId,row.title);
+    userStatStatRef.value.showData(row.statId,row.title);
   }
   
   /** 提醒配置 */

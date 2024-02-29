@@ -58,6 +58,16 @@
           <span>{{ scope.row.casCadeTypeName }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="绑定用户" align="center" width="95">
+        <template #default="scope">
+          <span v-if="scope.row.bindUser==true">
+            <el-icon color="green"><CircleCheckFilled /></el-icon>
+          </span>
+          <span v-else>
+            <el-icon color="red"><CircleCloseFilled /></el-icon>
+          </span>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" align="center" width="80" fixed="right" class-name="small-padding fixed-width">
         <template #default="scope">
           <el-button

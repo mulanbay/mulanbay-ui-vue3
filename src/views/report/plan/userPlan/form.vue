@@ -5,16 +5,16 @@
     <el-form ref="formRef" :model="form" :rules="rules" v-loading="formLoading" label-width="90px">
       <el-row>
         <el-col :span="24">
-          <el-form-item label="统计模板" prop="templateId">
+          <el-form-item label="计划模板" prop="templateId">
             <el-tree-select
               v-model="form.templateId"
               style="width: 580px"
-              :data="statTemplateOptions"
+              :data="planTemplateOptions"
               :props="{ value: 'id', label: 'text', children: 'children' }"
               value-key="id"
               placeholder="选择模版"
               :check-strictly="false" 
-              :disabled="form.statId!=null"
+              :disabled="form.planId!=null"
               @change="handleFromTemplateChange"/>
           </el-form-item>
         </el-col>
@@ -24,7 +24,7 @@
       </el-row>
       <el-row>
         <el-col :span="24">
-          <el-form-item label="统计标题" prop="title">
+          <el-form-item label="计划标题" prop="title">
             <el-input v-model="form.title" style="width: 580px"  placeholder="请输入标题" />
           </el-form-item>
         </el-col>
@@ -37,8 +37,27 @@
         </el-col>
       </el-row>
       <el-row>
+        <el-col :span="12">
+          <el-form-item label="计划类型" prop="planType">
+            <el-select v-model="form.planType" style="width: 230px" placeholder="请选择">
+              <el-option
+                v-for="dict in planTypeOptions"
+                :key="dict.id"
+                :label="dict.text"
+                :value="dict.id"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="显示顺序" prop="orderIndex">
+            <el-input-number v-model="form.orderIndex" style="width: 230px" controls-position="right" :min="0" :controls="true" :precision="0"/>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
         <el-col :span="24">
-          <el-form-item label="期望数值" prop="expectValue">
+          <el-form-item label="计划配置" prop="compareType">
             <el-select v-model="form.compareType" style="width: 100px" placeholder="请选择">
               <el-option
                 v-for="dict in compareTypeOptions"
@@ -51,14 +70,17 @@
                 <QuestionFilled />
               </el-icon>
             </el-tooltip>
-            <el-input-number v-model="form.expectValue" style="width: 200px" controls-position="right" :min="0" :controls="true" :precision="0"/>
-            <el-input v-model="form.unit" style="width: 80px"  placeholder="请输入单位" />
+            <el-input-number v-model="form.planCountValue" style="width: 180px" controls-position="right" :min="0" :controls="true" :precision="0"/>
+                <el-tag type="success">次</el-tag>
+            <el-input-number v-model="form.planValue" style="width: 180px" controls-position="right" :min="0" :controls="true" :precision="0"/>
+            <el-input v-model="form.unit" style="width: 70px"  placeholder="单位" />
+            <el-text class="mx-1" type="danger">{{planDesc}}</el-text>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="12">
-          <el-form-item label="模板状态" prop="status">
+          <el-form-item label="计划状态" prop="status">
             <el-radio-group v-model="form.status">
               <el-radio
                 v-for="dict in statusOptions"
@@ -66,21 +88,6 @@
                 :label="dict.id"
               >{{dict.text}}</el-radio>
             </el-radio-group>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="显示顺序" prop="orderIndex">
-            <el-input-number v-model="form.orderIndex" style="width: 230px" controls-position="right" :min="0" :controls="true" :precision="0"/>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="12">
-          <el-form-item label="消息提醒" prop="remind">
-            <el-switch v-model="form.remind"></el-switch>
-            <span v-if="form.statId!=null&&form.remind==true">
-              <el-button type="success" size="small" @click="showRemind()" icon="Tools" >设置</el-button>
-            </span>
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -93,6 +100,16 @@
                format="HH:mm" value-format="HH:mm"
                placeholder="任意时间点">
              </el-time-picker>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="12">
+          <el-form-item label="消息提醒" prop="remind">
+            <el-switch v-model="form.remind"></el-switch>
+            <span v-if="form.planId!=null&&form.remind==true">
+              <el-button type="success" size="small" @click="showRemind()" icon="Tools" >设置</el-button>
+            </span>
           </el-form-item>
         </el-col>
       </el-row>
@@ -113,16 +130,16 @@
   </el-dialog>
 
   <!-- 提醒表单 -->
-  <UserStatRemindForm ref="userStatRemindFormRef" />
+  <UserPlanRemindForm ref="userPlanRemindFormRef" />
   
 </template>
 
-<script setup name="UserStatForm">
-  import { createUserStat, editUserStat, getUserStat,getUserStatTree } from "@/api/report/stat/userStat";
-  import { getStatTemplate,getStatTemplateTree } from "@/api/report/stat/statTemplate";
+<script setup name="UserPlanForm">
+  import { createUserPlan, editUserPlan, getUserPlan } from "@/api/report/plan/userPlan";
+  import { getPlanTemplate, getPlanTemplateTree } from "@/api/report/plan/planTemplate";
   import { parseStatBindConfigs } from "@/api/report/bind/statBindConfig";
   import { generateFcRules, setTriggerParasBindValues, getBindValues, setBindValues } from "@/utils/formCreateUtils";
-  import UserStatRemindForm from '../userStatRemind/form.vue'
+  import UserPlanRemindForm from '../userPlanRemind/form.vue'
   
   //导入 form-create
   import formCreate from "@form-create/element-ui";
@@ -135,15 +152,17 @@
   const parasEditOpen = ref(false);
   const peApi = ref();
   
-  const userStatRemindFormRef = ref();
-  
-  const title = ref('用户统计');
+  const userPlanRemindFormRef = ref();
+  //计划描述
+  const planDesc = ref();
+  const title = ref('用户计划');
   const open = ref(false);
   const formLoading = ref(false);
   const formRef = ref();
   const statusOptions = ref(proxy.commonStatusOptions);
-  const statTemplateOptions = ref([]);
+  const planTemplateOptions = ref([]);
   const compareTypeOptions = ref([]);
+  const planTypeOptions = ref([]);
   
   const data = reactive({
     form: {},
@@ -163,6 +182,15 @@
       ],
       compareType: [
         { required: true, message: "比较类型不能为空", trigger: "blur" }
+      ],
+      planType: [
+        { required: true, message: "计划类型不能为空", trigger: "blur" }
+      ],
+      planCountValue: [
+        { required: true, message: "计划次数值不能为空", trigger: "blur" }
+      ],
+      planValue: [
+        { required: true, message: "计划值不能为空", trigger: "blur" }
       ],
       status: [
         { required: true, message: "状态不能为空", trigger: "blur" }
@@ -208,15 +236,16 @@
   
   /** 来源模版变更 */
   function handleFromTemplateChange(id){
-    if(form.value.statId!=null){
+    if(form.value.planId!=null){
       return;
     }
-    getStatTemplate(id).then(response => {
+    getPlanTemplate(id).then(response => {
       form.value.title = response.title;
       form.value.calendarTitle= response.calendarTitle;
-      form.value.unit = response.valueTypeName;
+      form.value.unit = response.unit;
+      planDesc.value = response.remark;
     });
-    loadStatBindConfigs(id,'STAT',form.value.bindValues);
+    loadStatBindConfigs(id,'PLAN',form.value.bindValues);
   }
   
   /** 获取值配置列表列表 */
@@ -234,7 +263,7 @@
   
   /** 提醒配置 */
   function showRemind(){
-    userStatRemindFormRef.value.openForm(form.value.statId);
+    userPlanRemindFormRef.value.openForm(form.value.planId);
   }
 
   /** 打开弹窗 */
@@ -250,11 +279,12 @@
       title.value = "修改";
       try {
         formLoading.value = true;
-        getUserStat(id).then(response => {
+        getUserPlan(id).then(response => {
           form.value = response;
+          planDesc.value = response.template.remark;
           form.value.templateId = response.template.templateId;
           form.value.template = null;
-          loadStatBindConfigs(form.value.templateId,'STAT',form.value.bindValues);
+          loadStatBindConfigs(form.value.templateId,'PLAN',form.value.bindValues);
         });
       } finally {
         formLoading.value = false;
@@ -268,22 +298,28 @@
   defineExpose({ openForm });
   
   function loadOptions(){
-    getStatTemplateTree().then(response => {
-      statTemplateOptions.value = response;
+    getPlanTemplateTree().then(response => {
+      planTemplateOptions.value = response;
     });
     proxy.getEnumDict('CompareType', 'FIELD', false).then(response => {
       compareTypeOptions.value = response;
+    });
+    proxy.getEnumDict('PlanType', 'FIELD', false).then(response => {
+      planTypeOptions.value = response;
     });
   }
 
   // 表单重置
   function resetForm() {
     form.value = {
-      statId: undefined,
+      planId: undefined,
       status:'ENABLE',
       remind:false,
       compareType: 'MORE',
+      planType: 'MONTH',
       orderIndex :1,
+      planCountValue :0,
+      planValue :0,
       title:undefined,
       calendarTitle:undefined,
       unit:undefined
@@ -298,15 +334,15 @@
         //获取绑定值
         let bindValues = getBindValues(peApi.value);
         form.value.bindValues = bindValues;
-        if (form.value.statId != undefined) {
-          editUserStat(form.value).then(response => {
+        if (form.value.planId != undefined) {
+          editUserPlan(form.value).then(response => {
             proxy.$modal.msgSuccess("修改成功");
             open.value = false;
             // 发送操作成功的事件
             emit('success');
           });
         } else {
-          createUserStat(form.value).then(response => {
+          createUserPlan(form.value).then(response => {
             proxy.$modal.msgSuccess("新增成功");
             open.value = false;
             // 发送操作成功的事件

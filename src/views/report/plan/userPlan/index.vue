@@ -1,6 +1,16 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryRef" :inline="true">
+      <el-form-item label="计划模板" prop="templateId">
+        <el-tree-select
+          v-model="queryParams.templateId"
+          style="width: 240px"
+          :data="planTemplateOptions"
+          :props="{ value: 'id', label: 'text', children: 'children' }"
+          value-key="id"
+          placeholder="选择模版"
+          :check-strictly="false"/>
+      </el-form-item>
       <el-form-item label="名称检索" prop="name">
         <el-input
           v-model="queryParams.name"
@@ -9,21 +19,12 @@
           style="width: 240px"
           @keyup.enter.native="handleQuery" />
       </el-form-item>
-      <el-form-item label="业务类型" prop="bussType">
-        <el-select v-model="queryParams.bussType" clearable style="width: 120px" placeholder="请选择">
-          <el-option
-            v-for="dict in bussTypeOptions"
-            :key="dict.id"
-            :label="dict.text"
-            :value="dict.id"/>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="模版状态" prop="status">
+      <el-form-item label="选择状态" v-show="moreCdn==true"  prop="status">
         <el-select
           v-model="queryParams.status"
           placeholder="状态"
           clearable
-          style="width: 120px"
+          style="width: 240px"
         >
           <el-option
             v-for="dict in statusOptions"
@@ -34,8 +35,9 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="search" @click="handleQuery" v-hasPermi="['report:stat:statTemplate:list']">搜索</el-button>
+        <el-button type="primary" icon="search" @click="handleQuery" v-hasPermi="['report:plan:userPlan:list']">搜索</el-button>
         <el-button icon="refresh" @click="resetQuery">重置</el-button>
+        <el-button type="warning" icon="more" @click="handleMoreCdn">{{cdnTitle}}</el-button>
       </el-form-item>
     </el-form>
 
@@ -45,7 +47,7 @@
           type="primary"
           icon="plus"
           @click="handleCreate"
-          v-hasPermi="['report:stat:statTemplate:create']">新增</el-button>
+          v-hasPermi="['report:plan:userPlan:create']">新增</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -53,7 +55,7 @@
           icon="edit"
           :disabled="single"
           @click="handleEdit"
-          v-hasPermi="['report:stat:statTemplate:edit']">修改</el-button>
+          v-hasPermi="['report:plan:userPlan:edit']">修改</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -61,68 +63,59 @@
           icon="delete"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['report:stat:statTemplate:delete']">删除</el-button>
+          v-hasPermi="['report:plan:userPlan:delete']">删除</el-button>
       </el-col>
     </el-row>
+    
     <!--列表数据-->
-    <el-table v-loading="loading" :data="statTemplateList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="userPlanList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="ID" fixed="left" prop="templateId" sortable="custom" align="center" width="90">
+      <el-table-column label="ID" fixed="left" prop="planId" sortable="custom" align="center" width="80">
         <template #default="scope">
-          <span>{{ scope.row.templateId }}</span>
+          <span>{{ scope.row.planId }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="名称" min-width="300" :show-overflow-tooltip="true">
+      <el-table-column label="标题" fixed="left"  min-width="200" :show-overflow-tooltip="true">
         <template #default="scope">
-          <span class="link-type" @click="handleEdit(scope.row)">{{ scope.row.templateName }}</span>
+          <span class="link-type" @click="handleEdit(scope.row)">{{ scope.row.title }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="标题" min-width="120" :show-overflow-tooltip="true">
+      <el-table-column label="计划类型" align="center" width="100">
         <template #default="scope">
-          <span>{{ scope.row.title }}</span>
+          <span>{{ scope.row.planTypeName }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="业务类型" align="center" width="100" >
+      <el-table-column label="次数计划值" align="center" width="140">
         <template #default="scope">
-          <span>{{ scope.row.bussTypeName }}</span>
+          <span v-if="scope.row.compareType=='MORE'">
+            {{ '>'+scope.row.planCountValue+'次' }}
+          </span>
+          <span v-else>
+            {{ '<'+scope.row.planCountValue+'次' }}
+          </span>
         </template>
       </el-table-column>
-      <el-table-column label="配置项" width="100" align="center">
+      <el-table-column label="计划值" align="center" width="140">
         <template #default="scope">
-          <span class="link-type" @click="handleBindList(scope.row)"><el-icon><Grid /></el-icon></span>
+          <span v-if="scope.row.compareType=='MORE'">
+            {{ '>'+scope.row.planValue+scope.row.unit }}
+          </span>
+          <span v-else>
+            {{ '<'+scope.row.planValue+scope.row.unit }}
+          </span>
         </template>
       </el-table-column>
-      <el-table-column label="查询类型" align="center">
-        <template #default="scope">
-          <span>{{ scope.row.sqlTypeName }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="数据类型" align="center" width="100">
-        <template #default="scope">
-          <span>{{ scope.row.resultTypeName }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="数据单位" align="center">
-        <template #default="scope">
-          <span>{{ scope.row.valueTypeName }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="排序号" align="center">
+      <el-table-column label="排序号" width="80" align="center">
         <template #default="scope">
           <span>{{ scope.row.orderIndex }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="等级" align="center">
+      <el-table-column label="统计" width="80" align="center">
         <template #default="scope">
-          <span>{{ scope.row.level }}</span>
+          <span class="link-type" @click="handleStat(scope.row)"><el-icon><Histogram /></el-icon></span>
         </template>
       </el-table-column>
-      <el-table-column label="积分奖励" align="center">
-        <template #default="scope">
-          <span>{{ scope.row.rewards }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="状态" align="center" width="95">
+      <el-table-column label="状态" align="center" width="80">
         <template #default="scope">
           <span v-if="scope.row.status=='ENABLE'">
             <el-icon color="green"><CircleCheckFilled /></el-icon>
@@ -132,7 +125,18 @@
           </span>
         </template>
       </el-table-column>
-      <el-table-column label="创建时间" align="center"  width="180">
+      <el-table-column label="日历时间" align="center">
+        <template #default="scope">
+          <span>{{ scope.row.calendarTime }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="配置提醒" align="center">
+        <template #default="scope">
+          <el-switch v-model="scope.row.remind" disabled ></el-switch>
+          <span class="link-type" @click="showRemindSet(scope.row)"><el-icon><Tools /></el-icon></span>
+        </template>
+      </el-table-column>
+      <el-table-column label="创建时间" align="center" width="180">
         <template #default="scope">
           <span>{{ scope.row.createdTime }}</span>
         </template>
@@ -144,14 +148,14 @@
             type="success"
             icon="edit"
             @click="handleEdit(scope.row)"
-            v-hasPermi="['report:stat:statTemplate:edit']">修改
+            v-hasPermi="['report:plan:userPlan:edit']">修改
           </el-button>
           <el-button
             link
             type="danger"
             icon="delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['report:stat:statTemplate:delete']">删除
+            v-hasPermi="['report:plan:userPlan:delete']">删除
           </el-button>
         </template>
       </el-table-column>
@@ -165,22 +169,30 @@
       @pagination="getList" />
       
     <!-- 表单 -->
-    <StatTemplateForm ref="formRef" @success="getList" />
-
-    <!-- 条件绑定列表 -->
-    <StatBindConfigList ref="statBindConfigListRef" />
+    <UserPlanForm ref="formRef" @success="getList" />
+    
+    <!-- 提醒表单 -->
+    <UserPlanRemindForm ref="userPlanRemindFormRef" />
+    
+    <!-- 统计 -->
+    <UserPlanStat ref="userPlanStatRef" />
     
   </div>
 </template>
 
-<script setup name="StatTemplate">
-  import { fetchList, deleteStatTemplate } from "@/api/report/stat/statTemplate";
-  import StatTemplateForm from './form.vue'
-  import StatBindConfigList from '../../bind/statBindConfig/index.vue'
-
+<script setup name="UserPlan">
+  import { fetchList, deleteUserPlan } from "@/api/report/plan/userPlan";
+  import { getPlanTemplateTree } from "@/api/report/plan/planTemplate";
+  import UserPlanForm from './form.vue'
+  import UserPlanRemindForm from '../userPlanRemind/form.vue'
+  import UserPlanStat from './stat.vue'
+  
   const { proxy } = getCurrentInstance();
   const formRef = ref();
-  const statBindConfigListRef = ref();
+  const userPlanRemindFormRef = ref();
+  const userPlanStatRef = ref();
+  const planTemplateOptions = ref();
+  const planTypeOptions = ref([]);
 
   // 遮罩层
   const loading = ref(true);
@@ -193,9 +205,8 @@
   // 总条数
   const total = ref(0);
   // 查询列表数据
-  const statTemplateList = ref([]);
+  const userPlanList = ref([]);
   const statusOptions = ref(proxy.commonStatusOptions);
-  const bussTypeOptions = ref([]);
   
   const data = reactive({
     queryParams: {
@@ -206,18 +217,38 @@
 
   const { queryParams } = toRefs(data);
   
-  /** 绑定值列表 */
-  function handleBindList(row){
-    statBindConfigListRef.value.showData(row.templateId,'STAT')
+  //查询条件更多属性 start
+  const cdnTitle = ref("更多");
+  const moreCdn = ref(false);
+  
+  /** 更多查询条件处理 */
+  function handleMoreCdn() {
+    if (moreCdn.value == true) {
+      moreCdn.value = false;
+      cdnTitle.value = '更多';
+    } else {
+      moreCdn.value = true;
+      cdnTitle.value = '取消';
+    }
+  }
+  
+  /** 统计 */
+  function handleStat(row){
+    userPlanStatRef.value.showData(row.planId,row.title);
+  }
+  
+  /** 提醒配置 */
+  function showRemindSet(row){
+    userPlanRemindFormRef.value.openForm(row.planId);
   }
   
   /** 查询列表 */
   function getList() {
     loading.value = true;
-    statTemplateList.value = [];
+    userPlanList.value = [];
     fetchList(queryParams.value).then(
       response => {
-        statTemplateList.value = response.rows;
+        userPlanList.value = response.rows;
         total.value = response.total;
         loading.value = false;
       }
@@ -243,19 +274,19 @@
 
   /** 修改按钮操作 */
   function handleEdit(row) {
-    const id = row.templateId || ids.value.join(",");
+    const id = row.planId || ids.value.join(",");
     formRef.value.openForm(id, 'edit');
   }
 
   /** 删除按钮操作 */
   function handleDelete(row) {
-    const deleteIds = row.templateId || ids.value.join(",");
+    const deleteIds = row.planId || ids.value.join(",");
     proxy.$confirm('是否确认删除编号为"' + deleteIds + '"的数据项?', "警告", {
       confirmButtonText: "确定",
       cancelButtonText: "取消",
       type: "warning"
     }).then(function() {
-      return deleteStatTemplate(deleteIds);
+      return deleteUserPlan(deleteIds);
     }).then(() => {
       proxy.$modal.msgSuccess("删除成功");
       getList();
@@ -264,7 +295,7 @@
 
   // 多选框选中数据
   function handleSelectionChange(selection) {
-    ids.value = selection.map(item => item.templateId)
+    ids.value = selection.map(item => item.planId)
     single.value = selection.length != 1
     multiple.value = !selection.length
   }
@@ -272,8 +303,8 @@
   /** 初始化 **/
   onMounted(() => {
     getList();
-    proxy.getEnumDict('BussType', 'FIELD', false).then(response => {
-      bussTypeOptions.value = response;
+    getPlanTemplateTree().then(response => {
+      planTemplateOptions.value = response;
     });
   })
 </script>

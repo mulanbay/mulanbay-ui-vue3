@@ -34,7 +34,7 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="search" @click="handleQuery" v-hasPermi="['report:stat:statTemplate:list']">搜索</el-button>
+        <el-button type="primary" icon="search" @click="handleQuery" v-hasPermi="['report:plan:planTemplate:list']">搜索</el-button>
         <el-button icon="refresh" @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>
@@ -45,7 +45,7 @@
           type="primary"
           icon="plus"
           @click="handleCreate"
-          v-hasPermi="['report:stat:statTemplate:create']">新增</el-button>
+          v-hasPermi="['report:plan:planTemplate:create']">新增</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -53,7 +53,7 @@
           icon="edit"
           :disabled="single"
           @click="handleEdit"
-          v-hasPermi="['report:stat:statTemplate:edit']">修改</el-button>
+          v-hasPermi="['report:plan:planTemplate:edit']">修改</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -61,18 +61,18 @@
           icon="delete"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['report:stat:statTemplate:delete']">删除</el-button>
+          v-hasPermi="['report:plan:planTemplate:delete']">删除</el-button>
       </el-col>
     </el-row>
     <!--列表数据-->
-    <el-table v-loading="loading" :data="statTemplateList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="planTemplateList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="ID" fixed="left" prop="templateId" sortable="custom" align="center" width="90">
         <template #default="scope">
           <span>{{ scope.row.templateId }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="名称" min-width="300" :show-overflow-tooltip="true">
+      <el-table-column label="名称" min-width="250" :show-overflow-tooltip="true">
         <template #default="scope">
           <span class="link-type" @click="handleEdit(scope.row)">{{ scope.row.templateName }}</span>
         </template>
@@ -92,19 +92,14 @@
           <span class="link-type" @click="handleBindList(scope.row)"><el-icon><Grid /></el-icon></span>
         </template>
       </el-table-column>
-      <el-table-column label="查询类型" align="center">
+      <el-table-column label="查询类型" align="center" width="100">
         <template #default="scope">
           <span>{{ scope.row.sqlTypeName }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="数据类型" align="center" width="100">
-        <template #default="scope">
-          <span>{{ scope.row.resultTypeName }}</span>
-        </template>
-      </el-table-column>
       <el-table-column label="数据单位" align="center">
         <template #default="scope">
-          <span>{{ scope.row.valueTypeName }}</span>
+          <span>{{ scope.row.unit }}</span>
         </template>
       </el-table-column>
       <el-table-column label="排序号" align="center">
@@ -144,14 +139,14 @@
             type="success"
             icon="edit"
             @click="handleEdit(scope.row)"
-            v-hasPermi="['report:stat:statTemplate:edit']">修改
+            v-hasPermi="['report:plan:planTemplate:edit']">修改
           </el-button>
           <el-button
             link
             type="danger"
             icon="delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['report:stat:statTemplate:delete']">删除
+            v-hasPermi="['report:plan:planTemplate:delete']">删除
           </el-button>
         </template>
       </el-table-column>
@@ -165,7 +160,7 @@
       @pagination="getList" />
       
     <!-- 表单 -->
-    <StatTemplateForm ref="formRef" @success="getList" />
+    <PlanTemplateForm ref="formRef" @success="getList" />
 
     <!-- 条件绑定列表 -->
     <StatBindConfigList ref="statBindConfigListRef" />
@@ -173,9 +168,9 @@
   </div>
 </template>
 
-<script setup name="StatTemplate">
-  import { fetchList, deleteStatTemplate } from "@/api/report/stat/statTemplate";
-  import StatTemplateForm from './form.vue'
+<script setup name="PlanTemplate">
+  import { fetchList, deletePlanTemplate } from "@/api/report/plan/planTemplate";
+  import PlanTemplateForm from './form.vue'
   import StatBindConfigList from '../../bind/statBindConfig/index.vue'
 
   const { proxy } = getCurrentInstance();
@@ -193,7 +188,7 @@
   // 总条数
   const total = ref(0);
   // 查询列表数据
-  const statTemplateList = ref([]);
+  const planTemplateList = ref([]);
   const statusOptions = ref(proxy.commonStatusOptions);
   const bussTypeOptions = ref([]);
   
@@ -208,16 +203,16 @@
   
   /** 绑定值列表 */
   function handleBindList(row){
-    statBindConfigListRef.value.showData(row.templateId,'STAT')
+    statBindConfigListRef.value.showData(row.templateId,'PLAN')
   }
   
   /** 查询列表 */
   function getList() {
     loading.value = true;
-    statTemplateList.value = [];
+    planTemplateList.value = [];
     fetchList(queryParams.value).then(
       response => {
-        statTemplateList.value = response.rows;
+        planTemplateList.value = response.rows;
         total.value = response.total;
         loading.value = false;
       }
@@ -255,7 +250,7 @@
       cancelButtonText: "取消",
       type: "warning"
     }).then(function() {
-      return deleteStatTemplate(deleteIds);
+      return deletePlanTemplate(deleteIds);
     }).then(() => {
       proxy.$modal.msgSuccess("删除成功");
       getList();

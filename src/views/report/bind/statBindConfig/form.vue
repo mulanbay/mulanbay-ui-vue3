@@ -18,6 +18,7 @@
               placeholder="数据来源"
               collapse-tags
               style="width: 230px"
+              @change="handleSourceChange"
             >
               <el-option
                 v-for="dict in sourceOptions"
@@ -69,8 +70,13 @@
       </el-row>
       <el-row>
         <el-col :span="12">
-          <el-form-item label="用户字段" v-if="form.source != 'ANY'" prop="userField">
-            <el-input v-model="form.userField" style="width: 230px" placeholder="" />
+          <el-form-item label="绑定用户" v-if="form.source == 'SQL'" prop="bindUser">
+            <el-switch v-model="form.bindUser"></el-switch>
+            <el-tooltip content="如果绑定用户,说明SQL语句中包含筛选用户字段." effect="dark" placement="top">
+              <el-icon>
+                <QuestionFilled />
+              </el-icon>
+            </el-tooltip>
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -151,6 +157,9 @@
       ],
       msg: [
         { required: true, message: "提示信息不能为空", trigger: "blur" }
+      ],
+      bindUser: [
+        { required: true, message: "绑定用户不能为空", trigger: "blur" }
       ]
     }
   });
@@ -187,6 +196,17 @@
       form.value.msg='请选择'+form.value.configName;
     }
   }
+  
+  // 来源变化
+  function handleSourceChange(source){
+    if(source=='SQL'){
+      form.value.bandUser = true;
+    }
+    if(source=='ENUM'){
+      form.value.enumIdType = 'ORDINAL';
+    }
+  }
+  
   // 表单重置
   function resetForm() {
     form.value = {
@@ -196,7 +216,7 @@
       orderIndex:1,
       casCadeType:'NOT_CASCADE',
       source:'SQL',
-      userField:'user_id',
+      bindUser:true,
       msg:undefined
     };
     proxy.resetForm("formRef");

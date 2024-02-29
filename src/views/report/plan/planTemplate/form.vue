@@ -9,7 +9,7 @@
             <el-tree-select
               v-model="form.fromTemplateId"
               style="width: 580px"
-              :data="statTemplateOptions"
+              :data="planTemplateOptions"
               :props="{ value: 'id', label: 'text', children: 'children' }"
               value-key="id"
               placeholder="选择模版"
@@ -67,25 +67,13 @@
       </el-row>
       <el-row>
         <el-col :span="12">
-          <el-form-item label="数据类型" prop="resultType">
-            <el-select v-model="form.resultType" style="width: 230px" placeholder="请选择">
-              <el-option
-                v-for="dict in resultTypeOptions"
-                :key="dict.id"
-                :label="dict.text"
-                :value="dict.id" />
-            </el-select>
+          <el-form-item label="显示顺序" prop="orderIndex">
+            <el-input-number v-model="form.orderIndex" style="width: 230px" controls-position="right" :min="0" :controls="true" :precision="0" />
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="数据单位" prop="valueType">
-            <el-select v-model="form.valueType" style="width: 230px" placeholder="请选择">
-              <el-option
-                v-for="dict in valueTypeOptions"
-                :key="dict.id"
-                :label="dict.text"
-                :value="dict.id" />
-            </el-select>
+          <el-form-item label="积分奖励" prop="rewards">
+            <el-input-number v-model="form.rewards" style="width: 230px" controls-position="right" :min="0" :controls="true" :precision="0" />
           </el-form-item>
         </el-col>
       </el-row>
@@ -108,13 +96,8 @@
       </el-row>
       <el-row>
         <el-col :span="12">
-          <el-form-item label="显示顺序" prop="orderIndex">
-            <el-input-number v-model="form.orderIndex" style="width: 230px" controls-position="right" :min="0" :controls="true" :precision="0" />
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="积分奖励" prop="rewards">
-            <el-input-number v-model="form.rewards" style="width: 230px" controls-position="right" :min="0" :controls="true" :precision="0" />
+          <el-form-item label="数值单位" prop="unit">
+            <el-input v-model="form.unit" style="width: 230px" placeholder="" />
           </el-form-item>
         </el-col>
       </el-row>
@@ -172,22 +155,20 @@
 
 </template>
 
-<script setup name="StatTemplateForm">
-  import { createStatTemplate, editStatTemplate, getStatTemplate, getStatTemplateTree, getNextOrderIndex } from "@/api/report/stat/statTemplate";
+<script setup name="PlanTemplateForm">
+  import { createPlanTemplate, editPlanTemplate, getPlanTemplate, getPlanTemplateTree, getNextOrderIndex } from "@/api/report/plan/planTemplate";
 
   const { proxy } = getCurrentInstance();
 
   //可执行时间段
-  const title = ref('统计模版');
+  const title = ref('计划模版');
   const open = ref(false);
   const formLoading = ref(false);
   const formRef = ref();
   const statusOptions = ref(proxy.commonStatusOptions);
-  const statTemplateOptions = ref([]);
+  const planTemplateOptions = ref([]);
   const sqlTypeOptions = ref([]);
   const bussTypeOptions = ref([]);
-  const resultTypeOptions = ref([]);
-  const valueTypeOptions = ref([]);
 
   const data = reactive({
     form: {},
@@ -208,14 +189,8 @@
       sqlContent: [
         { required: true, message: "查询语句不能为空", trigger: "blur" }
       ],
-      resultType: [
-        { required: true, message: "返回类型不能为空", trigger: "blur" }
-      ],
-      valueType: [
-        { required: true, message: "返回值类型不能为空", trigger: "blur" }
-      ],
-      bussKey: [
-        { required: true, message: "业务KEY不能为空", trigger: "blur" }
+      planType: [
+        { required: true, message: "计划类型不能为空", trigger: "blur" }
       ],
       status: [
         { required: true, message: "状态不能为空", trigger: "blur" }
@@ -239,7 +214,7 @@
     if (form.value.templateId != null) {
       return;
     }
-    getStatTemplate(id).then(response => {
+    getPlanTemplate(id).then(response => {
       response.fromTemplateId = form.value.fromTemplateId;
       form.value = response;
       form.value.templateId = null;
@@ -257,7 +232,7 @@
       title.value = "修改";
       try {
         formLoading.value = true;
-        getStatTemplate(id).then(response => {
+        getPlanTemplate(id).then(response => {
           form.value = response;
         });
       } finally {
@@ -272,8 +247,8 @@
   defineExpose({ openForm });
 
   function loadOptions() {
-    getStatTemplateTree().then(response => {
-      statTemplateOptions.value = response;
+    getPlanTemplateTree().then(response => {
+      planTemplateOptions.value = response;
     });
   }
 
@@ -281,12 +256,6 @@
   function loadTypeOptions() {
     proxy.getEnumDict('SqlType', 'FIELD', false).then(response => {
       sqlTypeOptions.value = response;
-    });
-    proxy.getEnumDict('ResultType', 'FIELD', false).then(response => {
-      resultTypeOptions.value = response;
-    });
-    proxy.getEnumDict('ValueType', 'FIELD', false).then(response => {
-      valueTypeOptions.value = response;
     });
     proxy.getEnumDict('BussType', 'FIELD', false).then(response => {
       bussTypeOptions.value = response;
@@ -326,14 +295,14 @@
     proxy.$refs["formRef"].validate(valid => {
       if (valid) {
         if (form.value.templateId != undefined) {
-          editStatTemplate(form.value).then(response => {
+          editPlanTemplate(form.value).then(response => {
             proxy.$modal.msgSuccess("修改成功");
             open.value = false;
             // 发送操作成功的事件
             emit('success');
           });
         } else {
-          createStatTemplate(form.value).then(response => {
+          createPlanTemplate(form.value).then(response => {
             proxy.$modal.msgSuccess("新增成功");
             open.value = false;
             // 发送操作成功的事件
