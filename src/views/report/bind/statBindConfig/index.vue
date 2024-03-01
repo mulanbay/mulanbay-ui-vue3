@@ -28,7 +28,7 @@
 
     <!--列表数据-->
     <el-table v-loading="loading" :data="detailList"  @selection-change="handleSelectionChange">
-      <el-table-column label="ID" fixed="left" prop="configId" sortable="custom" align="center" width="120">
+      <el-table-column label="ID" fixed="left" prop="configId" sortable="custom" align="center" width="80">
         <template #default="scope">
           <span>{{ scope.row.configId }}</span>
         </template>
@@ -38,17 +38,17 @@
           <span class="link-type" @click="handleEdit(scope.row)">{{ scope.row.configName }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="类型" align="center" width="100" >
+      <el-table-column label="类型" align="center" width="80" >
         <template #default="scope">
           <span>{{ scope.row.typeName }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="来源" align="center" width="100" >
+      <el-table-column label="来源" align="center" width="80" >
         <template #default="scope">
           <span>{{ scope.row.sourceName }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="排序号" align="center" >
+      <el-table-column label="排序号" align="center" width="80">
         <template #default="scope">
           <span>{{ scope.row.orderIndex }}</span>
         </template>
@@ -58,9 +58,19 @@
           <span>{{ scope.row.casCadeTypeName }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="绑定用户" align="center" width="95">
+      <el-table-column label="绑定用户" align="center" width="80">
         <template #default="scope">
           <span v-if="scope.row.bindUser==true">
+            <el-icon color="green"><CircleCheckFilled /></el-icon>
+          </span>
+          <span v-else>
+            <el-icon color="red"><CircleCloseFilled /></el-icon>
+          </span>
+        </template>
+      </el-table-column>
+      <el-table-column label="树形数据" align="center" width="80">
+        <template #default="scope">
+          <span v-if="scope.row.tree==true">
             <el-icon color="green"><CircleCheckFilled /></el-icon>
           </span>
           <span v-else>

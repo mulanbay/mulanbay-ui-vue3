@@ -25,6 +25,12 @@
             <svg-icon icon-class="notify" @click="dispatchFastMenu('UserStatStatList')"/>
           </span>
         </el-tooltip>
+        
+        <el-tooltip content="计划统计" effect="dark" placement="bottom">
+          <span class="right-menu-item hover-effect">
+            <svg-icon icon-class="plan" @click="dispatchFastMenu('UserPlanStatList')"/>
+          </span>
+        </el-tooltip>
 
         <screenfull id="screenfull" class="right-menu-item hover-effect" />
 

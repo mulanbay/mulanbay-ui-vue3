@@ -69,7 +69,7 @@
         </el-col>
       </el-row>
       <el-row>
-        <el-col :span="12">
+        <el-col :span="6">
           <el-form-item label="绑定用户" v-if="form.source == 'SQL'" prop="bindUser">
             <el-switch v-model="form.bindUser"></el-switch>
             <el-tooltip content="如果绑定用户,说明SQL语句中包含筛选用户字段." effect="dark" placement="top">
@@ -77,6 +77,11 @@
                 <QuestionFilled />
               </el-icon>
             </el-tooltip>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="树形数据" v-if="form.source == 'SQL'||form.source == 'JSON'" prop="tree">
+            <el-switch v-model="form.tree"></el-switch>
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -217,6 +222,7 @@
       casCadeType:'NOT_CASCADE',
       source:'SQL',
       bindUser:true,
+      tree:false,
       msg:undefined
     };
     proxy.resetForm("formRef");

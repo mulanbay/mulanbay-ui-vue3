@@ -120,16 +120,14 @@
               v-if="inputVisible"
               v-model="inputValue"
               ref="saveTagInput"
-              size="small"
               @keyup.enter.native="handleTagInputConfirm"
               @blur="handleTagInputConfirm">
             </el-input>
-            <el-button v-else class="button-new-tag" size="small" @click="showTagInput">+ 新建</el-button>
+            <el-button v-else class="button-new-tag" @click="showTagInput">+ 新建</el-button>
             <el-select
               v-model="chooseTag"
               clearable
               placeholder="请选择"
-              size="small"
               @change="selectTag">
               <el-option
                 v-for="dict in hisTagOptions"

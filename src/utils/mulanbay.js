@@ -166,8 +166,8 @@ export function isEmpty(o) {
 
 //计算百分比
 export function getPercent(num1,num2) {
-	if(num2==null||num2==0){
-		return 'n/a';
+	if(isEmpty(num2)||num2==0||isEmpty(num1)){
+		return 0;
 	}
   return (Math.round(num1 / num2 * 10000) / 100.00).toFixed(0);
 }
@@ -188,8 +188,9 @@ export function encodeJsonString(ss) {
  * @param {Object} len
  */
 export function ellipsis(value, len) {
-  //console.log(value+","+len);
-  if (!value) return ''
+  if (isEmpty(value)){
+    return '';
+  }
   if (value.length > len) {
     return value.slice(0, len) + '...'
   }

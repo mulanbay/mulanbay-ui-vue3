@@ -13,8 +13,22 @@ export function generateFcRules(dataRules) {
   for (let i = 0; i < n; i++) {
     let r = dataRules[i];
     let selectData=null;
-    //自定义类型
-    if (r.list == null || r.list.length == 0) {
+    if(r.tree==true){
+      //树形结构
+      selectData = {
+        type:"treeSelect",
+        title:r.name,
+        field:"rule",
+        value:[],
+        props:{
+            data:r.list,
+            props: {
+                "label": "title"
+            }
+        }
+      };
+    }else if (r.list == null || r.list.length == 0) {
+      ////自定义类型
       selectData = {
         type: "input",
         title: r.name,

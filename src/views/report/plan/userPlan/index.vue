@@ -85,6 +85,11 @@
           <span>{{ scope.row.planTypeName }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="统计" width="80" align="center">
+        <template #default="scope">
+          <span class="link-type" @click="handleStat(scope.row)"><el-icon><Histogram /></el-icon></span>
+        </template>
+      </el-table-column>
       <el-table-column label="次数计划值" align="center" width="140">
         <template #default="scope">
           <span v-if="scope.row.compareType=='MORE'">
@@ -108,11 +113,6 @@
       <el-table-column label="排序号" width="80" align="center">
         <template #default="scope">
           <span>{{ scope.row.orderIndex }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="统计" width="80" align="center">
-        <template #default="scope">
-          <span class="link-type" @click="handleStat(scope.row)"><el-icon><Histogram /></el-icon></span>
         </template>
       </el-table-column>
       <el-table-column label="状态" align="center" width="80">
