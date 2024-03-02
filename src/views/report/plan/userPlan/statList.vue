@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true">
-      <el-form-item label="起止日期" v-if="queryParams.realtime==false" style="width: 308px">
+      <el-form-item label="起止日期" v-show="moreCdn==true&&queryParams.realtime==false" style="width: 308px">
         <el-date-picker
           v-model="dateRange"
           unlink-panels
@@ -12,7 +12,18 @@
           end-placeholder="结束日期"
           :shortcuts="datePickerOptions"></el-date-picker>
       </el-form-item>
-      <el-form-item label="名称检索" prop="name">
+      <el-form-item label="选择计划" prop="planId">
+        <el-tree-select
+          v-model="queryParams.planId"
+          style="width: 240px"
+          clearable
+          :data="userPlanOptions"
+          :props="{ value: 'id', label: 'text', children: 'children' }"
+          value-key="id"
+          placeholder="选择计划"
+          :check-strictly="false" />
+      </el-form-item>
+      <el-form-item label="名称检索" v-show="moreCdn==true"  prop="name">
         <el-input
           v-model="queryParams.name"
           placeholder="请输入名称"
@@ -20,7 +31,7 @@
           style="width: 240px"
           @keyup.enter.native="handleQuery" />
       </el-form-item>
-      <el-form-item label="业务类型" prop="bussType">
+      <el-form-item label="业务类型" v-show="moreCdn==true" prop="bussType">
         <el-select v-model="queryParams.bussType" clearable style="width: 240px" placeholder="请选择">
           <el-option
             v-for="dict in bussTypeOptions"
@@ -38,7 +49,7 @@
             :value="dict.id" />
         </el-select>
       </el-form-item>
-      <el-form-item label="数据来源" prop="realtime">
+      <el-form-item label="数据来源" prop="realtime" @change="handleQuery">
         <el-radio-group v-model="queryParams.realtime">
           <el-radio :label="true">最新</el-radio>
           <el-radio :label="false">历史</el-radio>
@@ -50,6 +61,9 @@
       <el-form-item>
         <el-button type="primary" icon="TrendCharts" @click="handleQuery" v-hasPermi="['report:plan:userPlan:statList']">统计</el-button>
         <el-button icon="refresh" @click="resetQuery">重置</el-button>
+        <el-button type="warning" icon="more" @click="handleMoreCdn">{{cdnTitle}}</el-button>
+        <el-button type="success" icon="TrendCharts" @click="showManualStat" v-hasPermi="['report:plan:planReport:manualStat']">手动统计</el-button>
+        <el-button type="danger" icon="delete" @click="showCleanData" v-hasPermi="['report:plan:planReport:cleanData']">清洗数据</el-button>
       </el-form-item>
     </el-form>
 
@@ -92,6 +106,17 @@
                   </el-descriptions-item>
                   <el-descriptions-item>
                     <template #label>
+                      <el-icon><AlarmClock /></el-icon>
+                      统计时间
+                    </template>
+                    <div class="cell">
+                      <span>
+                        {{ item.planReport.createdTime }}
+                      </span>
+                    </div>
+                  </el-descriptions-item>
+                  <el-descriptions-item>
+                    <template #label>
                       <el-icon><Aim /></el-icon>
                       周期类型
                     </template>
@@ -123,8 +148,9 @@
                       操作选择
                     </template>
                     <div class="cell">
-                    <el-button link icon="tools" type="primary" @click="showRemindSet(item.planId)" size="small">配置提醒</el-button>
-                    <el-button link icon="Promotion" type="primary" @click="handleDispatch(item.template.url)" v-hasPermi="['report:plan:userPlan:list']" size="small">详情</el-button>
+                      <el-button link icon="tools" type="primary" @click="showRemindSet(item.planId)" size="small">配置提醒</el-button>
+                      <el-button link icon="Promotion" type="primary" @click="handleDispatch(item.template.url)" v-hasPermi="['report:plan:userPlan:list']" size="small">详情</el-button>
+                      <el-button link icon="refresh" type="danger" @click="handleReStatPlanReport(item.planReport.reportId)" v-if="queryParams.realtime==false" v-hasPermi="['report:plan:planReport:reStat']" size="small">重新统计</el-button>
                     </div>
                   </el-descriptions-item>
                 </el-descriptions>
@@ -158,7 +184,7 @@
                   <tr>
                     <td align="center">
                       <el-text class="mx-1" type="warning">
-                        次数完成比例
+                        次数完成度
                       </el-text>
                     </td>
                   </tr>
@@ -183,7 +209,7 @@
                   <tr>
                     <td align="center">
                       <el-text class="mx-1" type="warning">
-                        值完成比例
+                        值完成度
                       </el-text>
                     </td>
                   </tr>
@@ -238,16 +264,22 @@
     <!-- 提醒表单 -->
     <UserPlanRemindForm ref="userPlanRemindFormRef" />
     
+    <!-- 手动统计 -->
+    <ManualStatForm ref="manualStatFormRef" @success="getList"/>
+    
   </div>
 </template>
 
 <script setup name="UserPlanStatList">
-  import { getUserPlanStatList } from "@/api/report/plan/userPlan";
+  import { getUserPlanStatList,getUserPlanTree } from "@/api/report/plan/userPlan";
+  import { reStatPlanReport } from "@/api/report/plan/planReport";
   import { getPercent,ellipsis,progressColors,progressColors2,getQueryObject } from "@/utils/mulanbay";
   import UserPlanRemindForm from '../userPlanRemind/form.vue'
+  import ManualStatForm from '../planReport/manualStat.vue'
 
   const { proxy } = getCurrentInstance();
   const userPlanRemindFormRef = ref();
+  const manualStatFormRef = ref();
 
   //日期范围快速选择
   const datePickerOptions = ref(proxy.datePickerOptions);
@@ -259,6 +291,8 @@
   const bussTypeOptions = ref([]);
   const planTypeOptions = ref([]);
   const statResultList = ref([]);
+  const userPlanOptions = ref([]);
+  
   const cicleSize = ref(100);
   const data = reactive({
     queryParams: {
@@ -270,8 +304,26 @@
 
   const { queryParams } = toRefs(data);
 
+  //查询条件更多属性 start
+  const cdnTitle = ref("更多");
+  const moreCdn = ref(false);
+  
+  /** 更多查询条件处理 */
+  function handleMoreCdn() {
+    if (moreCdn.value == true) {
+      moreCdn.value = false;
+      cdnTitle.value = '更多';
+    } else {
+      moreCdn.value = true;
+      cdnTitle.value = '取消';
+    }
+  }
+  
   /** 下拉框加载 */
   function loadOptions() {
+    getUserPlanTree().then(response => {
+      userPlanOptions.value = response;
+    });
     proxy.getEnumDict('BussType', 'FIELD', false).then(response => {
       bussTypeOptions.value = response;
     });
@@ -285,6 +337,16 @@
     userPlanRemindFormRef.value.openForm(statId);
   }
   
+  /** 手动统计 */
+  function showManualStat(){
+    manualStatFormRef.value.openForm();
+  }
+  
+  /** 清洗数据 */
+  function showCleanData(){
+    
+  }
+  
   /** 路由定向 */
   function handleDispatch(pathName) {
     //路由定向
@@ -295,6 +357,19 @@
   function formatTitle(title) {
     let s = ellipsis(title, 10);
     return s;
+  }
+  
+  /** 重新统计 */
+  function handleReStatPlanReport(reportId) {
+    let postData={
+      reportId:reportId
+    }
+    proxy.$modal.loading("正在统计数据，请稍候！");
+    reStatPlanReport(postData).then(response => {
+      proxy.$modal.closeLoading();
+      proxy.$modal.msgSuccess("统计成功");
+      getList();
+    });
   }
 
   /** 搜索按钮操作 */

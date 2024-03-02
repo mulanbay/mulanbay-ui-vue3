@@ -31,6 +31,7 @@ export function editUserPlan(data) {
     data
   })
 }
+
 export function deleteUserPlan(ids) {
   const data = {
       ids
@@ -42,13 +43,11 @@ export function deleteUserPlan(ids) {
   })
 }
 
-export function getUserPlanTree(bussType) {
+export function getUserPlanTree(query) {
   return request({
     url: '/userPlan/tree',
     method: 'get',
-    params: {
-      bussType:bussType
-    }
+    params: query
   })
 }
 
