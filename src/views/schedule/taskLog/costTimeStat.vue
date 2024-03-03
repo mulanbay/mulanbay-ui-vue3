@@ -110,18 +110,19 @@
 
   /** 初始化 **/
   onMounted(() => {
-    let qb = getQueryObject(null);
-    if (!proxy.isEmpty(qb.triggerId)) {
-      queryParams.value.triggerId = qb.triggerId;
-    }
     //初始化
     costTimeStatChartIns = echarts.init(costTimeStatChart.value, "macarons");
-    initChart();
+    
+    let qb = getQueryObject(null);
+    if (!proxy.isEmpty(qb.triggerId)) {
+      queryParams.value.triggerId = parseInt(qb.triggerId);
+      initChart();
+    }
 
     getTaskTriggerTree(false).then(response => {
       taskTriggerOptions.value = response;
     });
-    proxy.getEnumDict('cn.mulanbay.schedule.enums.JobExecuteResult', 'FIELD', false).then(response => {
+    proxy.getEnumDict('cn.mulanbay.schedule.enums.JobResult', 'FIELD', false).then(response => {
       executeResultOptions.value = response;
     });
   })

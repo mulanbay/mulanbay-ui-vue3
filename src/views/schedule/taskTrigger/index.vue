@@ -217,12 +217,24 @@
           </span>
           <span v-else>
             {{ scope.row.lastExecuteTime }}
-            <span class="link-type" @click="handleExeCostTimeStat(scope.row)">
-              <el-icon>
+          </span>
+        </template>
+      </el-table-column>
+      <el-table-column label="运行统计" width="80" align="center">
+        <template #default="scope">
+          <el-tooltip class="box-item" effect="dark" content="时间统计" placement="top">
+            <span class="link-type" @click="handleCostTimeStat(scope.row)"><el-icon>
                 <Histogram />
               </el-icon>
             </span>
-          </span>
+          </el-tooltip>
+          <el-divider direction="vertical"></el-divider>
+          <el-tooltip class="box-item" effect="dark" content="结果统计" placement="top">
+            <span class="link-type" @click="handleExeStat(scope.row)"><el-icon>
+                <Compass />
+              </el-icon>
+            </span>
+          </el-tooltip>
         </template>
       </el-table-column>
       <el-table-column label="调度状态" align="center" width="100">
@@ -465,11 +477,17 @@
   }
 
   /** 调度执行时间分析 */
-  function handleExeCostTimeStat(row) {
+  function handleCostTimeStat(row) {
     //路由定向
     proxy.$router.push({ name: 'TaskLogCostTimeStat', query: { triggerId: row.triggerId } })
   }
 
+  /** 调度执行结果分析 */
+  function handleExeStat(row) {
+    //路由定向
+    proxy.$router.push({ name: 'TaskLogExeStat', query: { triggerId: row.triggerId } })
+  }
+  
   /** 手动执行 */
   function handleManualStart() {
     manualStartFormRef.value.openManualStart(getSelectId());

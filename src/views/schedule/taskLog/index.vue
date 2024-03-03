@@ -54,21 +54,11 @@
       <el-table-column label="调度名称" fixed="left" min-width="200px" :show-overflow-tooltip="true">
         <template #default="scope">
           <span>{{ scope.row.taskTrigger.triggerName }}</span>
-          <span class="link-type" @click="handleExeCostTimeStat(scope.row)">
-            <el-icon>
-              <Histogram />
-            </el-icon>
-          </span>
         </template>
       </el-table-column>
       <el-table-column label="业务日期" align="center" width="120">
         <template #default="scope">
           <span>{{ scope.row.bussDate }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="调度执行ID" align="center" min-width="160px" :show-overflow-tooltip="true">
-        <template #default="scope">
-          <span>{{ scope.row.scheduleIdentityId }}</span>
         </template>
       </el-table-column>
       <el-table-column label="执行结果" align="center">
@@ -95,6 +85,28 @@
               {{ scope.row.executeResultName }}
             </span>
           </span>
+        </template>
+      </el-table-column>
+      <el-table-column label="统计" width="80" align="center">
+        <template #default="scope">
+          <el-tooltip class="box-item" effect="dark" content="时间统计" placement="top">
+            <span class="link-type" @click="handleCostTimeStat(scope.row)"><el-icon>
+                <Histogram />
+              </el-icon>
+            </span>
+          </el-tooltip>
+          <el-divider direction="vertical"></el-divider>
+          <el-tooltip class="box-item" effect="dark" content="结果统计" placement="top">
+            <span class="link-type" @click="handleExeStat(scope.row)"><el-icon>
+                <Compass />
+              </el-icon>
+            </span>
+          </el-tooltip>
+        </template>
+      </el-table-column>
+      <el-table-column label="调度执行ID" align="center" min-width="160px" :show-overflow-tooltip="true">
+        <template #default="scope">
+          <span>{{ scope.row.scheduleIdentityId }}</span>
         </template>
       </el-table-column>
       <el-table-column label="运行开始时间" align="center" width="180">
@@ -245,11 +257,17 @@
   }
 
   /** 调度执行时间分析 */
-  function handleExeCostTimeStat(row) {
+  function handleCostTimeStat(row) {
     //路由定向
     proxy.$router.push({ name: 'TaskLogCostTimeStat', query: { triggerId: row.taskTrigger.triggerId } })
   }
 
+  /** 调度执行结果分析 */
+  function handleExeStat(row) {
+    //路由定向
+    proxy.$router.push({ name: 'TaskLogExeStat', query: { triggerId: row.taskTrigger.triggerId } })
+  }
+  
   /** 重做按钮操作 */
   function handleRedo(row) {
     const logId = row.logId;
@@ -278,7 +296,7 @@
     getTaskTriggerTree(false).then(response => {
       taskTriggerOptions.value = response;
     });
-    proxy.getEnumDict('cn.mulanbay.schedule.enums.JobExecuteResult', 'FIELD', false).then(response => {
+    proxy.getEnumDict('cn.mulanbay.schedule.enums.JobResult', 'FIELD', false).then(response => {
       executeResultOptions.value = response;
     });
   })
