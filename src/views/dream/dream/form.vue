@@ -108,17 +108,24 @@
           <el-form-item label="关联计划" prop="planId">
             <el-tree-select
               v-model="form.planId"
-              style="width: 100%"
-              :data="planOptions"
+              style="width: 200px"
+              :data="userPlanOptions"
               :props="{ value: 'id', label: 'text', children: 'children' }"
               value-key="id"
-              placeholder="请选择计划"
-              :check-strictly="false" />
+              placeholder="选择计划"
+              :check-strictly="false"/>
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="计划期望值" prop="planValue">
             <el-input-number v-model="form.planValue" :style="{width: '200px'}" placeholder="" controls-position="right" :min="0" :controls="false" :precision="0" />
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="12">
+          <el-form-item label="积分奖励" prop="rewards">
+           <el-input-number v-model="form.rewards" :style="{width: '200px'}" placeholder="" controls-position="right" :min="0" :controls="false" :precision="0" />
           </el-form-item>
         </el-col>
       </el-row>
@@ -145,6 +152,7 @@
 
 <script setup name="DreamForm">
   import { createDream, editDream, getDream } from "@/api/dream/dream";
+  import { getUserPlanTree } from "@/api/report/plan/userPlan";
   import DreamRemindForm from '../dreamRemind/form.vue'
 
   const { proxy } = getCurrentInstance();
@@ -156,7 +164,7 @@
   const formLoading = ref(false);
   const formRef = ref();
   const statusOptions = ref();
-  const planOptions = ref();
+  const userPlanOptions = ref();
 
   const data = reactive({
     form: {},
@@ -222,7 +230,7 @@
       important: 3,
       rate: 0,
       expectDays:0,
-      rewardPoint:0,
+      rewards:0,
       remind:false,
       planId:undefined,
       remark:undefined
@@ -257,6 +265,9 @@
   onMounted(() => {
     proxy.getEnumDict('DreamStatus', 'FIELD', false).then(response => {
       statusOptions.value = response;
+    });
+    getUserPlanTree().then(response => {
+      userPlanOptions.value = response;
     });
   })
 </script>

@@ -130,28 +130,6 @@
         <template #label>
           <div class="cell-item">
             <el-icon>
-              <Refresh />
-            </el-icon>
-            重做次数
-          </div>
-        </template>
-        {{ lastInfo.redoTimes}}
-      </el-descriptions-item>
-      <el-descriptions-item>
-        <template #label>
-          <div class="cell-item">
-            <el-icon>
-              <Refresh />
-            </el-icon>
-            子任务
-          </div>
-        </template>
-        {{ lastInfo.subTaskExecuteResults}}
-      </el-descriptions-item>
-      <el-descriptions-item>
-        <template #label>
-          <div class="cell-item">
-            <el-icon>
               <Clock />
             </el-icon>
             重做开始时间
@@ -174,21 +152,42 @@
         <template #label>
           <div class="cell-item">
             <el-icon>
-              <InfoFilled />
+              <Refresh />
             </el-icon>
-            备注信息
+            重做次数
           </div>
         </template>
-        {{ lastInfo.logComment}}
+        {{ lastInfo.redoTimes}}
+      </el-descriptions-item>
+      <el-descriptions-item>
+        <template #label>
+          <div class="cell-item">
+            <el-icon>
+              <Tools />
+            </el-icon>
+            操作
+          </div>
+        </template>
+        <el-button type="primary" icon="refresh" @click="handleRedo(lastInfo.logId)" size="small">重做</el-button>
+        <el-button type="success" icon="refresh" @click="loadLogInfo(null,lastInfo.logId)" size="small">刷新</el-button>
       </el-descriptions-item>
     </el-descriptions>
-
+    <br>
+    <el-card>
+      <template #header>
+        <div class="card-header">
+          <span>日志详情</span>
+        </div>
+      </template>
+      <el-text class="mx-1" type="info">{{ lastInfo.logComment}}</el-text>
+    </el-card>
+    
   </el-dialog>
 
 </template>
 
 <script setup name="TaskLogLastInfo">
-  import { getLastTaskLog, getTaskLog } from "@/api/schedule/taskLog";
+  import { getLastTaskLog, getTaskLog,redoTaskLog } from "@/api/schedule/taskLog";
 
   const { proxy } = getCurrentInstance();
 
@@ -208,10 +207,17 @@
 
   /** 打开弹窗 */
   const openLastInfo = async (triggerId, logId) => {
-    if (proxy.isEmpty(triggerId) && proxy.isEmpty(triggerId)) {
+    if (proxy.isEmpty(triggerId) && proxy.isEmpty(logId)) {
       proxy.$modal.msgError("调度编号或日志编号为空");
       return;
     }
+    loadLogInfo(triggerId,logId);
+  }
+
+  // 提供 open 方法，用于打开弹窗
+  defineExpose({ openLastInfo });
+  
+  function loadLogInfo(triggerId,logId){
     lastInfoOpen.value = true;
     resetForm();
     lastInfoLoading.value = true;
@@ -237,12 +243,22 @@
         lastInfo.value = response;
       });
     }
-
   }
-
-  // 提供 open 方法，用于打开弹窗
-  defineExpose({ openLastInfo });
-
+  
+  /** 重做按钮操作 */
+  function handleRedo(logId) {
+    proxy.$confirm('是否确认重做编号为"' + logId + '"的数据项?', "警告", {
+      confirmButtonText: "确定",
+      cancelButtonText: "取消",
+      type: "warning"
+    }).then(function() {
+      return redoTaskLog(logId);
+    }).then(() => {
+      proxy.$modal.msgSuccess("重做成功");
+      loadLogInfo(null,logId);
+    }).catch(function() {});
+  }
+  
   // 表单重置
   function resetForm() {
     lastInfo.value = {

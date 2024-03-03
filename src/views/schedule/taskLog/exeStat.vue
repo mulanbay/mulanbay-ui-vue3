@@ -34,6 +34,9 @@
     <!--日历数据-->
     <FullCalendar ref="myCalendarRef" :options="calendarOptions" @dateClick="handleCalendarDateClick" />
 
+    <!-- 调度日志信息 -->
+    <LogInfoForm ref="logInfoFormRef" />
+    
   </div>
 </template>
 
@@ -43,6 +46,7 @@
   import { copyObject, getQueryObject } from "@/utils/mulanbay";
   import { getFormatDate, getNowDateString } from "@/utils/datetime";
   import { ElNotification } from 'element-plus'
+  import LogInfoForm from './lastInfo.vue'
 
   import FullCalendar from '@fullcalendar/vue3'
   import dayGridPlugin from '@fullcalendar/daygrid'
@@ -51,6 +55,8 @@
   import listPlugin from '@fullcalendar/list'
 
   const { proxy } = getCurrentInstance();
+  const logInfoFormRef = ref();
+  
   const executeResultOptions = ref([]);
   const taskTriggerOptions = ref([]);
   const myCalendarRef = ref();
@@ -189,13 +195,13 @@
         let n = response.rows.length;
         for(let i=0;i<n;i++){
           let item = response.rows[i];
-          let color = 'teal';
+          let color = '#2E8B57';
           if(item.executeResult=='FAIL'){
-            color = 'red';
+            color = '#CD2626';
           }else if(item.executeResult=='SKIP'){
-            color = 'yellow';
+            color = '#CD9B1D';
           }else if(item.executeResult=='DUPLICATE'){
-            color = 'black';
+            color = '#8B658B';
           }
           let event = {
             id: item.logId,
@@ -231,11 +237,7 @@
 
   function handleEventClick(eventInfo) {
     let event = eventInfo.event;
-    let desc = '在'+getFormatDate(event.start, "yyyy-MM-dd hh:mm:ss")+'执行结果:'+event.extendedProps.executeResultName
-    ElNotification({
-      title: '调度器:'+event.title,
-      message: h('i', { style: 'color: teal' }, desc),
-    });
+    logInfoFormRef.value.openLastInfo(null, event.extendedProps.logId);
   }
   
   function handleEventMouseEnter(eventInfo){
