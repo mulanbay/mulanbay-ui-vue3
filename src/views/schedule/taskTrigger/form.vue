@@ -267,7 +267,7 @@
   const formLoading = ref(false);
 
   const triggerTypeOptions = ref([]);
-  const triggerStatusOptions = ref(proxy.commonStatusOptions);
+  const triggerStatusOptions = ref([]);
   const groupNameOptions = ref([]);
   const deployIdOptions = ref([]);
   const redoTypeOptions = ref([]);

@@ -55,13 +55,12 @@
   const openCascade = async (consumeId) => {
     cascadeOpen.value = true;
     resetForm();
-    setTimeout(function() {
+    proxy.$nextTick(()=>{
       parentGoodsFormRef.value.openForm(consumeId);
       childrenGoodsFormRef.value.openForm(consumeId);
       useTimeDetailFormRef.value.openForm(consumeId);
       treeStatFormRef.value.openForm(consumeId);
-    }, 100);
-
+    });
   }
 
   // 提供 open 方法，用于打开弹窗

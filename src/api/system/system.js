@@ -16,3 +16,18 @@ export function unlockSystem(data) {
   })
 }
 
+export function getAutoLock() {
+  return request({
+    url: '/system/getAutoLock',
+    method: 'get'
+  })
+}
+
+export function editAutoLock(data) {
+  return request({
+    url: '/system/editAutoLock',
+    method: 'post',
+    data
+  })
+}
+

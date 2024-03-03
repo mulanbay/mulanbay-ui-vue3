@@ -4,8 +4,40 @@
   <el-dialog :title="teEditTitle" v-model="teEditOpen" width="600px" append-to-body>
     <el-form ref="teFormRef" :model="teForm" label-width="120px">
       <el-form-item label="执行的时间段" prop="times">
-        <el-input v-model="teForm.times" placeholder="请输入时间段" />
-        <span style="color: red;">格式:08:00-13:00,14:00-16:00(空为总是要执行)</span>
+        <el-tag
+          :key="tag"
+          v-for="tag in timePeriodOptions"
+          closable
+          size="large"
+          :disable-transitions="false"
+          @close="handleTagClose(tag)">
+          {{tag}}
+        </el-tag>
+         <el-popover :visible="tagsPopOpen" placement="top" :width="450">
+          <el-time-picker
+            v-model="timePeriod"
+            is-range
+            format="HH:mm" 
+            value-format="HH:mm"
+            :picker-options="{selectableRange: '00:00:00 - 23:59:59'}"
+            range-separator="To"
+            start-placeholder="开始时间"
+            end-placeholder="结束时间"
+          />
+          <div style="text-align: right; margin: 0">
+            <br>
+            <el-button size="small" type="primary" icon="Check" @click="confirmTimePeriod" >确定</el-button>
+            <el-button size="small" type="warning" icon="Close" @click="tagsPopOpen = false" >取消</el-button>
+          </div>
+          <template #reference>
+            <el-button type="success" @click="tagsPopOpen = true" size="default" icon="Share">选择</el-button>
+          </template>
+        </el-popover>
+        <el-tooltip content="格式:01:00-02:00,多个以逗号分隔,空为总是要执行." effect="dark" placement="top">
+          <el-icon>
+            <QuestionFilled />
+          </el-icon>
+        </el-tooltip>
       </el-form-item>
       <el-form-item label="执行的星期" prop="weeks">
         <el-checkbox-group v-model="teForm.weeks" @change="handleWeeksChange">
@@ -30,6 +62,7 @@
 </template>
 
 <script setup name="TaskTriggerTimePeriods">
+  import { appendTagToOptions } from "@/utils/tagUtils";
   const { proxy } = getCurrentInstance();
 
   //可执行时间段
@@ -37,6 +70,10 @@
   const teEditOpen = ref(false);
   const teFormRef = ref();
 
+  const timePeriodOptions = ref([]);
+  const timePeriod = ref();
+  const tagsPopOpen = ref(false);
+  
   const data = reactive({
     teForm: {}
   });
@@ -58,7 +95,9 @@
       return;
     }
     if (!proxy.isEmpty(pp.times)) {
-      teForm.value.times = pp.times;
+      timePeriodOptions.value = pp.times.split(',');
+    } else {
+      timePeriodOptions.value = [];
     }
     if (pp.weeks != undefined) {
       teForm.value.weeks = pp.weeks.split(',');
@@ -68,6 +107,21 @@
   // 提供 open 方法，用于打开弹窗
   defineExpose({ openTimePeriodsEdit });
 
+  /** 标签处理 start */
+  function handleTagClose(tag) {
+    timePeriodOptions.value.splice(timePeriodOptions.value.indexOf(tag), 1);
+  }
+  
+  function confirmTimePeriod(){
+    if(proxy.isEmpty(timePeriod.value)){
+      return;
+    }
+    let pd = timePeriod.value[0]+'-'+timePeriod.value[1];
+    appendTagToOptions(pd,timePeriodOptions.value);
+    tagsPopOpen.value= false;
+  }
+  /** 标签处理 end */
+  
   /** 不刷新显示有问题 */
   function handleWeeksChange() {
     proxy.$forceUpdate();
@@ -85,7 +139,11 @@
   /** 提交表单 */
   function submitExecTimeEdit() {
     let pp = { times: undefined, weeks: undefined };
-    pp.times = teForm.value.times;
+    if (timePeriodOptions.value.length > 0) {
+      pp.times = timePeriodOptions.value.join(',');
+    } else {
+      pp.times = undefined;
+    }
     if (teForm.value.weeks != null && teForm.value.weeks.length > 0) {
       pp.weeks = teForm.value.weeks.join(',');
     }

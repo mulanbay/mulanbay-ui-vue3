@@ -7,6 +7,9 @@ import { ElMessage } from 'element-plus'
  * @param {Object} tagOptions
  */
 export function appendTagToOptions(tag,tagOptions){
+  if(tag==null||tag==undefined||tag==''){
+    return;
+  }
   const a = tagOptions.indexOf(tag);
   if(a>=0){
     ElMessage({
