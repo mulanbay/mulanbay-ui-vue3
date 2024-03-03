@@ -6,7 +6,7 @@
         <ManualLockForm @success="closeForm" />
       </el-tab-pane>
       <el-tab-pane label="自动锁定" name="autoLock">
-        <AutoLockForm @success="closeForm" />
+        <AutoLockForm ref="autoLockFormRef" @success="closeForm" />
       </el-tab-pane>
     </el-tabs>
 
@@ -19,8 +19,8 @@
   import AutoLockForm from './autoLock.vue'
   
   const { proxy } = getCurrentInstance();
+  const autoLockFormRef = ref();
 
-  //可执行时间段
   const title = ref('系统锁定');
   const open = ref(false);
 
@@ -29,6 +29,9 @@
   /** 打开弹窗 */
   const openForm = async () => {
     open.value = true;
+    proxy.$nextTick(()=>{
+      autoLockFormRef.value.refreshData();
+    });
   }
   
   // 提供 open 方法，用于打开弹窗

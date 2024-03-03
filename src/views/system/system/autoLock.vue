@@ -117,7 +117,15 @@
   });
 
   const { form, rules } = toRefs(data);
-
+  
+  /** 刷新数据 */
+  const refreshData = async () => {
+    loadAutoLock();
+  }
+  
+  // 提供 open 方法，用于打开弹窗
+  defineExpose({ refreshData });
+  
   // 定义 success 事件，用于操作成功后的回调
   const emit = defineEmits(['success']);
   

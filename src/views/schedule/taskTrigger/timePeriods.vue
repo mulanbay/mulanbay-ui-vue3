@@ -3,7 +3,7 @@
   <!-- 执行时间段编辑对话框 -->
   <el-dialog :title="teEditTitle" v-model="teEditOpen" width="600px" append-to-body>
     <el-form ref="teFormRef" :model="teForm" label-width="120px">
-      <el-form-item label="执行的时间段" prop="times">
+      <el-form-item label="运行时间段" prop="times">
         <el-tag
           :key="tag"
           v-for="tag in timePeriodOptions"
@@ -13,7 +13,7 @@
           @close="handleTagClose(tag)">
           {{tag}}
         </el-tag>
-         <el-popover :visible="tagsPopOpen" placement="top" :width="450">
+         <el-popover :visible="tagsPopOpen" placement="bottom" :width="450">
           <el-time-picker
             v-model="timePeriod"
             is-range
@@ -33,13 +33,13 @@
             <el-button type="success" @click="tagsPopOpen = true" size="default" icon="Share">选择</el-button>
           </template>
         </el-popover>
-        <el-tooltip content="格式:01:00-02:00,多个以逗号分隔,空为总是要执行." effect="dark" placement="top">
+        <el-tooltip content="格式:01:00-02:00,多个以逗号分隔,空为总是要运行." effect="dark" placement="top">
           <el-icon>
             <QuestionFilled />
           </el-icon>
         </el-tooltip>
       </el-form-item>
-      <el-form-item label="执行的星期" prop="weeks">
+      <el-form-item label="运行的星期" prop="weeks">
         <el-checkbox-group v-model="teForm.weeks" @change="handleWeeksChange">
           <el-checkbox label="1">星期一</el-checkbox>
           <el-checkbox label="2">星期二</el-checkbox>
