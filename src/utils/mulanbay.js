@@ -362,3 +362,16 @@ export const progressColors2 = [
   {color: '#1989fa', percentage: 80},
   {color: '#5cb87a', percentage: 100}
 ]
+
+export const calendarColors = ['#9e5fff','#e6a23c','#00a9ff','#ff5583','#03bd9e','#191970','#800080','#9e5fff','#EE82EE','#B22222'];
+
+/**
+ * 获取日历颜色
+ * @param {Object} source
+ */
+export function getCalendarColor(sourceTypeIndex){
+  if(sourceTypeIndex==null){
+    sourceTypeIndex = 0;
+  }
+	return calendarColors[sourceTypeIndex%10];
+}

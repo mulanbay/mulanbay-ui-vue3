@@ -60,12 +60,12 @@
     <!--列表数据-->
     <el-table v-loading="loading" :data="dbCleanList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="ID" fixed="left" prop="id" sortable="custom" align="center" width="120">
+      <el-table-column label="ID" fixed="left" prop="id" sortable="custom" align="center" width="80">
         <template #default="scope">
           <span>{{ scope.row.id }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="名称" fixed="left" min-width="200px" :show-overflow-tooltip="true">
+      <el-table-column label="名称" fixed="left" min-width="180px" :show-overflow-tooltip="true">
         <template #default="scope">
           <span class="link-type" @click="handleEdit(scope.row)">{{ scope.row.name }}</span>
         </template>
@@ -94,6 +94,20 @@
           </span>
         </template>
       </el-table-column>
+      <el-table-column label="状态" align="center" width="100">
+        <template #default="scope">
+          <span v-if="scope.row.status=='DISABLE'">
+            <el-icon color="red">
+              <CircleCloseFilled />
+            </el-icon>
+          </span>
+          <span v-else>
+            <el-icon color="green">
+              <CircleCheckFilled />
+            </el-icon>
+          </span>
+        </template>
+      </el-table-column>
       <el-table-column label="删除类型" align="center" width="120">
         <template #default="scope">
           <span>{{ scope.row.cleanTypeName }}</span>
@@ -109,11 +123,6 @@
           <span>{{ scope.row.lastCleanCounts }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="状态" align="center" width="100">
-        <template #default="scope">
-          <el-switch v-model="scope.row.status" active-value="ENABLE" inactive-value="DISABLE" disabled></el-switch>
-        </template>
-      </el-table-column>
       <el-table-column label="排序号" align="center">
         <template #default="scope">
           <span>{{ scope.row.orderIndex }}</span>
@@ -124,15 +133,8 @@
           <span>{{ scope.row.createdTime }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" width="210" fixed="right" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" width="140" fixed="right" class-name="small-padding fixed-width">
         <template #default="scope">
-          <el-button
-            link
-            type="success"
-            icon="edit"
-            @click="handleEdit(scope.row)"
-            v-hasPermi="['system:dbClean:edit']">修改
-          </el-button>
           <el-button
             link
             type="danger"

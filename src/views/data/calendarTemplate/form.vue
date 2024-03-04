@@ -9,7 +9,7 @@
             <el-tree-select
               v-model="form.fromTemplateId"
               style="width: 580px"
-              :data="planTemplateOptions"
+              :data="calendarTemplateOptions"
               :props="{ value: 'id', label: 'text', children: 'children' }"
               value-key="id"
               placeholder="选择模版"
@@ -67,18 +67,6 @@
       </el-row>
       <el-row>
         <el-col :span="12">
-          <el-form-item label="显示顺序" prop="orderIndex">
-            <el-input-number v-model="form.orderIndex" style="width: 230px" controls-position="right" :min="0" :controls="true" :precision="0" />
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="积分奖励" prop="rewards">
-            <el-input-number v-model="form.rewards" style="width: 230px" controls-position="right" :min="0" :controls="true" :precision="0" />
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="12">
           <el-form-item label="模板状态" prop="status">
             <el-radio-group v-model="form.status">
               <el-radio
@@ -91,13 +79,6 @@
         <el-col :span="12">
           <el-form-item label="模板等级" prop="level">
             <el-input-number v-model="form.level" style="width: 230px" controls-position="right" :min="0" :controls="true" :precision="0" />
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="12">
-          <el-form-item label="数值单位" prop="unit">
-            <el-input v-model="form.unit" style="width: 230px" placeholder="" />
           </el-form-item>
         </el-col>
       </el-row>
@@ -127,14 +108,9 @@
         </el-col>
       </el-row>
       <el-row>
-        <el-col :span="24">
-          <el-form-item label="日历标题" prop="calendarTitle">
-            <el-input v-model="form.calendarTitle" style="width: 580px" placeholder="" />
-            <el-tooltip content="显示在用户日历中的标题信息." effect="dark" placement="top">
-              <el-icon>
-                <QuestionFilled />
-              </el-icon>
-            </el-tooltip>
+        <el-col :span="12">
+          <el-form-item label="显示顺序" prop="orderIndex">
+            <el-input-number v-model="form.orderIndex" style="width: 230px" controls-position="right" :min="0" :controls="true" :precision="0" />
           </el-form-item>
         </el-col>
       </el-row>
@@ -168,19 +144,19 @@
 
 </template>
 
-<script setup name="PlanTemplateForm">
-  import { createPlanTemplate, editPlanTemplate, getPlanTemplate, getPlanTemplateTree, getNextOrderIndex } from "@/api/report/plan/planTemplate";
+<script setup name="CalendarTemplateForm">
+  import { createCalendarTemplate, editCalendarTemplate, getCalendarTemplate, getCalendarTemplateTree, getNextOrderIndex } from "@/api/data/calendarTemplate";
   import { getFullRouters } from "@/api/menu";
 
   const { proxy } = getCurrentInstance();
 
   //可执行时间段
-  const title = ref('计划模版');
+  const title = ref('日历模版');
   const open = ref(false);
   const formLoading = ref(false);
   const formRef = ref();
   const statusOptions = ref(proxy.commonStatusOptions);
-  const planTemplateOptions = ref([]);
+  const calendarTemplateOptions = ref([]);
   const sqlTypeOptions = ref([]);
   const bussTypeOptions = ref([]);
   const bussKeyOptions = ref([]);
@@ -205,9 +181,6 @@
       sqlContent: [
         { required: true, message: "查询语句不能为空", trigger: "blur" }
       ],
-      planType: [
-        { required: true, message: "计划类型不能为空", trigger: "blur" }
-      ],
       status: [
         { required: true, message: "状态不能为空", trigger: "blur" }
       ],
@@ -230,7 +203,7 @@
     if (form.value.templateId != null) {
       return;
     }
-    getPlanTemplate(id).then(response => {
+    getCalendarTemplate(id).then(response => {
       response.fromTemplateId = form.value.fromTemplateId;
       form.value = response;
       form.value.templateId = null;
@@ -248,7 +221,7 @@
       title.value = "修改";
       try {
         formLoading.value = true;
-        getPlanTemplate(id).then(response => {
+        getCalendarTemplate(id).then(response => {
           form.value = response;
         });
       } finally {
@@ -263,8 +236,8 @@
   defineExpose({ openForm });
 
   function loadOptions() {
-    getPlanTemplateTree().then(response => {
-      planTemplateOptions.value = response;
+    getCalendarTemplateTree().then(response => {
+      calendarTemplateOptions.value = response;
     });
   }
 
@@ -300,11 +273,8 @@
       templateId: undefined,
       templateName: undefined,
       sqlType: 'SQL',
-      resultType: 'DATE',
-      valueType: 'DAY',
       status: 'ENABLE',
       level: 3,
-      rewarda: 0,
       orderIndex: undefined,
       fromTemplateId: undefined,
       copyItems: true
@@ -317,14 +287,14 @@
     proxy.$refs["formRef"].validate(valid => {
       if (valid) {
         if (form.value.templateId != undefined) {
-          editPlanTemplate(form.value).then(response => {
+          editCalendarTemplate(form.value).then(response => {
             proxy.$modal.msgSuccess("修改成功");
             open.value = false;
             // 发送操作成功的事件
             emit('success');
           });
         } else {
-          createPlanTemplate(form.value).then(response => {
+          createCalendarTemplate(form.value).then(response => {
             proxy.$modal.msgSuccess("新增成功");
             open.value = false;
             // 发送操作成功的事件

@@ -440,7 +440,7 @@
         }
         //消费/预算比例
         let monthConsumeBudgetRate = getPercent(response.totalAmount, response.budgetAmount);
-        statData.value.monthConsumeBudgetRate = parseInt(monthConsumeBudgetRate.toFixed(0));
+        statData.value.monthConsumeBudgetRate = parseInt(monthConsumeBudgetRate);
         //统计
         consumeChartStat();
         //预算快照

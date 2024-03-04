@@ -108,6 +108,31 @@
       </el-row>
       <el-row>
         <el-col :span="12">
+          <el-form-item label="业务代码" prop="bussKey">
+            <el-select v-model="form.bussKey" style="width: 230px" placeholder="请选择">
+              <el-option
+                v-for="dict in bussKeyOptions"
+                :key="dict.id"
+                :label="dict.text"
+                :value="dict.id" />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="跳转地址" prop="url">
+            <el-tree-select
+              v-model="form.url"
+              style="width: 230px"
+              :data="urlOptions"
+              :props="{ value: 'name', label: 'title', children: 'children' }"
+              value-key="id"
+              placeholder="跳转地址"
+              :check-strictly="false"/>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="12">
           <el-form-item label="显示顺序" prop="orderIndex">
             <el-input-number v-model="form.orderIndex" style="width: 230px" controls-position="right" :min="0" :controls="true" :precision="0" />
           </el-form-item>
@@ -115,18 +140,6 @@
         <el-col :span="12">
           <el-form-item label="积分奖励" prop="rewards">
             <el-input-number v-model="form.rewards" style="width: 230px" controls-position="right" :min="0" :controls="true" :precision="0" />
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="24">
-          <el-form-item label="链接地址" prop="url">
-            <el-input v-model="form.url" style="width: 580px" placeholder="" />
-            <el-tooltip content="版本的路由跳转名称." effect="dark" placement="top">
-              <el-icon>
-                <QuestionFilled />
-              </el-icon>
-            </el-tooltip>
           </el-form-item>
         </el-col>
       </el-row>
@@ -174,6 +187,7 @@
 
 <script setup name="StatTemplateForm">
   import { createStatTemplate, editStatTemplate, getStatTemplate, getStatTemplateTree, getNextOrderIndex } from "@/api/report/stat/statTemplate";
+  import { getFullRouters } from "@/api/menu";
 
   const { proxy } = getCurrentInstance();
 
@@ -188,6 +202,8 @@
   const bussTypeOptions = ref([]);
   const resultTypeOptions = ref([]);
   const valueTypeOptions = ref([]);
+  const bussKeyOptions = ref([]);
+  const urlOptions = ref([]);
 
   const data = reactive({
     form: {},
@@ -291,6 +307,12 @@
     proxy.getEnumDict('BussType', 'FIELD', false).then(response => {
       bussTypeOptions.value = response;
     });
+    proxy.getDictItemTree('BUSS_KEY', false).then(response => {
+      bussKeyOptions.value = response;
+    });
+    getFullRouters().then(response => {
+      urlOptions.value = response;
+    });
   }
 
   // 获取下一个排序号
@@ -313,7 +335,7 @@
       valueType: 'DAY',
       status: 'ENABLE',
       level: 3,
-      rewarda: 0,
+      rewards: 0,
       orderIndex: undefined,
       fromTemplateId: undefined,
       copyItems: true

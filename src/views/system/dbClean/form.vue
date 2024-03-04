@@ -2,21 +2,23 @@
 
   <!-- 表单编辑对话框 -->
   <el-dialog :title="title" v-model="open" append-to-body>
-    <el-form ref="formRef" :model="form" :rules="rules" v-loading="formLoading" label-width="120px">
+    <el-form ref="formRef" :model="form" :rules="rules" v-loading="formLoading" label-width="100px">
       <el-row>
         <el-col :span="24">
-          <el-form-item label="名称" prop="name">
+          <el-form-item label="清理名称" prop="name">
             <el-input v-model="form.name" placeholder="请输入名称" />
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
-        <el-col :span="12">
-          <el-form-item label="表名" prop="tableName">
+        <el-col :span="24">
+          <el-form-item label="数据库表" prop="tableName">
             <el-input v-model="form.tableName" placeholder="请输入表名" />
           </el-form-item>
         </el-col>
-        <el-col :span="12">
+      </el-row>
+      <el-row>
+        <el-col :span="24">
           <el-form-item label="时间字段" prop="dateField">
             <el-input v-model="form.dateField" placeholder="请输入时间字段" />
           </el-form-item>
@@ -48,13 +50,13 @@
       <el-row>
         <el-col :span="24">
           <el-form-item label="附加条件" prop="extraCondition">
-            <el-input v-model="form.extraCondition" placeholder="请输入附加条件" />
+            <el-input v-model="form.extraCondition"  type="textarea" placeholder="请输入附加条件" />
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="12">
-          <el-form-item label="状态" prop="status">
+          <el-form-item label="状态信息" prop="status">
             <el-select
               v-model="form.status"
               placeholder="状态"

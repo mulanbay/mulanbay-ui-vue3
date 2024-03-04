@@ -4,13 +4,13 @@
   <el-dialog :title="cleanTitle" v-model="cleanOpen" width="480px" append-to-body>
     <el-divider content-position="center">表信息</el-divider>
     <el-descriptions class="margin-top" :column="1" border>
-      <el-descriptions-item width="120px">
+      <el-descriptions-item>
         <template #label>
           <div class="cell-item">
             <el-icon>
               <StarFilled />
             </el-icon>
-            名称
+            清理名称
           </div>
         </template>
         {{ cleanForm.name}}
@@ -26,7 +26,7 @@
         </template>
         {{ cleanForm.tableName}}
       </el-descriptions-item>
-      <el-descriptions-item>
+      <el-descriptions-item label-class-name="my-label">
         <template #label>
           <div class="cell-item">
             <el-icon>
@@ -62,7 +62,7 @@
       <el-row v-if="cleanForm.cleanType=='DATE_COMPARE'&&cleanForm.extraCondition!=null">
         <el-col :span="24">
           <el-form-item label="添加附加条件" prop="useEc">
-            <el-switch v-model="cleanForm.useEc" active-value="true" inactive-value="false"></el-switch>
+            <el-switch v-model="cleanForm.useEc" :active-value="true" :inactive-value="false"></el-switch>
           </el-form-item>
         </el-col>
       </el-row>
@@ -126,6 +126,7 @@
   function loadDBClean(id) {
     getDBClean(id).then(response => {
       cleanForm.value = response;
+      cleanForm.value.useEc = true;
     });
   }
 
@@ -156,3 +157,11 @@
 
   })
 </script>
+<style>
+  .my-label {
+    width: 120px;
+    color: #999;
+    font-weight: normal;
+    background: #fff;
+  }
+</style>

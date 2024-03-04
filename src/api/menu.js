@@ -7,3 +7,12 @@ export const getRouters = () => {
     method: 'get'
   })
 }
+
+//获取所有路由
+export const getFullRouters = () => {
+  return request({
+    url: '/main/getFullRouters',
+    method: 'get'
+  })
+}
+
