@@ -69,6 +69,27 @@
           </el-icon>
         </el-tooltip>
       </el-form-item>
+      <el-form-item label="系统锁定类型" prop="stopStatus">
+        <el-select
+          v-model="form.stopStatus"
+          placeholder="锁定类型"
+          collapse-tags
+          style="width: 250px">
+          <el-option
+            v-for="dict in stopStatusOptions"
+            :key="dict.id"
+            :label="dict.text"
+            :value="dict.id" />
+        </el-select>
+        <el-tooltip content="永久解锁后,自动锁定任务无法对系统进行锁定." effect="dark" placement="top">
+          <el-icon>
+            <QuestionFilled />
+          </el-icon>
+        </el-tooltip>
+      </el-form-item>
+      <el-form-item label="锁定后提示消息" prop="message">
+        <el-input v-model="form.message" placeholder="请输入消息" :style="{width: '250px'}" />
+      </el-form-item>
       <el-form-item >
           <el-row :gutter="20">
             <el-col :span="12">
@@ -99,7 +120,10 @@
   const stopPeriodOptions = ref([]);
   const timePeriod = ref();
   const tagsPopOpen = ref(false);
-
+  const stopStatusOptions = ref([
+      {id:9999,text:"最高级别锁定,只有人工解锁"},
+      {id:9998,text:"正常锁定,系统自动解锁"}
+  ]);
   const data = reactive({
     form: {},
     // 表单校验
@@ -112,6 +136,12 @@
       ],
       triggerStatus: [
         { required: true, message: "调度状态不能为空", trigger: "blur" }
+      ],
+      stopStatus: [
+        { required: true, message: "关闭代码不能为空", trigger: "blur" }
+      ],
+      message: [
+        { required: true, message: "消息提示不能为空", trigger: "blur" }
       ]
     }
   });
@@ -143,6 +173,8 @@
     getAutoLock().then(response => {
       formLoading.value = false;
       form.value.stopPeriod = response.stopPeriod;
+      form.value.stopStatus = response.stopStatus;
+      form.value.message = response.message;
       form.value.triggerType = response.trigger.triggerType;
       form.value.triggerInterval = response.trigger.triggerInterval;
       form.value.triggerStatus = response.trigger.triggerStatus;

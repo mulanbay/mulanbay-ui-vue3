@@ -59,7 +59,16 @@
                 日历时间
               </div>
             </template>
-            {{ beanData.bussDay +' -- ' +beanData.expireTime}}
+            {{ formatCalendarDate(beanData)}}
+          </el-descriptions-item>
+          <el-descriptions-item>
+            <template #label>
+              <div class="cell-item">
+                <el-icon><Clock /></el-icon>
+                失效时间
+              </div>
+            </template>
+            {{ beanData.expireTime}}
           </el-descriptions-item>
           <el-descriptions-item>
             <template #label>
@@ -86,11 +95,9 @@
                 完成状态
               </div>
             </template>
-            <span v-if="beanData.period=='ONCE'">
-              {{ beanData.finishTypeName==null ? '未完成':beanData.finishTypeName}}
-            </span>
-            <span v-else>
-              周期性日历无需完成
+            {{ beanData.finishTypeName==null ? '未完成':beanData.finishTypeName}}
+            <span v-if="beanData.finishType!=null">
+              {{ beanData.match ? '(时间匹配)':'(时间未匹配)'}}
             </span>
           </el-descriptions-item>
           <el-descriptions-item>
@@ -231,6 +238,22 @@
 
   function handleClick() {
 
+  }
+  
+  /** 日历时间显示 */
+  function formatCalendarDate(item){
+    if(proxy.isEmpty(item)||proxy.isEmpty(item.bussDay)){
+      return null
+    }
+    if(item.period=='ONCE'){
+      if(item.allDay){
+        return item.bussDay.substring(0,10)+' (全天日历)';
+      }else{
+        return item.bussDay.substring(11,16);
+      }
+    }else{
+      return item.bussDay.substring(11,16);
+    }
   }
   
   /** 修改按钮操作 */

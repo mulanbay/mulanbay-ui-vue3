@@ -165,9 +165,7 @@
       <el-row>
         <el-col :span="12">
           <el-form-item label="是否二手" prop="secondhand">
-            <el-switch
-              v-model="form.secondhand">
-            </el-switch>
+            <el-switch v-model="form.secondhand" ></el-switch>
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -463,7 +461,7 @@
       shopName: undefined,
       brand: undefined
     };
-    proxy.resetForm("formRef");
+    //proxy.resetForm("formRef");
     loadOptions();
     keywordsTags.value = [];
   }

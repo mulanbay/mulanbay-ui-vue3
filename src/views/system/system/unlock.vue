@@ -3,11 +3,29 @@
   <!-- 表单编辑对话框 -->
   <el-dialog :title="title" v-model="open" width="400px" append-to-body>
     <el-form ref="formRef" :model="form" :rules="rules" v-loading="formLoading" label-width="80px">
+      <el-form-item label="解锁类型" prop="status">
+        <el-select
+          v-model="form.status"
+          placeholder="状态"
+          collapse-tags
+          style="width: 260px">
+          <el-option
+            v-for="dict in statusOptions"
+            :key="dict.id"
+            :label="dict.text"
+            :value="dict.id" />
+        </el-select>
+        <el-tooltip content="永久解锁后,自动锁定任务无法对系统进行锁定." effect="dark" placement="top">
+          <el-icon>
+            <QuestionFilled />
+          </el-icon>
+        </el-tooltip>
+      </el-form-item>
       <el-form-item label="解锁码" prop="unlockCode">
-        <el-input type="password" v-model="form.unlockCode" placeholder="请输入解锁码" />
+        <el-input type="password" style="width: 260px" v-model="form.unlockCode" placeholder="请输入解锁码" />
       </el-form-item>
       <el-form-item label="验证码" prop="code" v-if="captchaEnabled">
-        <el-input type="text" v-model="form.code" placeholder="验证码" style="width: 58%;" @keyup.enter="submitForm" />
+        <el-input type="text" v-model="form.code" placeholder="验证码" style="width: 50%;" @keyup.enter="submitForm" />
         <div class="login-code">
           <img :src="codeUrl" @click="getCode" class="login-code-img" />
         </div>
@@ -37,11 +55,18 @@
   // 验证码开关
   const captchaEnabled = ref(true);
   const codeUrl = ref("");
+  const statusOptions = ref([
+    {id:9999,text:"永久解锁,不允许自动锁定"},
+    {id:9991,text:"非永久解锁,允许自动锁定"}
+  ]);
 
   const data = reactive({
     form: {},
     // 表单校验
     rules: {
+      status: [
+        { required: true, message: "解锁状态码不能为空", trigger: "blur" }
+      ],
       unlockCode: [
         { required: true, message: "解锁码不能为空", trigger: "blur" }
       ],
@@ -80,6 +105,7 @@
   // 表单重置
   function resetForm() {
     form.value = {
+      status:9999,
       unlockCode: undefined,
       code: undefined
     };

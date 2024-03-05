@@ -138,3 +138,19 @@ export function recentSchedules() {
     method: 'get'
   })
 }
+
+export function getTaskTriggerStat(query) {
+  return request({
+    url: '/taskTrigger/stat',
+    method: 'get',
+    params: query
+  })
+}
+
+export function getScheduleStat(query) {
+  return request({
+    url: '/taskTrigger/scheduleStat',
+    method: 'get',
+    params: query
+  })
+}

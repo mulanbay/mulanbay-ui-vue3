@@ -2,9 +2,19 @@
   <div class="app-container">
 
     <el-form ref="formRef" :model="form" :rules="rules" v-loading="formLoading" label-width="80px">
-      <el-form-item label="关闭代码" prop="code">
-        <el-input-number v-model="form.code" placeholder="请输入code" :style="{width: '300px'}" :min="9991" :max="9999" :precision="0" />
-        <el-tooltip content="值越大,级别越高." effect="dark" placement="top">
+      <el-form-item label="锁定类型" prop="status">
+        <el-select
+          v-model="form.status"
+          placeholder="状态"
+          collapse-tags
+          style="width: 300px">
+          <el-option
+            v-for="dict in statusOptions"
+            :key="dict.id"
+            :label="dict.text"
+            :value="dict.id" />
+        </el-select>
+        <el-tooltip content="永久锁定后,自动锁定任务无法对系统进行解锁." effect="dark" placement="top">
           <el-icon>
             <QuestionFilled />
           </el-icon>
@@ -46,13 +56,16 @@
 
   const formLoading = ref(false);
   const formRef = ref();
-
+  const statusOptions = ref([
+      {id:9999,text:"永久锁定,不允许自动解锁"},
+      {id:9991,text:"非永久锁定,允许自动解锁"}
+  ]);
   const data = reactive({
     form: {},
     // 表单校验
     rules: {
-      code: [
-        { required: true, message: "Code不能为空", trigger: "blur" }
+      status: [
+        { required: true, message: "锁定类型不能为空", trigger: "blur" }
       ],
       message: [
         { required: true, message: "消息不能为空", trigger: "blur" }
@@ -68,7 +81,7 @@
   // 表单重置
   function resetForm() {
     form.value = {
-      code: 9999,
+      status: 9999,
       message: '系统被锁定',
       expireTime: undefined
     };

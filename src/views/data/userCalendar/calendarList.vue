@@ -219,15 +219,22 @@
         for(let i=0;i<n;i++){
           let item = response[i];
           let color = getCalendarColor(item.sourceTypeIndex);
+          let textColor = 'black';
           let editable = item.sourceType=='MANUAL'&&item.period=='ONCE' ? true :false;
+          let title = item.title;
+          if(item.finishTime!=null){
+            textColor = 'green';
+            title = '[完成]'+title;
+          }
           let event = {
             id: item.id,
-            title: item.title, 
+            title: title, 
             start: item.bussDay,
             end: item.expireTime,
             editable: editable,
             borderColor:color,
             backgroundColor:color,
+            textColor: textColor,
             //display:'block',
             allDay:item.allDay,
             extendedProps:item
