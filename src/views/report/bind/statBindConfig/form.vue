@@ -5,6 +5,22 @@
     <el-form ref="formRef" :model="form" :rules="rules" v-loading="formLoading" label-width="90px">
       <el-row>
         <el-col :span="24">
+          <el-form-item label="选取模板" prop="templateId">
+            <el-tree-select
+              v-model="templateId"
+              style="width: 580px"
+              :data="templateOptions"
+              :props="{ value: 'id', label: 'text', children: 'children' }"
+              value-key="id"
+              placeholder="选择模版"
+              :check-strictly="false"
+              :disabled="form.configId!=null"
+              @change="handleTemplateChange" />
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="24">
           <el-form-item label="配置名称" prop="configName">
             <el-input v-model="form.configName" style="width: 580px" @blur="setRemark" placeholder="" />
           </el-form-item>
@@ -69,6 +85,11 @@
         </el-col>
       </el-row>
       <el-row>
+        <el-col :span="12">
+          <el-form-item label="可为空" prop="nullable">
+            <el-switch v-model="form.nullable"></el-switch>
+          </el-form-item>
+        </el-col>
         <el-col :span="6">
           <el-form-item label="绑定用户" v-if="form.source == 'SQL'" prop="bindUser">
             <el-switch v-model="form.bindUser"></el-switch>
@@ -84,6 +105,8 @@
             <el-switch v-model="form.tree"></el-switch>
           </el-form-item>
         </el-col>
+      </el-row>
+      <el-row>
         <el-col :span="12">
           <el-form-item v-if="form.source == 'ENUM'" label="枚举字段" prop="enumIdType">
             <el-select
@@ -99,6 +122,18 @@
                 :value="dict.id"
               />
             </el-select>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="12">
+          <el-form-item v-if="form.type=='CHART'" label="表单字段" prop="formField">
+            <el-input v-model="form.formField" style="width: 230px" placeholder="对应表单里面的字段名" />
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item v-if="form.type=='CHART'" label="默认值" prop="defaultValue">
+            <el-input v-model="form.defaultValue" style="width: 230px" placeholder="" />
           </el-form-item>
         </el-col>
       </el-row>
@@ -121,7 +156,7 @@
 </template>
 
 <script setup name="StatBindConfigForm">
-  import { createStatBindConfig, editStatBindConfig, getStatBindConfig } from "@/api/report/bind/statBindConfig";
+  import { createStatBindConfig, editStatBindConfig, getStatBindConfig,getStatBindConfigTree } from "@/api/report/bind/statBindConfig";
 
   const { proxy } = getCurrentInstance();
 
@@ -134,6 +169,9 @@
   const casCadeTypeOptions = ref([]);
   const enumIdTypeOptions = ref([]);
   const valueClassOptions = ref([]);
+  //模版
+  const templateId = ref();
+  const templateOptions = ref([]);
   
   const data = reactive({
     form: {},
@@ -159,6 +197,9 @@
       ],
       casCadeType: [
         { required: true, message: "级联类型不能为空", trigger: "blur" }
+      ],
+      nullable: [
+        { required: true, message: "请选择是否可为空", trigger: "blur" }
       ],
       msg: [
         { required: true, message: "提示信息不能为空", trigger: "blur" }
@@ -189,12 +230,33 @@
       title.value = "新增";
       form.value.fid = fid;
       form.value.type = type;
+      loadTemplateTree(fid,type);
     }
   }
 
   // 提供 open 方法，用于打开弹窗
   defineExpose({ openForm });
 
+  // 模版
+  function loadTemplateTree(fid,type){
+    getStatBindConfigTree(null,type).then(response => {
+      templateOptions.value = response;
+    });
+  }
+  
+  // 模版
+  function handleTemplateChange(templateId){
+    getStatBindConfig(templateId).then(response => {
+      //避免被覆盖
+      let fid = form.value.fid;
+      let type = form.value.type;
+      form.value = response;
+      form.value.configId = undefined;
+      form.value.fid = fid;
+      form.value.type = type;
+    });
+  }
+  
   // 设置备注
   function setRemark(){
     if(proxy.isEmpty(form.value.msg)){
@@ -222,7 +284,10 @@
       casCadeType:'NOT_CASCADE',
       source:'SQL',
       bindUser:true,
+      defaultValue: undefined,
+      formField: undefined,
       tree:false,
+      nullable: false,
       msg:undefined
     };
     proxy.resetForm("formRef");

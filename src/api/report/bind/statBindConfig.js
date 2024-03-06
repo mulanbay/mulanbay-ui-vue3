@@ -8,6 +8,17 @@ export function fetchList(query) {
   })
 }
 
+export function getStatBindConfigTree(fid,type)  {
+  return request({
+    url: '/statBindConfig/tree',
+    method: 'get',
+    params: { 
+      fid:fid,
+      type:type
+    }
+  })
+}
+
 export function getStatBindConfig(configId) {
   return request({
     url: '/statBindConfig/get',

@@ -43,19 +43,24 @@
           <span>{{ scope.row.typeName }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="来源" align="center" width="80" >
+      <el-table-column label="来源" align="center" width="100" >
         <template #default="scope">
           <span>{{ scope.row.sourceName }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="排序号" align="center" width="80">
+      <el-table-column label="序号" align="center" width="60">
         <template #default="scope">
           <span>{{ scope.row.orderIndex }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="级联类型" align="center" >
+      <el-table-column label="可为空" align="center" width="80">
         <template #default="scope">
-          <span>{{ scope.row.casCadeTypeName }}</span>
+          <span v-if="scope.row.nullable==true">
+            <el-icon color="green"><CircleCheckFilled /></el-icon>
+          </span>
+          <span v-else>
+            <el-icon color="red"><CircleCloseFilled /></el-icon>
+          </span>
         </template>
       </el-table-column>
       <el-table-column label="绑定用户" align="center" width="80">
@@ -66,6 +71,11 @@
           <span v-else>
             <el-icon color="red"><CircleCloseFilled /></el-icon>
           </span>
+        </template>
+      </el-table-column>
+      <el-table-column label="级联类型" align="center" >
+        <template #default="scope">
+          <span>{{ scope.row.casCadeTypeName }}</span>
         </template>
       </el-table-column>
       <el-table-column label="树形数据" align="center" width="80">

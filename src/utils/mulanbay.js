@@ -65,8 +65,19 @@ export function addDateRange(params, dateRange, propName) {
     search['startDate'] = dateRange[0];
     search['endDate'] = dateRange[1];
   } else {
-    search['start' + propName] = dateRange[0];
-    search['end' + propName] = dateRange[1];
+    search[propName[0]] = dateRange[0];
+    search[propName[1]] = dateRange[1];
+  }
+  return search;
+}
+
+// 添加日期
+export function addDate(params, date, propName) {
+  let search = params;
+  if (typeof (propName) === 'undefined') {
+    search['date'] = date;
+  } else {
+    search[propName] = date;
   }
   return search;
 }

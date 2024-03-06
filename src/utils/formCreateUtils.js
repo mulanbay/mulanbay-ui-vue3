@@ -12,14 +12,18 @@ export function generateFcRules(dataRules) {
   const n = dataRules.length;
   for (let i = 0; i < n; i++) {
     let r = dataRules[i];
+    let field = "bindValue" + i;
+    if(r.formField!=null&&r.formField!=undefined&&r.formField!=''){
+      field = r.formField;
+    }
     let selectData=null;
     if(r.tree==true){
       //树形结构
       selectData = {
         type:"treeSelect",
         title:r.name,
-        field:"rule",
-        value:[],
+        field:field,
+        value:r.defaultValue,
         props:{
             data:r.list,
             props: {
@@ -32,22 +36,24 @@ export function generateFcRules(dataRules) {
       selectData = {
         type: "input",
         title: r.name,
-        field: "bindValue" + i,
-        value: "",
+        field: field,
+        value: r.defaultValue,
         props: {
           "type": "text",
+          clearable: r.nullable
         }
       }
     }else{
       //field插件需要唯一
       selectData = {
         type: "select",
-        field: "bindValue" + i,
+        field: field,
         title: r.name,
-        value: [],
+        value: r.defaultValue,
         options: [],
         props: {
-          multiple: false
+          multiple: false,
+          clearable: r.nullable
         }
       };
       const ll = r.list.length;
@@ -60,7 +66,7 @@ export function generateFcRules(dataRules) {
       selectData.options = os;
     }
     selectData.validate = [
-      { required: true, message: r.msg, trigger: 'blur' },
+      { required: r.nullable==false, message: r.msg, trigger: 'blur' },
     ]
     selectOptions.push(selectData);
   }

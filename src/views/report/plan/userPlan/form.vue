@@ -219,7 +219,7 @@
         labelPosition: 'right',
         labelWidth: '90px',
         size: undefined,
-        inline: false,
+        inline: true,
         hideRequiredAsterisk: false
       },
       row: {
