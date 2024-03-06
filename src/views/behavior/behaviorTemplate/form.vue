@@ -66,14 +66,38 @@
         </el-col>
       </el-row>
       <el-row>
+        <el-col :span="24">
+          <el-form-item label="附加条件" prop="extraSql">
+            <el-input v-model="form.extraSql" style="width: 580px" placeholder="" />
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
         <el-col :span="12">
           <el-form-item label="显示顺序" prop="orderIndex">
             <el-input-number v-model="form.orderIndex" style="width: 230px" controls-position="right" :min="0" :controls="true" :precision="0" />
           </el-form-item>
         </el-col>
-        <el-col :span="12">
-          <el-form-item label="积分奖励" prop="rewards">
-            <el-input-number v-model="form.rewards" style="width: 230px" controls-position="right" :min="0" :controls="true" :precision="0" />
+      </el-row>
+      <el-row>
+        <el-col :span="6">
+          <el-form-item label="月分析" prop="monthStat">
+            <el-switch v-model="form.monthStat"></el-switch>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="天分析" prop="dayStat">
+            <el-switch v-model="form.dayStat"></el-switch>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="小时分析" prop="hourStat">
+            <el-switch v-model="form.hourStat"></el-switch>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="全天日历" prop="allDay">
+            <el-switch v-model="form.allDay"></el-switch>
           </el-form-item>
         </el-col>
       </el-row>
@@ -91,13 +115,6 @@
         <el-col :span="12">
           <el-form-item label="模板等级" prop="level">
             <el-input-number v-model="form.level" style="width: 230px" controls-position="right" :min="0" :controls="true" :precision="0" />
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="12">
-          <el-form-item label="数值单位" prop="unit">
-            <el-input v-model="form.unit" style="width: 230px" placeholder="" />
           </el-form-item>
         </el-col>
       </el-row>
@@ -123,18 +140,6 @@
               value-key="id"
               placeholder="跳转地址"
               :check-strictly="false"/>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="24">
-          <el-form-item label="日历标题" prop="calendarTitle">
-            <el-input v-model="form.calendarTitle" style="width: 580px" placeholder="" />
-            <el-tooltip content="显示在用户日历中的标题信息." effect="dark" placement="top">
-              <el-icon>
-                <QuestionFilled />
-              </el-icon>
-            </el-tooltip>
           </el-form-item>
         </el-col>
       </el-row>
@@ -168,14 +173,14 @@
 
 </template>
 
-<script setup name="PlanTemplateForm">
-  import { createPlanTemplate, editPlanTemplate, getPlanTemplate, getPlanTemplateTree, getNextOrderIndex } from "@/api/report/plan/planTemplate";
+<script setup name="BehaviorTemplateForm">
+  import { createBehaviorTemplate, editBehaviorTemplate, getBehaviorTemplate, getBehaviorTemplateTree } from "@/api/behavior/behaviorTemplate";
   import { getFullRouters } from "@/api/menu";
 
   const { proxy } = getCurrentInstance();
 
   //可执行时间段
-  const title = ref('计划模版');
+  const title = ref('行为模版');
   const open = ref(false);
   const formLoading = ref(false);
   const formRef = ref();
@@ -205,8 +210,20 @@
       sqlContent: [
         { required: true, message: "查询语句不能为空", trigger: "blur" }
       ],
-      planType: [
-        { required: true, message: "计划类型不能为空", trigger: "blur" }
+      dateRegion: [
+        { required: true, message: "日期区段不能为空", trigger: "blur" }
+      ],
+      monthStat: [
+        { required: true, message: "月分析不能为空", trigger: "blur" }
+      ],
+      dayStat: [
+        { required: true, message: "天分析不能为空", trigger: "blur" }
+      ],
+      hourStat: [
+        { required: true, message: "小时分析不能为空", trigger: "blur" }
+      ],
+      allDay: [
+        { required: true, message: "全天日历不能为空", trigger: "blur" }
       ],
       status: [
         { required: true, message: "状态不能为空", trigger: "blur" }
@@ -230,7 +247,7 @@
     if (form.value.templateId != null) {
       return;
     }
-    getPlanTemplate(id).then(response => {
+    getBehaviorTemplate(id).then(response => {
       response.fromTemplateId = form.value.fromTemplateId;
       form.value = response;
       form.value.templateId = null;
@@ -248,7 +265,7 @@
       title.value = "修改";
       try {
         formLoading.value = true;
-        getPlanTemplate(id).then(response => {
+        getBehaviorTemplate(id).then(response => {
           form.value = response;
         });
       } finally {
@@ -263,7 +280,7 @@
   defineExpose({ openForm });
 
   function loadOptions() {
-    getPlanTemplateTree().then(response => {
+    getBehaviorTemplateTree().then(response => {
       planTemplateOptions.value = response;
     });
   }
@@ -286,12 +303,7 @@
 
   // 获取下一个排序号
   function initOrderIndex() {
-    if(form.value.orderIndex!=null){
-      return;
-    }
-    getNextOrderIndex(form.value.bussType).then(response => {
-      form.value.orderIndex = response;
-    });
+
   }
 
   // 表单重置
@@ -300,11 +312,13 @@
       templateId: undefined,
       templateName: undefined,
       sqlType: 'SQL',
-      resultType: 'DATE',
-      valueType: 'DAY',
       status: 'ENABLE',
       level: 3,
-      rewards: 0,
+      dateRegion:false,
+      monthStat:false,
+      dayStat:true,
+      hourStat:true,
+      allDay:true,
       orderIndex: undefined,
       fromTemplateId: undefined,
       copyItems: true
@@ -317,14 +331,14 @@
     proxy.$refs["formRef"].validate(valid => {
       if (valid) {
         if (form.value.templateId != undefined) {
-          editPlanTemplate(form.value).then(response => {
+          editBehaviorTemplate(form.value).then(response => {
             proxy.$modal.msgSuccess("修改成功");
             open.value = false;
             // 发送操作成功的事件
             emit('success');
           });
         } else {
-          createPlanTemplate(form.value).then(response => {
+          createBehaviorTemplate(form.value).then(response => {
             proxy.$modal.msgSuccess("新增成功");
             open.value = false;
             // 发送操作成功的事件

@@ -29,18 +29,9 @@
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="条件筛选" v-if="moreCdn==true">
-        <el-checkbox v-model="queryParams.needFinished" label="包含完成" />
-        <el-checkbox v-model="queryParams.needPeriod" label="包含周期性" />
-        <el-checkbox v-model="queryParams.needBudget" label="包含预算" />
-        <el-checkbox v-model="queryParams.needTreatDrug" label="用药日历" />
-        <el-checkbox v-model="queryParams.needConsume" label="包含消费" />
-        <el-checkbox v-model="queryParams.needBandLog" label="日志绑定" />
-      </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="TrendCharts" @click="handleQuery" v-hasPermi="['data:userCalendar:calendarList']">查询</el-button>
+        <el-button type="primary" icon="TrendCharts" @click="handleQuery" v-hasPermi="['behavior:userBehavior:calendarList']">查询</el-button>
         <el-button icon="refresh" @click="resetQuery">重置</el-button>
-        <el-button type="warning" icon="more" @click="handleMoreCdn">{{cdnTitle}}</el-button>
       </el-form-item>
     </el-form>
 
@@ -53,8 +44,8 @@
   </div>
 </template>
 
-<script setup name="UserCalendarCalendarList">
-  import { getCalendarList,updateUserCalendarDate } from "@/api/data/userCalendar";
+<script setup name="UserBehaviorCalendarList">
+  import { getCalendarList,getSourceDetail } from "@/api/behavior/userBehavior";
   import { copyObject, getQueryObject,getCalendarColor } from "@/utils/mulanbay";
   import { getFormatDate, getNowDateString } from "@/utils/datetime";
   import { deepClone } from "@/utils/index";
@@ -220,12 +211,8 @@
           let item = response[i];
           let color = getCalendarColor(item.sourceTypeIndex);
           let textColor = 'black';
-          let editable = item.sourceType=='MANUAL'&&item.period=='ONCE' ? true :false;
+          let editable = false;
           let title = item.title;
-          if(item.finishTime!=null){
-            textColor = 'green';
-            title = '[完成]'+title;
-          }
           let event = {
             id: item.id,
             title: title, 
@@ -261,12 +248,7 @@
 
   function handleEventClick(eventInfo) {
     let event = eventInfo.event;
-    let calendarId = event.extendedProps.calendarId;
-    if(proxy.isEmpty(calendarId)){
-      sourceDetailRef.value.showComputedData(event.extendedProps);
-    }else{
-      sourceDetailRef.value.showData(calendarId);
-    }
+    sourceDetailRef.value.showData(event.extendedProps);
   }
   
   function handleEventMouseEnter(eventInfo){
