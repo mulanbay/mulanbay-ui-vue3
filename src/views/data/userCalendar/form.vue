@@ -317,7 +317,7 @@
     proxy.getEnumDict('PeriodType', 'FIELD', false).then(response => {
       periodOptions.value = response;
     });
-    proxy.getEnumDict('UserCalendarSource', 'FIELD', false).then(response => {
+    proxy.getEnumDict('BussSource', 'FIELD', false).then(response => {
       sourceTypeOptions.value = response;
     });
     proxy.getEnumDict('UserCalendarFinishType', 'FIELD', false).then(response => {

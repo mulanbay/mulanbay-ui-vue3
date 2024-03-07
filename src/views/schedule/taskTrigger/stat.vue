@@ -259,8 +259,6 @@
   
   /** 加载数据 */
   function loadScheduleInfo() {
-    scheduleData.value = {};
-    cecJobsList.value = [];
     scheduleInfoLoading.value = true;
     getScheduleInfo().then(response => {
       scheduleInfoLoading.value = false;

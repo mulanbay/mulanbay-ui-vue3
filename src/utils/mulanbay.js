@@ -374,7 +374,7 @@ export const progressColors2 = [
   {color: '#5cb87a', percentage: 100}
 ]
 
-export const calendarColors = ['#9e5fff','#e6a23c','#00a9ff','#ff5583','#03bd9e','#191970','#800080','#9e5fff','#EE82EE','#B22222'];
+export const calendarColors = ['#9e5fff','#e6a23c','#00a9ff','#ff5583','#03bd9e','#191970','#668B8B','#FFE4E1','#008B45','#A0522D','#104E8B'];
 
 /**
  * 获取日历颜色

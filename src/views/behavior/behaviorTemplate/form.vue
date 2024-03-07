@@ -120,10 +120,10 @@
       </el-row>
       <el-row>
         <el-col :span="12">
-          <el-form-item label="业务代码" prop="bussKey">
-            <el-select v-model="form.bussKey" style="width: 230px" placeholder="请选择">
+          <el-form-item label="业务来源" prop="source">
+            <el-select v-model="form.source" style="width: 230px" placeholder="请选择">
               <el-option
-                v-for="dict in bussKeyOptions"
+                v-for="dict in sourceOptions"
                 :key="dict.id"
                 :label="dict.text"
                 :value="dict.id" />
@@ -188,7 +188,7 @@
   const planTemplateOptions = ref([]);
   const sqlTypeOptions = ref([]);
   const bussTypeOptions = ref([]);
-  const bussKeyOptions = ref([]);
+  const sourceOptions = ref([]);
   const urlOptions = ref([]);
 
   const data = reactive({
@@ -293,8 +293,8 @@
     proxy.getEnumDict('BussType', 'FIELD', false).then(response => {
       bussTypeOptions.value = response;
     });
-    proxy.getDictItemTree('BUSS_KEY', false).then(response => {
-      bussKeyOptions.value = response;
+    proxy.getEnumDict('BussSource', 'FIELD', false).then(response => {
+      sourceOptions.value = response;
     });
     getFullRouters().then(response => {
       urlOptions.value = response;
@@ -311,6 +311,7 @@
     form.value = {
       templateId: undefined,
       templateName: undefined,
+      source: undefined,
       sqlType: 'SQL',
       status: 'ENABLE',
       level: 3,

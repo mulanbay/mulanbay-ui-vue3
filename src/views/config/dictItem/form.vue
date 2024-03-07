@@ -9,8 +9,18 @@
         <el-form-item label="代码" prop="code">
           <el-input v-model="form.code" placeholder="请输入代码" />
         </el-form-item>
+        <el-form-item label="类型" prop="valueClass">
+          <el-select v-model="form.valueClass" placeholder="请选择" style="width: 100%">
+            <el-option
+              v-for="dict in valueClassOptions"
+              :key="dict.id"
+              :label="dict.text"
+              :value="dict.id"
+            />
+          </el-select>
+        </el-form-item>
         <el-form-item label="顺序" prop="orderIndex">
-          <el-input-number v-model="form.orderIndex" controls-position="right" :min="0" :controls="true" :precision="0" />
+          <el-input-number v-model="form.orderIndex" style="width: 100%" controls-position="right" :min="0" :controls="true" :precision="0" />
         </el-form-item>
         <el-form-item label="状态" prop="status">
           <el-radio-group v-model="form.status">
@@ -41,6 +51,7 @@
   const formLoading = ref(false);
   const formRef = ref();
   const commonStatusOptions = ref(proxy.commonStatusOptions);
+  const valueClassOptions = ref([]);
 
   const data = reactive({
     form: {},
@@ -51,6 +62,9 @@
       ],
       code: [
         { required: true, message: "代码不能为空", trigger: "blur" }
+      ],
+      valueClass: [
+        { required: true, message: "值类型不能为空", trigger: "blur" }
       ],
       orderIndex: [
         { required: true, message: "排序号不能为空", trigger: "blur" }
@@ -96,7 +110,8 @@
     form.value = {
       itemId: undefined,
       itemName: undefined,
-      groupId: undefined,
+      code: undefined,
+      valueClass: 'STRING',
       orderIndex: 0,
       status: "ENABLE"
     };
@@ -128,5 +143,8 @@
 
   /** 初始化 **/
   onMounted(() => {
+    proxy.getEnumDict('StatValueClass', 'FIELD', false).then(response => {
+      valueClassOptions.value = response;
+    });
   })
 </script>

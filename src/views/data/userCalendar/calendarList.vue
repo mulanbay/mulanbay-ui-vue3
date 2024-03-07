@@ -323,7 +323,7 @@
   /** 初始化 **/
   onMounted(() => {
     handleDateRangeChange();
-    proxy.getEnumDict('UserCalendarSource', 'FIELD', false).then(response => {
+    proxy.getEnumDict('BussSource', 'FIELD', false).then(response => {
       let n =response.length;
       for(let i=0;i<n;i++){
         let item = response[i];

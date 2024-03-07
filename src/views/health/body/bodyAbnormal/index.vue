@@ -80,12 +80,12 @@
           <span class="link-type" @click="handleDrugStat(scope.row)"><el-icon><Grid /></el-icon></span>
         </template>
       </el-table-column>
-      <el-table-column label="发生日期" align="center" >
+      <el-table-column label="发生日期" align="center" width="120"  >
         <template #default="scope">
           <span>{{ scope.row.occurDate }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="结束日期" align="center" >
+      <el-table-column label="结束日期" align="center" width="120" >
         <template #default="scope">
           <span>{{ scope.row.finishDate }}</span>
         </template>
@@ -117,7 +117,7 @@
           </el-rate>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" width="210" fixed="right" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" width="140" fixed="right" class-name="small-padding fixed-width">
         <template #default="scope">
           <el-button
             link

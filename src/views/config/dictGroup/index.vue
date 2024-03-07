@@ -96,9 +96,14 @@
           <span>{{ scope.row.orderIndex }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="状态" align="center" width="100">
+      <el-table-column label="状态" align="center" width="95">
         <template #default="scope">
-          <el-switch v-model="scope.row.status" active-value="ENABLE" inactive-value="DISABLE" disabled></el-switch>
+          <span v-if="scope.row.status=='ENABLE'">
+            <el-icon color="green"><CircleCheckFilled /></el-icon>
+          </span>
+          <span v-else>
+            <el-icon color="red"><CircleCloseFilled /></el-icon>
+          </span>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" width="150" fixed="right" class-name="small-padding fixed-width">

@@ -1,7 +1,7 @@
 <template>
 
   <!-- 详情对话框 -->
-  <el-dialog :title="detailTitle" v-model="detailOpen" width="500px" append-to-body >
+  <el-dialog :title="detailTitle" v-model="detailOpen" width="550px" append-to-body >
 
     <el-descriptions class="margin-top" :column="1" border>
       <el-descriptions-item label-class-name="my-label">
@@ -17,16 +17,16 @@
         <template #label>
           <div class="cell-item">
             <el-icon><Comment /></el-icon>
-            内容
+            业务业务
           </div>
         </template>
-        {{ beanData.value==null ? null:beanData.value+beanData.unit}}
+        {{ beanData.bussName}}
       </el-descriptions-item>
       <el-descriptions-item>
         <template #label>
           <div class="cell-item">
             <el-icon><Comment /></el-icon>
-            详情
+            内容
           </div>
         </template>
         {{ beanData.content}}
@@ -35,90 +35,101 @@
         <template #label>
           <div class="cell-item">
             <el-icon><Clock /></el-icon>
-            开始时间
+            积分时间
           </div>
         </template>
-        {{ beanData.bussDay}}
+        {{ rewardData.createdTime}}
       </el-descriptions-item>
       <el-descriptions-item>
         <template #label>
           <div class="cell-item">
-            <el-icon><Clock /></el-icon>
-            结束时间
+            <el-icon><UploadFilled /></el-icon>
+            奖励积分
           </div>
         </template>
-        {{ beanData.expireTime}}
+        {{ rewardData.rewards}}
       </el-descriptions-item>
       <el-descriptions-item>
         <template #label>
           <div class="cell-item">
-            <el-icon><StarFilled /></el-icon>
-            业务来源
+            <el-icon><Comment /></el-icon>
+            备注
           </div>
         </template>
-        {{ beanData.bussTypeName}}
+        {{ rewardData.remark}}
       </el-descriptions-item>
       <el-descriptions-item>
         <template #label>
           <div class="cell-item">
-            <el-icon><Clock /></el-icon>
-            行为时间
+            <el-icon><Folder /></el-icon>
+            消息标题
           </div>
         </template>
-        {{ beanData.bussDay}}
+        {{ sourceMessage.title}}
+      </el-descriptions-item>
+      <el-descriptions-item>
+        <template #label>
+          <div class="cell-item">
+            <el-icon><DocumentCopy /></el-icon>
+            消息内容
+          </div>
+        </template>
+        {{ sourceMessage.content}}
       </el-descriptions-item>
     </el-descriptions>
-
   </el-dialog>
 
 </template>
 
-<script setup name="UserBehaviorSourceDetail">
+<script setup name="UserRewardSourceDetail">
+  import { getUserRewardsourceDetail } from "@/api/data/userReward";
+  import { getMessage } from "@/api/log/message";
 
   const { proxy } = getCurrentInstance();
   const formRef = ref();
 
   //可执行时间段
-  const detailTitle = ref('行为详情');
+  const detailTitle = ref('积分详情');
   const detailOpen = ref(false);
   const detailLoading = ref(false);
   
   const data = reactive({
-    beanData:{}
+    beanData:{},
+    rewardData:{},
+    sourceMessage:{}
   });
   
-  const { beanData } = toRefs(data);
+  const { beanData,rewardData,sourceMessage } = toRefs(data);
   
   // 定义 success 事件，用于操作成功后的回调
   const emit = defineEmits(['success']);
 
   /** 打开弹窗 */
-  const showData = async (data) => {
+  const showData = async (id) => {
     detailOpen.value = true;
-    proxy.$nextTick(()=>{
-      beanData.value = data;
+    beanData.value ={};
+    rewardData.value ={};
+    getUserRewardsourceDetail(id).then(response => {
+      beanData.value = response;
+      rewardData.value = response.originData;
+      loadMessage(response.originData.messageId);
     });
-    
+  }
+  
+  function loadMessage(messageId){
+    sourceMessage.value={};
+    if(messageId==null){
+      return;
+    }
+    getMessage(messageId).then(response => {
+      if(response!=null){
+        sourceMessage.value = response;
+      }
+    });
   }
 
   // 提供 open 方法，用于打开弹窗
   defineExpose({ showData });
-
-  /** 日历时间显示 */
-  function formatCalendarDate(item){
-    if(proxy.isEmpty(item)||proxy.isEmpty(item.bussDay)){
-      return null
-    }
-    if(item.period=='ONCE'){
-      if(item.allDay){
-        return item.bussDay.substring(0,10)+' (全天日历)';
-      }else{
-        return item.bussDay.substring(11,16);
-      }
-    }else{
-      return item.bussDay.substring(11,16);
-    }
-  }
 
   /** 初始化 **/
   onMounted(() => {
