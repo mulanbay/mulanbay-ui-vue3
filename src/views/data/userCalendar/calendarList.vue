@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryRef" :rules="rules" :inline="true">
+    <el-form :model="queryParams" ref="queryRef" :rules="rules" :inline="true" v-loading="formLoading" >
       <el-form-item label="名称检索" prop="name">
         <el-input
           v-model="queryParams.name"
@@ -67,6 +67,7 @@
   import listPlugin from '@fullcalendar/list'
 
   const { proxy } = getCurrentInstance();
+  const formLoading = ref(false);
   const myCalendarRef = ref();
   const sourceTypeOptions = ref([]);
   const calendarEventList = ref([]);
@@ -151,7 +152,12 @@
       eventDrop: handleEventDrop, // 拖动日历日程事件
       eventResize: handleEventResize, // 修改日历日程大小事件
       eventDidMount: handleEventDidMount, // 安装提示事件
-      events: calendarEventList
+      events: calendarEventList,
+      eventTimeFormat: { // like '14:30:00'
+        hour: '2-digit',
+        minute: '2-digit',
+        meridiem: false
+      }
     },
     queryParams: {
       needFinished:true,
@@ -213,8 +219,10 @@
     fullPara.startDate = getFormatDate(start, "yyyy-MM-dd hh:mm:ss");
     fullPara.endDate = getFormatDate(end, "yyyy-MM-dd hh:mm:ss");
     calendarEventList.value=[];
+    formLoading.value = true;
     getCalendarList(fullPara).then(
       response => {
+        formLoading.value = false;
         let n = response.length;
         for(let i=0;i<n;i++){
           let item = response[i];

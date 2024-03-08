@@ -94,8 +94,11 @@
   const detailLoading = ref(false);
   
   const data = reactive({
+    //通用的bean信息
     beanData:{},
+    //积分数据
     rewardData:{},
+    //来源消息数据
     sourceMessage:{}
   });
   
@@ -110,9 +113,9 @@
     beanData.value ={};
     rewardData.value ={};
     getUserRewardsourceDetail(id).then(response => {
-      beanData.value = response;
-      rewardData.value = response.originData;
-      loadMessage(response.originData.messageId);
+      beanData.value = response.beanData;
+      rewardData.value = response.rewardData;
+      loadMessage(response.rewardData.messageId);
     });
   }
   

@@ -45,10 +45,10 @@
       </el-row>
       <el-row>
         <el-col :span="23">
-          <el-form-item label="日历模板" prop="templateId">
+          <el-form-item label="绑定行为" prop="templateId">
             <el-tree-select
               v-model="form.templateId"
-              :data="calendarTemplateOptions"
+              :data="behaviorTemplateOptions"
               :props="{ value: 'id', label: 'text', children: 'children' }"
               value-key="id"
               style="width: 730px"
@@ -60,7 +60,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="1">
-          <el-tooltip content="如果绑定了日历模版,则系统会自动根据模版的数据值来判断该日历是否完成." effect="dark" placement="top">
+          <el-tooltip content="如果绑定了绑定用户行为,则系统会自动根据模版的数据值来判断该日历是否完成." effect="dark" placement="top">
             <el-icon>
               <QuestionFilled />
             </el-icon>
@@ -168,6 +168,7 @@
 
 <script setup name="UserCalendarForm">
   import { createUserCalendar, editUserCalendar, getUserCalendar } from "@/api/data/userCalendar";
+  import { getBehaviorTemplateUserTree } from "@/api/behavior/behaviorTemplate";
   import { getCalendarTemplateUserTree } from "@/api/data/calendarTemplate";
   import { parseStatBindConfigs } from "@/api/report/bind/statBindConfig";
   import { generateFcRules, getBindValues, setBindValues } from "@/utils/formCreateUtils";
@@ -190,7 +191,7 @@
   const periodOptions = ref([]);
   const periodValues = ref([]);
   const periodValueOptions = ref([]);
-  const calendarTemplateOptions = ref([]);
+  const behaviorTemplateOptions = ref([]);
   const finishTypeOptions = ref([]);
   const sourceTypeOptions = ref([]);
 
@@ -252,7 +253,7 @@
     if (form.value.templateId != null) {
       //return;
     }
-    loadStatBindConfigs(id, 'CALENDAR', form.value.bindValues);
+    loadStatBindConfigs(id, 'BEHAVIOR', form.value.bindValues);
   }
 
   /** 获取值配置列表列表 */
@@ -284,7 +285,7 @@
         getUserCalendar(id).then(response => {
           form.value = response;
           if (!proxy.isEmpty(form.value.templateId)) {
-            loadStatBindConfigs(form.value.templateId, 'CALENDAR', form.value.bindValues);
+            loadStatBindConfigs(form.value.templateId, 'BEHAVIOR', form.value.bindValues);
           }
           loadPeriodValueOptions();
           if (proxy.isEmpty(response.periodValues)) {
@@ -306,8 +307,8 @@
   defineExpose({ openForm });
 
   function loadOptions() {
-    getCalendarTemplateUserTree().then(response => {
-      calendarTemplateOptions.value = response;
+    getBehaviorTemplateUserTree().then(response => {
+      behaviorTemplateOptions.value = response;
     });
 
   }

@@ -100,19 +100,19 @@
             <el-input v-model="form.unit" style="width: 230px" placeholder="" />
           </el-form-item>
         </el-col>
-      </el-row>
-      <el-row>
         <el-col :span="12">
-          <el-form-item label="业务代码" prop="bussKey">
-            <el-select v-model="form.bussKey" style="width: 230px" placeholder="请选择">
+          <el-form-item label="业务来源" prop="source">
+            <el-select v-model="form.source" style="width: 230px" placeholder="请选择">
               <el-option
-                v-for="dict in bussKeyOptions"
+                v-for="dict in sourceOptions"
                 :key="dict.id"
                 :label="dict.text"
                 :value="dict.id" />
             </el-select>
           </el-form-item>
         </el-col>
+      </el-row>
+      <el-row>
         <el-col :span="12">
           <el-form-item label="跳转地址" prop="url">
             <el-tree-select
@@ -183,7 +183,7 @@
   const planTemplateOptions = ref([]);
   const sqlTypeOptions = ref([]);
   const bussTypeOptions = ref([]);
-  const bussKeyOptions = ref([]);
+  const sourceOptions = ref([]);
   const urlOptions = ref([]);
 
   const data = reactive({
@@ -201,6 +201,9 @@
       ],
       bussType: [
         { required: true, message: "关联的业务不能为空", trigger: "blur" }
+      ],
+      source: [
+        { required: true, message: "业务来源不能为空", trigger: "blur" }
       ],
       sqlContent: [
         { required: true, message: "查询语句不能为空", trigger: "blur" }
@@ -276,8 +279,8 @@
     proxy.getEnumDict('BussType', 'FIELD', false).then(response => {
       bussTypeOptions.value = response;
     });
-    proxy.getDictItemTree('BUSS_KEY', false).then(response => {
-      bussKeyOptions.value = response;
+    proxy.getEnumDict('BussSource', 'FIELD', false).then(response => {
+      sourceOptions.value = response;
     });
     getFullRouters().then(response => {
       urlOptions.value = response;

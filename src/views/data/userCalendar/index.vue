@@ -116,6 +116,9 @@
       </el-table-column>
       <el-table-column label="标题" fixed="left" min-width="200" :show-overflow-tooltip="true">
         <template #default="scope">
+          <span v-if="scope.row.templateId!=null">
+            <el-icon><Share /></el-icon>
+          </span>    
           <span v-if="scope.row.finishType!=null">
            <span class="link-type" @click="handleEdit(scope.row)"><el-icon color="green"><Select /></el-icon>{{ scope.row.title }}</span>
           </span>
@@ -415,7 +418,7 @@
   /** 初始化 **/
   onMounted(() => {
     getList();
-    proxy.getEnumDict('UserCalendarSource', 'FIELD', false).then(response => {
+    proxy.getEnumDict('BussSource', 'FIELD', false).then(response => {
       sourceTypeOptions.value = response;
     });
     proxy.getEnumDict('UserCalendarFinishType', 'FIELD', false).then(response => {

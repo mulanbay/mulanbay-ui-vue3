@@ -59,17 +59,31 @@
         </el-col>
       </el-row>
       <el-row>
-        <el-col :span="24">
+        <el-col :span="23">
           <el-form-item label="查询语句" prop="sqlContent">
-            <el-input v-model="form.sqlContent" type="textarea" :rows="5" style="width: 580px" placeholder="请输入内容"></el-input>
+            <el-input v-model="form.sqlContent" type="textarea" :rows="6" style="width: 580px" placeholder="请输入内容"></el-input>
           </el-form-item>
+        </el-col>
+        <el-col :span="1">
+          <el-tooltip :content="sqlContentDesc" raw-content effect="dark" placement="top">
+            <el-icon>
+              <QuestionFilled />
+            </el-icon>
+          </el-tooltip>
         </el-col>
       </el-row>
       <el-row>
-        <el-col :span="24">
+        <el-col :span="23">
           <el-form-item label="附加条件" prop="extraSql">
             <el-input v-model="form.extraSql" style="width: 580px" placeholder="" />
           </el-form-item>
+        </el-col>
+        <el-col :span="1">
+          <el-tooltip content="如果执行附加条件,则在上面的查询语句需要添加{extra_sql}替换占位符" raw-content effect="dark" placement="top">
+            <el-icon>
+              <QuestionFilled />
+            </el-icon>
+          </el-tooltip>
         </el-col>
       </el-row>
       <el-row>
@@ -82,22 +96,22 @@
       <el-row>
         <el-col :span="6">
           <el-form-item label="月分析" prop="monthStat">
-            <el-switch v-model="form.monthStat"></el-switch>
+            <el-switch v-model="form.monthStat" :active-value="true" :inactive-value="false"></el-switch>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="天分析" prop="dayStat">
-            <el-switch v-model="form.dayStat"></el-switch>
+            <el-switch v-model="form.dayStat" :active-value="true" :inactive-value="false"></el-switch>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="小时分析" prop="hourStat">
-            <el-switch v-model="form.hourStat"></el-switch>
+            <el-switch v-model="form.hourStat" :active-value="true" :inactive-value="false"></el-switch>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="全天日历" prop="allDay">
-            <el-switch v-model="form.allDay"></el-switch>
+            <el-switch v-model="form.allDay" :active-value="true" :inactive-value="false"></el-switch>
           </el-form-item>
         </el-col>
       </el-row>
@@ -191,6 +205,16 @@
   const sourceOptions = ref([]);
   const urlOptions = ref([]);
 
+  const sqlContentDesc = ref(
+  '一共返回七列,分别为:<br>'+
+  '1. ID<br>'+
+  '2. 时间<br>'+
+  '3. 名称<br>'+
+  '4. 业务值<br>'+
+  '5. 单位<br>'+
+  '6. 持续天数<br>'+
+  '7. 内容详情<br>'
+  );
   const data = reactive({
     form: {},
     // 表单校验
@@ -316,11 +340,11 @@
       status: 'ENABLE',
       level: 3,
       dateRegion:false,
-      monthStat:false,
+      monthStat:true,
       dayStat:true,
       hourStat:true,
       allDay:true,
-      orderIndex: undefined,
+      orderIndex: 1,
       fromTemplateId: undefined,
       copyItems: true
     };
