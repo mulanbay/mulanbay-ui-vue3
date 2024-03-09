@@ -26,3 +26,11 @@ export function getSourceDetail(sourceId,bussType) {
     }
   })
 }
+
+export function getUserBehaviorWordCloudStat(query) {
+  return request({
+    url: '/userBehavior/wordCloudStat',
+    method: 'get',
+    params: query
+  })
+}

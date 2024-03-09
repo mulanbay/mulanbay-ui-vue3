@@ -82,7 +82,7 @@
 </template>
 
 <script setup name="UserRewardSourceDetail">
-  import { getUserRewardsourceDetail } from "@/api/data/userReward";
+  import { getUserRewardSourceDetail } from "@/api/data/userReward";
   import { getMessage } from "@/api/log/message";
 
   const { proxy } = getCurrentInstance();
@@ -112,7 +112,7 @@
     detailOpen.value = true;
     beanData.value ={};
     rewardData.value ={};
-    getUserRewardsourceDetail(id).then(response => {
+    getUserRewardSourceDetail(id).then(response => {
       beanData.value = response.beanData;
       rewardData.value = response.rewardData;
       loadMessage(response.rewardData.messageId);

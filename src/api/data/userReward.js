@@ -8,7 +8,7 @@ export function fetchList(query) {
   })
 }
 
-export function getUserRewardsourceDetail(id) {
+export function getUserRewardSourceDetail(id) {
   return request({
     url: '/userReward/sourceDetail',
     method: 'get',

@@ -230,9 +230,11 @@
           let textColor = 'black';
           let editable = item.sourceType=='MANUAL'&&item.period=='ONCE' ? true :false;
           let title = item.title;
+          let allDay = item.allDay;
           if(item.finishTime!=null){
             textColor = 'green';
             title = '[完成]'+title;
+            allDay = false;
           }
           let event = {
             id: item.id,
@@ -244,7 +246,7 @@
             backgroundColor:color,
             textColor: textColor,
             //display:'block',
-            allDay:item.allDay,
+            allDay:allDay,
             extendedProps:item
           };
           calendarEventList.value.push(event);

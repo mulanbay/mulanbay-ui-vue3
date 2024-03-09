@@ -53,7 +53,12 @@
       </el-table-column>
       <el-table-column label="调度名称" fixed="left" min-width="200px" :show-overflow-tooltip="true">
         <template #default="scope">
-          <span>{{ scope.row.taskTrigger.triggerName }}</span>
+          <span class="link-type" @click="showTaskTrigger(scope.row)">
+            {{ scope.row.taskTrigger.triggerName }}
+          </span>
+          <span v-if="scope.row.redoTimes>0">
+            <el-tag type="danger" size="small">重做</el-tag>
+          </span>
         </template>
       </el-table-column>
       <el-table-column label="业务日期" align="center" width="120">
@@ -175,7 +180,10 @@
 
     <!-- 调度日志信息 -->
     <LogInfoForm ref="logInfoFormRef" />
-
+    
+    <!-- 表单弹窗：添加/修改 -->
+    <TaskTriggerForm ref="formRef" @success="getList" />
+    
   </div>
 </template>
 
@@ -183,6 +191,7 @@
   import { fetchList, redoTaskLog } from "@/api/schedule/taskLog";
   import { getTaskTriggerTree } from "@/api/schedule/taskTrigger";
   import LogInfoForm from './lastInfo.vue'
+  import TaskTriggerForm from '../taskTrigger/form.vue'
 
   const { proxy } = getCurrentInstance();
   // 遮罩层
@@ -201,7 +210,8 @@
   const taskTriggerOptions = ref([]);
 
   const logInfoFormRef = ref();
-
+  const formRef = ref();
+  
   //日期范围快速选择
   const datePickerOptions = ref(proxy.datePickerOptions);
   const dateRange = ref([]);
@@ -254,6 +264,11 @@
   /** 日志信息按钮操作 */
   function showLogInfo(row) {
     logInfoFormRef.value.openLastInfo(null, row.logId);
+  }
+  
+  /** 调度器操作 */
+  function showTaskTrigger(row){
+    formRef.value.openForm(row.taskTrigger.triggerId, 'edit');
   }
 
   /** 调度执行时间分析 */
