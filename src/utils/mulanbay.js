@@ -374,7 +374,7 @@ export const progressColors2 = [
   {color: '#5cb87a', percentage: 100}
 ]
 
-export const calendarColors = ['#9e5fff','#e6a23c','#00a9ff','#ff5583','#03bd9e','#191970','#668B8B','#720f00','#008B45','#A0522D','#104E8B'];
+export const calendarColors = ['#FF6F61','#87CEEB','#8A2BE2','#E6E6FA','#7FFF00','#B76E79','#cd3e64','#FF8C00','#0047AB','#008080','#EEDD82','#43464B'];
 
 /**
  * 获取日历颜色
@@ -384,5 +384,5 @@ export function getCalendarColor(sourceTypeIndex){
   if(sourceTypeIndex==null){
     sourceTypeIndex = 0;
   }
-	return calendarColors[sourceTypeIndex%10];
+	return calendarColors[sourceTypeIndex%12];
 }

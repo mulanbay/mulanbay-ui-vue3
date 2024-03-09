@@ -31,6 +31,12 @@
             <svg-icon icon-class="plan" @click="dispatchFastMenu('UserPlanStatList')"/>
           </span>
         </el-tooltip>
+        
+        <el-tooltip content="我的日历" effect="dark" placement="bottom">
+          <span class="right-menu-item hover-effect">
+            <svg-icon icon-class="calendar" @click="dispatchFastMenu('UserCalendarCalendarList')"/>
+          </span>
+        </el-tooltip>
 
         <screenfull id="screenfull" class="right-menu-item hover-effect" />
 
