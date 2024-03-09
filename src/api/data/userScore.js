@@ -36,11 +36,11 @@ export function deleteUserScore(ids) {
   })
 }
 
-export function selfJudge(data) {
+export function userScoreSelfJudge(data) {
   return request({
     url: '/userScore/selfJudge',
     method: 'post',
-    params: data
+    data
   })
 }
 
@@ -48,7 +48,7 @@ export function reSaveUserScore(data) {
   return request({
     url: '/userScore/reSave',
     method: 'post',
-    params: data
+    data
   })
 }
 

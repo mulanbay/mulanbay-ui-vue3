@@ -110,6 +110,7 @@
   /** 打开弹窗 */
   const showData = async (id) => {
     detailOpen.value = true;
+    detailTitle.value = '积分详情,ID=['+id+']';
     beanData.value ={};
     rewardData.value ={};
     getUserRewardSourceDetail(id).then(response => {

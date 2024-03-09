@@ -89,6 +89,9 @@
       </el-col>
     </el-row>
 
+    <!-- 自我评测 -->
+    <LevelSelfJedge ref="levelSelfJedgeRef" />
+    
   </div>
 </template>
 
@@ -100,9 +103,12 @@
   import FastMenu from "./fastMenu.vue";
   import Archive from "./archive.vue";
   import UserSet from "./userSet.vue";
+  import LevelSelfJedge from '../../../config/levelConfig/selfJedge'
 
   const archiveRef = ref();
   const activeTab = ref("userinfo");
+  const levelSelfJedgeRef = ref();
+  
   const state = reactive({
     user: {}
   });
@@ -118,7 +124,7 @@
   };
 
   function handleSelfJudge() {
-
+    levelSelfJedgeRef.value.showData();
   }
 
   /** 初始化 **/

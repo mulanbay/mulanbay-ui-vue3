@@ -1,7 +1,34 @@
 <template>
 
   <!-- 详情对话框 -->
-  <el-dialog :title="detailTitle" v-model="detailOpen" width="650px" append-to-body class="customDialogCss">
+  <el-dialog :title="title" v-model="open" width="650px" append-to-body class="customDialogCss">
+    
+    <el-form ref="queryRef" :model="queryParams" label-width="120px" :inline="true">
+      <el-form-item label="用户评分模板" prop="scoreGroupId">
+        <el-select
+          v-model="queryParams.scoreGroupId"
+          placeholder="评分模板"
+          collapse-tags
+          style="width: 200px"
+        >
+          <el-option
+            v-for="dict in scoreGroupOptions"
+            :key="dict.id"
+            :label="dict.text"
+            :value="dict.id"
+          />
+        </el-select>
+        <el-tooltip content="不同的模板采用不同的评测标准" effect="dark" placement="top">
+          <el-icon>
+            <QuestionFilled />
+          </el-icon>
+        </el-tooltip>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" icon="UploadFilled" @click="handeSelfJudge" v-hasPermi="['data:userScore:selfJudge']">评测</el-button>
+      </el-form-item>
+    </el-form>
+    
     <!--列表数据-->
     <el-table
       v-loading="loading" 
@@ -61,27 +88,45 @@
 
 </template>
 
-<script setup name="UserScoreDetail">
-  import { getUserScoreScoreDetail } from "@/api/data/userScore";
+<script setup name="UserScoreSelfJudge">
+  import { userScoreSelfJudge } from "@/api/data/userScore";
+  import { getScoreGroupTree } from "@/api/config/scoreGroup";
 
   const { proxy } = getCurrentInstance();
   const formRef = ref();
 
   //可执行时间段
-  const detailTitle = ref('评分详情');
-  const detailOpen = ref(false);
+  const title = ref('自我评测');
+  const open = ref(false);
   const loading = ref(false);
+  
   const dataList = ref([]);
+  const scoreGroupOptions = ref([]);
+  const data = reactive({
+    queryParams: {
+      scoreGroupId: undefined
+    },
+    rules: {}
+  });
+  
+  const { queryParams, rules } = toRefs(data);
   
   // 定义 success 事件，用于操作成功后的回调
   const emit = defineEmits(['success']);
 
   /** 打开弹窗 */
-  const showData = async (scoreId) => {
-    detailOpen.value = true;
+  const showData = async (scoreGroupId) => {
+    open.value = true;
+    queryParams.value.scoreGroupId = scoreGroupId;
+    handeSelfJudge();
+  }
+  // 提供 open 方法，用于打开弹窗
+  defineExpose({ showData });
+
+  function handeSelfJudge(){
     dataList.value = [];
     loading.value = true;
-    getUserScoreScoreDetail(scoreId).then(response => {
+    userScoreSelfJudge(queryParams.value).then(response => {
       loading.value = false;
       let totalScore=0;
       let totalMaxScore=0;
@@ -112,11 +157,11 @@
       dataList.value.push(row);
     });
   }
-  // 提供 open 方法，用于打开弹窗
-  defineExpose({ showData });
-
+  
   /** 初始化 **/
   onMounted(() => {
-
+    getScoreGroupTree().then(response => {
+      scoreGroupOptions.value = response;
+    });
   })
 </script>

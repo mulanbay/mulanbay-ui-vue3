@@ -92,7 +92,7 @@
           </span>
         </template>
       </el-table-column>
-      <el-table-column label="积分值" align="center">
+      <el-table-column label="得分" align="center">
         <template #default="scope">
           <span>{{ scope.row.rewards }}</span>
         </template>

@@ -39,7 +39,7 @@
       </el-select>
     </el-form-item>
     <el-form-item label="默认支付方式">
-      <el-select v-model="form.payment" :style="{width: '100%'}" placeholder="请选择">
+      <el-select v-model="form.payment" :style="{width: '240px'}" placeholder="请选择">
         <el-option
           v-for="dict in paymentOptions"
           :key="dict.id"
@@ -49,14 +49,14 @@
       </el-select>
     </el-form-item>
     <el-form-item label="我的常驻城市" prop="residentCity">
-      <el-input v-model="form.residentCity" maxlength="50" />
+      <el-input v-model="form.residentCity" style="width: 240px" maxlength="50" />
     </el-form-item>
     <el-form-item label="用户评分模板" prop="scoreGroupId">
       <el-select
         v-model="form.scoreGroupId"
         placeholder="评分模板"
         collapse-tags
-        style="width: 200px"
+        style="width: 240px"
       >
         <el-option
           v-for="dict in scoreGroupOptions"
@@ -71,13 +71,17 @@
         </el-icon>
       </el-tooltip>
       <el-button link type="primary" @click="handleSelfJudge" v-hasPermi="['data:userScore:selfJudge']">
-        评测
+        自我评测
       </el-button>
     </el-form-item>
     <el-form-item>
       <el-button type="primary" @click="submitForm">保存</el-button>
     </el-form-item>
   </el-form>
+  
+  <!-- 自我评测 -->
+  <UserScoreSelfJedge ref="userScoreSelfJedgeRef" />
+  
 </template>
 
 <script setup>
@@ -85,6 +89,7 @@
   import { getGoodsTypeTree } from "@/api/consume/goodsType";
   import { getConsumeSourceTree } from "@/api/consume/consumeSource";
   import { getScoreGroupTree } from "@/api/config/scoreGroup";
+  import UserScoreSelfJedge from '../../../data/userScore/selfJedge'
 
   const { proxy } = getCurrentInstance();
   
@@ -92,6 +97,8 @@
   const sourceOptions = ref([]);
   const paymentOptions = ref([]);
   const scoreGroupOptions = ref([]);
+  
+  const userScoreSelfJedgeRef = ref();
 
   const data = reactive({
     form: {},
@@ -138,7 +145,7 @@
   
   /** 评测 */
   function handleSelfJudge(){
-    
+    userScoreSelfJedgeRef.value.showData(form.value.scoreGroupId);
   }
   
   /** 提交按钮 */
