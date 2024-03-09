@@ -50,6 +50,11 @@
             </el-tooltip>
           </span>
           <span class="link-type" @click="handleEdit(scope.row)">{{ scope.row.funcName }}</span>
+          <span v-if="scope.row.status=='DISABLE'">
+            <el-tooltip content="功能已经关闭." effect="dark" placement="top">
+              <el-icon color="red"><CircleCloseFilled /></el-icon>
+            </el-tooltip>
+          </span>
         </template>
       </el-table-column>
       <el-table-column prop="icon" label="图标" width="80">
@@ -88,24 +93,34 @@
           <span>{{ scope.row.orderIndex }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="路由地址" :show-overflow-tooltip="true">
+      <el-table-column label="路由地址" min-width="140px" :show-overflow-tooltip="true">
         <template #default="scope">
           <span>{{ scope.row.path }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="组件路径" min-width="200px" :show-overflow-tooltip="true">
+      <el-table-column label="组件路径" min-width="140px" :show-overflow-tooltip="true">
         <template #default="scope">
           <span>{{ scope.row.component }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="路由" align="center">
+      <el-table-column label="路由" align="center" width="95">
         <template #default="scope">
-          <el-switch v-model="scope.row.router" disabled></el-switch>
+          <span v-if="scope.row.router==true">
+            <el-icon color="green"><CircleCheckFilled /></el-icon>
+          </span>
+          <span v-else>
+            <el-icon color="red"><CircleCloseFilled /></el-icon>
+          </span>
         </template>
       </el-table-column>
-      <el-table-column label="菜单可见" align="center">
+      <el-table-column label="菜单可见" align="center" width="95">
         <template #default="scope">
-          <el-switch v-model="scope.row.visible" disabled></el-switch>
+          <span v-if="scope.row.visible==true">
+            <el-icon color="green"><CircleCheckFilled /></el-icon>
+          </span>
+          <span v-else>
+            <el-icon color="red"><CircleCloseFilled /></el-icon>
+          </span>
         </template>
       </el-table-column>
       <el-table-column label="请求地址" min-width="180px" :show-overflow-tooltip="true">
@@ -118,19 +133,18 @@
           <span>{{ scope.row.supportMethods }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="状态" align="center" width="100">
+      <el-table-column label="状态" align="center" width="95">
         <template #default="scope">
-          <el-switch v-model="scope.row.status" disabled active-value="ENABLE" inactive-value="DISABLE"></el-switch>
+          <span v-if="scope.row.status=='ENABLE'">
+            <el-icon color="green"><CircleCheckFilled /></el-icon>
+          </span>
+          <span v-else>
+            <el-icon color="red"><CircleCloseFilled /></el-icon>
+          </span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" fixed="right" width="280" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" fixed="right" width="200" class-name="small-padding fixed-width">
         <template #default="scope">
-          <el-button
-            type="success"
-            link
-            icon="edit"
-            @click="handleEdit(scope.row)"
-            v-hasPermi="['auth:sysFunc:edit']">修改</el-button>
           <el-button
             type="primary"
             link
@@ -138,7 +152,7 @@
             @click="handleCreate(scope.row)"
             v-hasPermi="['auth:sysFunc:create']">新增</el-button>
           <el-button
-            type="primary"
+            type="success"
             link
             icon="plus"
             @click="handleCopy(scope.row)"

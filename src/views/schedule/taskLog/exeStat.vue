@@ -141,7 +141,12 @@
       eventDrop: handleEventDrop, // 拖动日历日程事件
       eventResize: handleEventResize, // 修改日历日程大小事件
       eventDidMount: handleEventDidMount, // 安装提示事件
-      events: calendarEventList
+      events: calendarEventList,
+      eventTimeFormat: { // like '14:30:00'
+        hour: '2-digit',
+        minute: '2-digit',
+        meridiem: false
+      }
     },
     queryParams: {
       triggerId: undefined

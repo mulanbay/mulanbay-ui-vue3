@@ -122,7 +122,9 @@
       <el-table-column label="名称" fixed="left" min-width="200px" :show-overflow-tooltip="true">
         <template #default="scope">
           <span v-if="scope.row.triggerStatus=='DISABLE'">
-            <el-icon color="red"><CircleCloseFilled /></el-icon>
+             <el-tooltip content="调度已经关闭." effect="dark" placement="top">
+               <el-icon color="red"><CircleCloseFilled /></el-icon>
+             </el-tooltip>
           </span>
           <span v-if="scope.row.executing==true" class="link-type" @click="handleUpdate(scope.row)" style="color:red ;">
             <i class="el-icon-loading"></i> {{ scope.row.triggerName+'[执行中]' }}
@@ -153,7 +155,7 @@
           </span>
         </template>
       </el-table-column>
-      <el-table-column label="距离下一次执行还有" align="center" min-width="160px" :show-overflow-tooltip="true">
+      <el-table-column label="距离下一次执行" align="center" min-width="140px" :show-overflow-tooltip="true">
         <template #default="scope">
           <span v-if="scope.row.tillNextExecuteTime<=60" style="color:red ;">
             {{ tillNowString(scope.row.tillNextExecuteTime) }}
@@ -169,22 +171,7 @@
           </span>
         </template>
       </el-table-column>
-      <el-table-column label="部署点" align="center">
-        <template #default="scope">
-          <span>{{ scope.row.deployId }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="首次执行时间" align="center" width="180">
-        <template #default="scope">
-          <span>{{ scope.row.firstExecuteTime }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="下一次执行时间" align="center" width="180">
-        <template #default="scope">
-          <span>{{ scope.row.nextExecuteTime==null ? scope.row.firstExecuteTime : scope.row.nextExecuteTime }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="最后一次执行结果" align="center" width="160">
+      <el-table-column label="最新执行结果" align="center" width="120">
         <template #default="scope">
           <span v-if="scope.row.lastExecuteResult==null || scope.row.lastExecuteResult==''">
             --
@@ -208,6 +195,21 @@
               {{ scope.row.lastExecuteResultName }}
             </span>
           </span>
+        </template>
+      </el-table-column>
+      <el-table-column label="部署点" align="center">
+        <template #default="scope">
+          <span>{{ scope.row.deployId }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="首次执行时间" align="center" width="180">
+        <template #default="scope">
+          <span>{{ scope.row.firstExecuteTime }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="下一次执行时间" align="center" width="180">
+        <template #default="scope">
+          <span>{{ scope.row.nextExecuteTime==null ? scope.row.firstExecuteTime : scope.row.nextExecuteTime }}</span>
         </template>
       </el-table-column>
       <el-table-column label="最后一次执行时间" align="center" min-width="200px">
@@ -291,17 +293,13 @@
           </span>
         </template>
       </el-table-column>
-      <el-table-column label="支持分布式" align="center" width="100">
+      <el-table-column label="分布式" align="center" width="80">
         <template #default="scope">
           <span v-if="scope.row.distriable==true">
-            <el-icon color="green">
-              <Check />
-            </el-icon>
+            <el-icon color="green"><CircleCheckFilled /></el-icon>
           </span>
           <span v-else>
-            <el-icon color="red">
-              <Close />
-            </el-icon>
+            <el-icon color="red"><CircleCloseFilled /></el-icon>
           </span>
         </template>
       </el-table-column>
@@ -320,9 +318,14 @@
           <span>{{ scope.row.timeout }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="需要检查唯一" align="center" width="120">
+      <el-table-column label="唯一检验" align="center" width="100">
         <template #default="scope">
-          <el-switch v-model="scope.row.checkUnique" disabled></el-switch>
+          <span v-if="scope.row.checkUnique==true">
+            <el-icon color="green"><CircleCheckFilled /></el-icon>
+          </span>
+          <span v-else>
+            <el-icon color="red"><CircleCloseFilled /></el-icon>
+          </span>
         </template>
       </el-table-column>
       <el-table-column label="唯一性类型" align="center" width="120">
@@ -330,14 +333,24 @@
           <span>{{ scope.row.uniqueTypeName==null ? '--' : scope.row.uniqueTypeName}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="记录日志" align="center">
+      <el-table-column label="记录日志" align="center" width="100">
         <template #default="scope">
-          <el-switch v-model="scope.row.loggable" disabled></el-switch>
+          <span v-if="scope.row.loggable==true">
+            <el-icon color="green"><CircleCheckFilled /></el-icon>
+          </span>
+          <span v-else>
+            <el-icon color="red"><CircleCloseFilled /></el-icon>
+          </span>
         </template>
       </el-table-column>
-      <el-table-column label="需要提醒" align="center">
+      <el-table-column label="日志提醒" align="center" width="100">
         <template #default="scope">
-          <el-switch v-model="scope.row.notifiable" disabled></el-switch>
+          <span v-if="scope.row.notifiable==true">
+            <el-icon color="green"><CircleCheckFilled /></el-icon>
+          </span>
+          <span v-else>
+            <el-icon color="red"><CircleCloseFilled /></el-icon>
+          </span>
         </template>
       </el-table-column>
       <el-table-column label="创建时间" align="center" width="180">

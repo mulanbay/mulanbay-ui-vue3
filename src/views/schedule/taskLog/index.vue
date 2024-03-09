@@ -101,7 +101,7 @@
             </span>
           </el-tooltip>
           <el-divider direction="vertical"></el-divider>
-          <el-tooltip class="box-item" effect="dark" content="结果统计" placement="top">
+          <el-tooltip class="box-item" effect="dark" content="执行统计" placement="top">
             <span class="link-type" @click="handleExeStat(scope.row)"><el-icon>
                 <Compass />
               </el-icon>
