@@ -55,14 +55,6 @@
           v-hasPermi="['system:command:delete']">删除
         </el-button>
       </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="danger"
-          icon="delete"
-          @click="handleSystemLock"
-          v-hasPermi="['system:system:lock']">锁定系统
-        </el-button>
-      </el-col>
     </el-row>
 
     <!--列表数据-->
@@ -98,9 +90,14 @@
           <span>{{ scope.row.levelName }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="状态" align="center" width="100">
+      <el-table-column label="状态" align="center" width="80">
         <template #default="scope">
-          <el-switch v-model="scope.row.status" active-value="ENABLE" inactive-value="DISABLE" disabled></el-switch>
+          <span v-if="scope.row.status=='ENABLE'">
+            <el-icon color="green"><CircleCheckFilled /></el-icon>
+          </span>
+          <span v-else>
+            <el-icon color="red"><CircleCloseFilled /></el-icon>
+          </span>
         </template>
       </el-table-column>
       <el-table-column label="排序号" align="center">

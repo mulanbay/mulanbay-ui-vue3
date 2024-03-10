@@ -14,10 +14,10 @@
             :value="dict.id" />
         </el-select>
       </el-form-item>
-      <el-form-item label="类型" prop="type">
+      <el-form-item label="预算类型" prop="type">
         <el-select
           v-model="queryParams.type"
-          placeholder="类型"
+          placeholder="预算类型"
           clearable
           style="width: 120px">
           <el-option
@@ -27,10 +27,10 @@
             :value="dict.id" />
         </el-select>
       </el-form-item>
-      <el-form-item label="周期" prop="period">
+      <el-form-item label="预算周期" prop="period">
         <el-select
           v-model="queryParams.period"
-          placeholder="周期"
+          placeholder="预算周期"
           clearable
           style="width: 120px">
           <el-option

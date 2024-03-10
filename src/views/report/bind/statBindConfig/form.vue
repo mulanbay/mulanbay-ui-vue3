@@ -114,6 +114,7 @@
               placeholder="枚举字段"
               collapse-tags
               style="width: 230px"
+              @change="handleEnumIdTypeChange"
             >
               <el-option
                 v-for="dict in enumIdTypeOptions"
@@ -271,6 +272,18 @@
     }
     if(source=='ENUM'){
       form.value.enumIdType = 'ORDINAL';
+    }
+  }
+  
+  function handleEnumIdTypeChange(enumIdType){
+    if(enumIdType=='FIELD'){
+      form.value.valueClass = 'STRING';
+    }
+    if(enumIdType=='ORDINAL'){
+      form.value.valueClass = 'SHORT';
+    }
+    if(enumIdType=='VALUE'){
+      form.value.valueClass = 'INTEGER';
     }
   }
   

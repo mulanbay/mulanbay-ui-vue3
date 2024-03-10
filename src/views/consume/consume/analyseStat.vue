@@ -23,7 +23,7 @@
             :value="dict.id" />
         </el-select>
       </el-form-item>
-      <el-form-item v-show="moreCdn==true" label="名称检索" prop="roleName">
+      <el-form-item v-show="moreCdn==true" label="名称检索" prop="name">
         <el-input
           v-model="queryParams.name"
           placeholder="请输入名称"
