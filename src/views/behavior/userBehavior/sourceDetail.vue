@@ -67,6 +67,20 @@
         </template>
         {{ beanData.bussDay}}
       </el-descriptions-item>
+      <el-descriptions-item>
+        <template #label>
+          <div class="cell-item">
+            <el-icon><QuartzWatch /></el-icon>
+            全天日历
+          </div>
+        </template>
+        <span v-if="beanData.allDay==true">
+          <el-icon color="green"><CircleCheckFilled /></el-icon>
+        </span>
+        <span v-else>
+          <el-icon color="red"><CircleCloseFilled /></el-icon>
+        </span>
+      </el-descriptions-item>
     </el-descriptions>
 
   </el-dialog>

@@ -92,7 +92,7 @@
           </span>
         </template>
       </el-table-column>
-      <el-table-column label="参考范围" align="center" width="140">
+      <el-table-column label="参考范围" align="center" min-width="140px" :show-overflow-tooltip="true">
         <template #default="scope">
           <span>{{ formatScope(scope.row) }}</span>
         </template>

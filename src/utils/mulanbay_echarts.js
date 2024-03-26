@@ -2511,8 +2511,8 @@ export function createWorldCloudChartOption(chartData) {
       sizeRange: [24, 128],
       // 字体旋转角度的范围
       //文本旋转范围和步进度。文本将通过rotationStep:45在[- 90,90]范围内随机旋转
-      rotationRange: [-90, 90],
-      //rotationRange: [0, 0],
+      //rotationRange: [-90, 90],
+      rotationRange: [0, 0],
       rotationStep: 45,
       //可用的形状有(circle)圆形(默认)、(cardioid)心形，(diamond)菱形，(triangle-forward)三角形向前，(triangle)三角形，(pentagon)五边形和(star)星形。*/
       shape: 'diamond',
