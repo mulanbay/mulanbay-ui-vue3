@@ -160,7 +160,12 @@
       </el-table-column>
       <el-table-column label="状态" align="center" width="100">
         <template #default="scope">
-          <el-switch v-model="scope.row.status" active-value="ENABLE" inactive-value="DISABLE" disabled></el-switch>
+          <span v-if="scope.row.status=='ENABLE'">
+            <el-icon color="green"><CircleCheckFilled /></el-icon>
+          </span>
+          <span v-else>
+            <el-icon color="red"><CircleCloseFilled /></el-icon>
+          </span>
         </template>
       </el-table-column>
       <el-table-column label="新增流水" width="80" align="center">
@@ -227,9 +232,14 @@
           <span>{{ scope.row.lastPaidTime }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="配置提醒" align="center" width="100">
+      <el-table-column label="提醒" align="center" width="80">
         <template #default="scope">
-          <el-switch v-model="scope.row.remind" disabled></el-switch>
+          <span v-if="scope.row.remind==true">
+            <el-icon color="green"><CircleCheckFilled /></el-icon>
+          </span>
+          <span v-else>
+            <el-icon color="red"><CircleCloseFilled /></el-icon>
+          </span>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" width="160" fixed="right" class-name="small-padding fixed-width">

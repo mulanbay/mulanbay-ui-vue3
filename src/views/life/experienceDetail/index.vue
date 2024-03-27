@@ -1,7 +1,7 @@
 <template>
 
   <!-- 对话框 -->
-  <el-dialog :title="title" v-model="open" width="850px" append-to-body>
+  <el-dialog :title="title" v-model="open" width="900px" append-to-body>
     <el-form :model="queryParams" ref="queryRef" :inline="true" >
       <el-form-item label="起止日期" style="width: 308px">
         <el-date-picker
@@ -37,7 +37,7 @@
           <span>{{ scope.row.detailId }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="日期" align="center" width="120">
+      <el-table-column label="日期" fixed="left" align="center" width="120">
         <template #default="scope">
           <span class="link-type" @click="handleEdit(scope.row)">{{ scope.row.occurDate }}</span>
         </template>

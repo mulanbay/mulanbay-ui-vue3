@@ -86,49 +86,14 @@
       </el-table-column>
       <el-table-column label="标题" align="center" min-width="160px" :show-overflow-tooltip="true">
         <template #default="scope">
-          <span>{{ scope.row.title }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="内容" align="center" width="80">
-        <template #default="scope">
-          <span class="link-type" @click="showMsg('内容',scope.row.content)">
-            <el-icon>
-              <InfoFilled />
-            </el-icon>
-          </span>
-        </template>
-      </el-table-column>
-      <el-table-column label="异常类型" align="center" width="80">
-        <template #default="scope">
-          <span class="link-type" @click="showMsg('异常类型',scope.row.exceptionClassName)">
-            <el-icon>
-              <InfoFilled />
-            </el-icon>
+          <span class="link-type" @click="showDetail(scope.row)">
+            {{ scope.row.title }}
           </span>
         </template>
       </el-table-column>
       <el-table-column label="发生时间" align="center" width="180">
         <template #default="scope">
           <span>{{ scope.row.occurTime }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="请求参数" align="center" width="80">
-        <template #default="scope">
-          <span class="link-type" @click="showParasDetail(scope.row)">
-            <el-icon>
-              <Message />
-            </el-icon>
-          </span>
-        </template>
-      </el-table-column>
-      <el-table-column label="主键值" align="center" width="80">
-        <template #default="scope">
-          <span v-if="scope.row.idValue!=null" class="link-type" @click="showBeanDetail(scope.row)">
-            <el-icon>
-              <InfoFilled />
-            </el-icon>
-          </span>
-          <span v-else>--</span>
         </template>
       </el-table-column>
       <el-table-column label="日志级别" align="center" width="80">
@@ -197,13 +162,11 @@
       v-model:limit="queryParams.pageSize"
       @pagination="getList" />
 
-    <!-- 参数/主键详情 -->
-    <el-dialog :title="parasDetailTitle" width="650px" v-model="parasDetailOpen" append-to-body>
-      <ParasDetail ref="parasDetailRef"></ParasDetail>
-    </el-dialog>
-
     <!-- 系统代码 -->
     <SysCodeForm ref="sysCodeFormRef" />
+    
+    <!-- 日志详情 -->
+    <SysLogDetail ref="sysLogDetailRef" />
 
   </div>
 </template>
@@ -212,14 +175,12 @@
   import { fetchList, getBeanDetail } from "@/api/log/sysLog";
   import { getFuncTree } from "@/api/auth/sysFunc";
   import { getDomainClassList } from "@/api/common";
-  import ParasDetail from '../../common/jsonTreeTable'
+  import SysLogDetail from './detail.vue'
   import SysCodeForm from '../sysCode/form.vue'
-
-  //子页面对象
-  const parasDetailRef = ref();
 
   const { proxy } = getCurrentInstance();
 
+  const sysLogDetailRef = ref(true);
   const sysCodeFormRef = ref(true);
 
   // 遮罩层
@@ -243,12 +204,6 @@
   //查询条件更多属性 start
   const cdnTitle = ref("更多");
   const moreCdn = ref(false);
-
-  //请求参数
-  // 弹出层标题
-  const parasDetailTitle = ref("");
-  // 是否显示弹出层
-  const parasDetailOpen = ref(false);
 
   const logLevelOptions = ref([]);
   const funcOptions = ref([]);
@@ -287,43 +242,15 @@
     proxy.$router.push({ name: 'SysLogAnalyseStat', query: {} })
   }
 
-  /** 消息提示 */
-  function showMsg(title, content) {
-    proxy.$modal.msgInfo(title, content);
-  }
 
   /** 系统代码详情 */
   function showSysCode(row) {
-    sysCodeFormRef.value.openForm(row.errorCode, 'view');
+    sysCodeFormRef.value.openForm(row.errorCode, 'edit');
   }
 
-  /** 参数详情 */
-  function showParasDetail(row) {
-    let paras = row.paras;
-    if (proxy.isEmpty(paras)) {
-      proxy.$modal.msgWarning("无请求参数信息");
-      return;
-    }
-    parasDetailOpen.value = true;
-    parasDetailTitle.value = 'ID[' + row.id + ']请求参数详情';
-    //不等待第一次执行为空，未找到原因
-    setTimeout(function() {
-      parasDetailRef.value.showData(JSON.parse(paras));
-    }, 100);
-
-  }
-
-  /** 主键值详情 */
-  function showBeanDetail(row) {
-    proxy.$modal.loading("正在加载数据，请稍候！");
-    getBeanDetail(row.id).then(response => {
-      proxy.$modal.closeLoading();
-      parasDetailOpen.value = true;
-      parasDetailTitle.value = '操作对象(' + response.beanName + '),ID=' + response.idValue;
-      setTimeout(function() {
-        parasDetailRef.value.showData(response.beanData);
-      }, 100);
-    });
+  /** 详情 */
+  function showDetail(row) {
+    sysLogDetailRef.value.showData(row);
   }
 
   /** 查询列表 */

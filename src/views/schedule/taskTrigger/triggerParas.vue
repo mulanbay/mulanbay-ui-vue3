@@ -34,7 +34,7 @@
       resetBtn: true,
       form: {
         labelPosition: 'left',
-        labelWidth: '160px',
+        labelWidth: '180px',
         size: undefined,
         inline: false,
         hideRequiredAsterisk: false

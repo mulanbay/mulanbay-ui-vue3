@@ -169,11 +169,6 @@
           <span>{{ scope.row.remark }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="发生时间" align="center" width="180">
-        <template #default="scope">
-          <span>{{ scope.row.occurDate }}</span>
-        </template>
-      </el-table-column>
       <el-table-column label="创建时间" align="center" width="180">
         <template #default="scope">
           <span>{{ scope.row.createdTime }}</span>

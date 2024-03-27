@@ -275,7 +275,7 @@
     <FlowLogList ref="flowLogListRef" />
     
     <!-- 来源详情 -->
-    <SourceDetail ref="sourceDetailRef" />
+    <SourceDetail ref="sourceDetailRef" @success="getList"/>
     
   </div>
 </template>

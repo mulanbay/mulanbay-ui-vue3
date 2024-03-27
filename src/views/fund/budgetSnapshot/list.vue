@@ -70,11 +70,22 @@
           <span>{{ scope.row.createdTime }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="操作" align="center" width="100" fixed="right" class-name="small-padding fixed-width">
+        <template #default="scope">
+          <el-button
+            link
+            type="success"
+            icon="refresh"
+            @click="handleRestat(scope.row)">重新统计
+          </el-button>
+        </template>
+      </el-table-column>
     </el-table>
   </div>
 </template>
 
 <script setup name="BudgetSnapshotList">
+  import { reSaveBudgetLog } from "@/api/fund/budgetLog";
   const { proxy } = getCurrentInstance();
 
   const loading = ref(false);
@@ -92,6 +103,21 @@
   function showHistory(row) {
     //路由定向
     proxy.$router.push({ name: 'BudgetSnapshotHistory', query: { budgetId: row.budgetId } })
+  }
+  
+  /** 重新统计 */
+  function handleRestat(row){
+    let logId = row.budgetLogId;
+    proxy.$confirm('是否要重新统计该条记录?', "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(function() {
+        return reSaveBudgetLog(logId);
+      }).then(() => {
+        //getList();
+        proxy.$modal.msgSuccess("统计成功");
+      }).catch(function() {});
   }
   
   // 提供 open 方法，用于打开弹窗

@@ -103,6 +103,7 @@
     loadSportTree();
     if (sportId != null) {
       queryParams.value.sportId = sportId;
+      handleQuery();
     }
     //getList();
   }

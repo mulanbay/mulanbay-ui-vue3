@@ -80,6 +80,11 @@
           </span>
         </template>
       </el-table-column>
+      <el-table-column label="睡眠质量"  align="center" width="120">
+        <template #default="scope">
+          <span>{{ scope.row.quality }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="首次醒来时间" align="center" width="120">
         <template #default="scope">
           <span v-if="scope.row.fwpTime!=null">
@@ -113,11 +118,6 @@
       <el-table-column label="起床时长" align="center" width="120">
         <template #default="scope">
           {{ formatGetUpTimes(scope.row) }}
-        </template>
-      </el-table-column>
-      <el-table-column label="睡眠质量"  align="center" width="140">
-        <template #default="scope">
-          <el-rate v-model="scope.row.quality" disabled></el-rate>
         </template>
       </el-table-column>
       <el-table-column label="浅睡时长" align="center" width="120">

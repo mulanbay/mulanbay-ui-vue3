@@ -115,7 +115,9 @@
   const showData = async (startDate,endDate) => {
     open.value = true;
     title.value = '用药统计';
-    dateRange.value = [startDate,endDate];
+    if(startDate!=null&&endDate!=null){
+      dateRange.value = [startDate,endDate];
+    }
     getList();
   }
 

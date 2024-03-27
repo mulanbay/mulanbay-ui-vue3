@@ -32,6 +32,12 @@
           </span>
         </el-tooltip>
         
+        <el-tooltip content="财务速览" effect="dark" placement="bottom">
+          <span class="right-menu-item hover-effect">
+            <svg-icon icon-class="fund" @click="dispatchFastMenu('Finance')"/>
+          </span>
+        </el-tooltip>
+        
         <el-tooltip content="我的日历" effect="dark" placement="bottom">
           <span class="right-menu-item hover-effect">
             <svg-icon icon-class="calendar" @click="dispatchFastMenu('UserCalendarCalendarList')"/>

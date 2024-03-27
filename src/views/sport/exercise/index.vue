@@ -205,16 +205,16 @@
       <el-table-column label="统计分析" align="center">
         <el-table-column label="里程碑" align="center">
           <template #default="scope">
-            <span class="link-type" @click="handleAchieveMilestone(scope.row.exerciseId)"><el-icon>
-                <Histogram />
-              </el-icon></span>
+            <span class="link-type" @click="handleAchieveMilestone(scope.row.exerciseId)">
+              <el-icon><Histogram /></el-icon>
+            </span>
           </template>
         </el-table-column>
         <el-table-column label="身体近况" align="center">
           <template #default="scope">
-            <span class="link-type" @click="showBodyAnalyse()"><el-icon>
-                <Histogram />
-              </el-icon></span>
+            <span class="link-type" @click="showBodyAnalyse()">
+              <el-icon><VideoCameraFilled /></el-icon>
+            </span>
           </template>
         </el-table-column>
       </el-table-column>
@@ -327,10 +327,12 @@
     }
   }
 
-  //刷新
+  /** 身体分析 */
   function showBodyAnalyse() {
-    refreshRef.value.openRefresh();
+    //路由定向
+    proxy.$router.push({name:'BodyAbnormalAnalyse',query: {name:'心脏',groupField:'ORGAN'}})
   }
+  
 
   /** 统计 */
   function handleMultiStat() {

@@ -59,7 +59,7 @@
 
   //日期范围快速选择
   const datePickerOptions = ref(proxy.datePickerOptions);
-  const dateRange = ref([]);
+  const dateRange = ref(proxy.getYearDateRange(0));
 
   const data = reactive({
     queryParams: {

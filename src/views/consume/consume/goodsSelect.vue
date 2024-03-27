@@ -168,7 +168,7 @@
                 <el-button
                   link
                   type="success"
-                  icon="plus"
+                  icon="Select"
                   @click="handleSelect(scope.row)">选择
                 </el-button>
               </span>

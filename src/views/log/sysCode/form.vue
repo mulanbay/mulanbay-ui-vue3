@@ -166,12 +166,13 @@
     open.value = true;
     resetForm();
     formType.value = type;
-    if (code != null) {
+    if (type == 'edit') {
       title.value = "修改";
       try {
         formLoading.value = true;
         getSysCode(code).then(response => {
           if (response == null) {
+            formType.value ='create';
             proxy.$modal.msgError("未找到相关代码");
             return;
           }

@@ -48,7 +48,7 @@
     <FullCalendar ref="myCalendarRef" :options="calendarOptions" @dateClick="handleCalendarDateClick" />
     
     <!-- 来源详情 -->
-    <SourceDetail ref="sourceDetailRef" />
+    <SourceDetail ref="sourceDetailRef" @success="handleDateRangeChange" />
     
   </div>
 </template>

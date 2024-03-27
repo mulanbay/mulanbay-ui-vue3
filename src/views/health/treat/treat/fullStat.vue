@@ -30,9 +30,9 @@
     <!--列表数据-->
     <el-table v-loading="loading" :data="dataList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="ID" type="index" align="center" width="80">
+      <el-table-column label="ID" type="index" fixed="left"  align="center" width="60">
       </el-table-column>
-      <el-table-column label="疾病标签" min-width="160px" :show-overflow-tooltip="true">
+      <el-table-column label="疾病标签" fixed="left"  min-width="160px" :show-overflow-tooltip="true">
         <template #default="scope">
           <span class="link-type" @click="showRelation(scope.row)">{{ scope.row.tags }}</span>
         </template>

@@ -134,7 +134,7 @@
           </span>
         </template>
       </el-table-column>
-      <el-table-column label="服务器节点" align="center" width="120">
+      <el-table-column label="服务器节点" align="center" min-width="120px" :show-overflow-tooltip="true">
         <template #default="scope">
           <span>{{ scope.row.deployId }}</span>
         </template>

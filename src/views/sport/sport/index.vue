@@ -74,7 +74,12 @@
       </el-table-column>
       <el-table-column label="状态" align="center" width="100">
         <template #default="scope">
-          <el-switch v-model="scope.row.status" active-value="ENABLE" inactive-value="DISABLE" disabled></el-switch>
+          <span v-if="scope.row.status=='ENABLE'">
+            <el-icon color="green"><CircleCheckFilled /></el-icon>
+          </span>
+          <span v-else>
+            <el-icon color="red"><CircleCloseFilled /></el-icon>
+          </span>
         </template>
       </el-table-column>
       <el-table-column label="排序号" align="center">
@@ -123,6 +128,9 @@
 
     <!-- 表单 -->
     <SportForm ref="formRef" @success="getList" />
+    
+    <!-- 统计 -->
+    <MultiStat ref="multiStatRef" />
 
   </div>
 </template>
@@ -130,9 +138,11 @@
 <script setup name="Sport">
   import { fetchList, deleteSport } from "@/api/sport/sport";
   import SportForm from './form.vue'
+  import MultiStat from '../exercise/multiStat.vue';
 
   const { proxy } = getCurrentInstance();
   const formRef = ref();
+  const multiStatRef = ref();
 
   // 遮罩层
   const loading = ref(true);
@@ -158,7 +168,7 @@
 
   /** 统计 */
   function handleMultiStat(sportId) {
-
+    multiStatRef.value.openForm(sportId);
   }
 
   /** 查询列表 */

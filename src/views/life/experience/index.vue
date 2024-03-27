@@ -71,12 +71,12 @@
     <!--列表数据-->
     <el-table v-loading="loading" :data="experienceList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="ID" fixed="left" prop="expId" sortable="custom" align="center" width="120">
+      <el-table-column label="ID" fixed="left" prop="expId" sortable="custom" align="center" width="80">
         <template #default="scope">
           <span>{{ scope.row.expId }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="名称" fixed="left" min-width="200px" :show-overflow-tooltip="true">
+      <el-table-column label="名称" fixed="left" min-width="250px" :show-overflow-tooltip="true">
         <template #default="scope">
           <span class="link-type" @click="handleEdit(scope.row)">{{ scope.row.expName }}</span>
         </template>
@@ -109,11 +109,6 @@
           <span>{{ scope.row.typeName }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="天数" align="center" width="80">
-        <template #default="scope">
-          <span>{{ scope.row.days }}</span>
-        </template>
-      </el-table-column>
       <el-table-column label="行程明细" width="100" align="center">
         <template #default="scope">
           <span class="link-type" @click="handleDetailList(scope.row)">
@@ -126,6 +121,11 @@
       <el-table-column label="花费" align="center" width="120">
         <template #default="scope">
           <span>{{ formatMoney(scope.row.cost) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="天数" align="center" width="80">
+        <template #default="scope">
+          <span>{{ scope.row.days }}</span>
         </template>
       </el-table-column>
       <el-table-column label="开始日期" align="center" width="120">

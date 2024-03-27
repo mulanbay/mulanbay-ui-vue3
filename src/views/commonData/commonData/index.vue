@@ -73,12 +73,12 @@
           <span>{{ scope.row.dataId }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="名称" fixed="left" min-width="160px" :show-overflow-tooltip="true">
+      <el-table-column label="名称" fixed="left" min-width="140px" :show-overflow-tooltip="true">
         <template #default="scope">
           <span class="link-type" @click="handleEdit(scope.row)">{{ scope.row.dataName }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="类型" align="center" width="80">
+      <el-table-column label="类型" align="center" width="120">
         <template #default="scope">
           <span>{{ scope.row.type.typeName }}</span>
         </template>

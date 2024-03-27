@@ -253,7 +253,7 @@
   /** 进度 */
   function formatPercent(row) {
     let pp = getPercent(row.cpPaidAmount, row.amount);
-    return parseInt(pp.toFixed(0));
+    return parseInt(pp);
   }
 
   /** 初始化 **/

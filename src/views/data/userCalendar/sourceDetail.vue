@@ -13,7 +13,10 @@
         <el-button type="primary" icon="Grid" @click="handleFlowLog" :disabled="calendarId==null" v-hasPermi="['data:userCalendar:flowLogList']">流水</el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="danger" icon="CircleClose" @click="detailOpen=false">关闭</el-button>
+        <el-button type="danger" icon="delete" @click="handleDelete">删除</el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button type="warning" icon="CircleClose" @click="detailOpen=false">关闭</el-button>
       </el-col>
     </el-row>
 
@@ -174,7 +177,7 @@
 </template>
 
 <script setup name="UserCalendarSourceDetail">
-  import { getUserCalendarSourceDetail } from "@/api/data/userCalendar";
+  import { getUserCalendarSourceDetail,deleteUserCalendar } from "@/api/data/userCalendar";
   import SourceDetail from '../common/beanDetail'
   import FinishSourceDetail from '../common/beanDetail'
   import CalendarDataInfo from '../../common/jsonTreeTable'
@@ -235,7 +238,23 @@
   // 提供 open 方法，用于打开弹窗
   defineExpose({ showData,showComputedData });
 
-
+  /** 删除按钮操作 */
+  function handleDelete() {
+    const deleteIds = calendarId.value;
+    proxy.$confirm('是否确认删除该条日历?', "警告", {
+      confirmButtonText: "确定",
+      cancelButtonText: "取消",
+      type: "warning"
+    }).then(function() {
+      return deleteUserCalendar(deleteIds);
+    }).then(() => {
+      proxy.$modal.msgSuccess("删除成功");
+      detailOpen.value = false;
+      // 发送操作成功的事件
+      emit('success');
+    }).catch(function() {});
+  }
+  
   function handleClick() {
 
   }

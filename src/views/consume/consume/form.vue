@@ -315,6 +315,8 @@
           if (type == 'copy') {
             title.value = "复制";
             form.value.consumeId = undefined;
+            form.value.buyTime = undefined;
+            form.value.consumeTime = undefined;
           } else {
             title.value = "修改";
           }
