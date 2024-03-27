@@ -59,7 +59,7 @@
 </template>
 
 <script setup name="BodyInfoYoyStat">
-  import { getBodyInfoYoyStat } from "@/api/health/body/BodyInfo";
+  import { getBodyInfoYoyStat } from "@/api/health/body/bodyInfo";
   import { getYearList } from "@/api/common";
   import {deepClone} from "@/utils/index";
   import * as echarts from 'echarts';
