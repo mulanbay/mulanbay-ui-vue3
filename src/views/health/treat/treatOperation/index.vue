@@ -222,7 +222,7 @@
 </template>
 
 <script setup name="TreatOperation">
-  import { fetchList, getTreatOperationCateTree, deleteTreatOperation, getTreatOperation } from "@/api/health/treat/TreatOperation";
+  import { fetchList, getTreatOperationCateTree, deleteTreatOperation, getTreatOperation } from "@/api/health/treat/treatOperation";
   import { getTreatCateTree } from "@/api/health/treat/treat";
   import { getDay, getDayByDate, getNowDateString,formatDays } from "@/utils/datetime";
   import TreatOperationForm from './form.vue'
