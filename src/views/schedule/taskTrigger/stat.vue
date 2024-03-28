@@ -25,6 +25,23 @@
           </el-form>
         </div>
       </el-col>
+      
+      <el-col :span="24" class="card-box">
+        <el-card>
+          <template #header>
+            <div class="card-header">
+              <span>最近调度</span>
+            </div>
+          </template>
+          <div>
+            <el-steps :active="recentScheduleSize" align-center finish-status="process">
+              <template v-for="item in recentScheduleList">
+                <el-step :title="item.key" :description="item.value"></el-step>
+              </template>
+            </el-steps>
+          </div>
+        </el-card>
+      </el-col>
 
       <el-col :span="14" class="card-box">
         <el-card>
@@ -195,7 +212,7 @@
 </template>
 
 <script setup name="TaskTriggerStat">
-  import { getTaskTriggerStat,getScheduleStat,getScheduleInfo } from "@/api/schedule/taskTrigger";
+  import { getTaskTriggerStat,getScheduleStat,getScheduleInfo,recentSchedules } from "@/api/schedule/taskTrigger";
   import * as echarts from 'echarts';
   import { createChart, createPieChartOption, createLineChartOption } from "@/utils/mulanbay_echarts";
 
@@ -215,7 +232,8 @@
   const scheduleData = ref({});
   const scheduleInfoLoading = ref(false);
   const cecJobsList = ref([]);
-  
+  const recentScheduleList = ref([]);
+  const recentScheduleSize= ref(0);
   const timelineLoading = ref(false);
   const timelineHeight = ref('450px');
 
@@ -239,6 +257,7 @@
   function handleQuery() {
     loadScheduleInfo();
     initTimeLineChart();
+    loadRecentSchedule();
   }
 
   /** 重置按钮操作 */
@@ -246,7 +265,6 @@
     proxy.resetForm("queryRef");
     handleQuery();
   }
-
 
   /** 自动刷新 */
   function updateRefreshInterval() {
@@ -256,6 +274,30 @@
         handleQuery();
       }, seconds.value * 1000)
     }
+  }
+  
+  /** 最近调度 */
+  function loadRecentSchedule() {
+    let para = {
+      page: 1,
+      pageSize : 5,
+      period: false
+    };
+    recentSchedules(para).then(response => {
+      recentScheduleList.value = [];
+      let datas = response;
+      const n = datas.length;
+      recentScheduleSize.value = n;
+      for (let i = 0; i < n; i++) {
+        let net = (datas[i].nextExecuteTime == null ? datas[i].firstExecuteTime : datas[i].nextExecuteTime);
+        let row ={
+          key : datas[i].triggerName,
+          value: net.substr(11,8),
+          nextExecuteTime: net
+        };
+        recentScheduleList.value.push(row);
+      }
+    });
   }
   
   /** 加载数据 */
@@ -314,6 +356,7 @@
     initChart();
     initTimeLineChart();
     loadScheduleInfo();
+    loadRecentSchedule();
     //每秒检查参数
     timer.value = setInterval(() => {
       handleQuery();

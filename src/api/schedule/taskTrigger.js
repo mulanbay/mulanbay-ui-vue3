@@ -132,10 +132,11 @@ export function refreshSchedule(data) {
   })
 }
 
-export function recentSchedules() {
+export function recentSchedules(query) {
   return request({
     url: '/taskTrigger/recentSchedules',
-    method: 'get'
+    method: 'get',
+    params: query
   })
 }
 

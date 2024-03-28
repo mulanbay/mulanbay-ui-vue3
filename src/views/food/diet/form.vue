@@ -59,7 +59,7 @@
               @blur="handleFoodsTagInputConfirm">
             </el-input>
             <el-button v-else type="primary" class="button-new-tag" @click="showFoodsTagInput">+ 新建</el-button>
-            <el-popover :visible="foodsTagsPopOpen" placement="top" :width="400">
+            <el-popover :visible="foodsTagsPopOpen" placement="bottom" :width="500">
               <el-tag
                 effect="plain"
                 :key="tag"

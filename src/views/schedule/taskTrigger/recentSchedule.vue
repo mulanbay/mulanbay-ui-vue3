@@ -76,7 +76,12 @@
   function loadRecentSchedule() {
     resetForm();
     recentScheduleLoading.value = true;
-    recentSchedules().then(response => {
+    let para = {
+      page: 0,
+      pageSize : 0,
+      period: true
+    };
+    recentSchedules(para).then(response => {
       recentScheduleLoading.value = false;
       let datas = response;
       const n = datas.length;
