@@ -41,6 +41,7 @@
         <el-button type="primary" icon="TrendCharts" @click="handleQuery" v-hasPermi="['data:userCalendar:calendarList']">查询</el-button>
         <el-button icon="refresh" @click="resetQuery">重置</el-button>
         <el-button type="warning" icon="more" @click="handleMoreCdn">{{cdnTitle}}</el-button>
+        <el-button type="primary" icon="plus" @click="handleCreate" v-hasPermi="['data:userCalendar:create']">新增</el-button>
       </el-form-item>
     </el-form>
 
@@ -49,6 +50,9 @@
     
     <!-- 来源详情 -->
     <SourceDetail ref="sourceDetailRef" @success="handleDateRangeChange" />
+    
+    <!-- 表单 -->
+    <UserCalendarForm ref="formRef" @success="handleDateRangeChange" />
     
   </div>
 </template>
@@ -59,6 +63,7 @@
   import { getFormatDate, getNowDateString } from "@/utils/datetime";
   import { deepClone } from "@/utils/index";
   import SourceDetail from './sourceDetail.vue'
+  import UserCalendarForm from './form.vue'
 
   import FullCalendar from '@fullcalendar/vue3'
   import dayGridPlugin from '@fullcalendar/daygrid'
@@ -72,6 +77,7 @@
   const sourceTypeOptions = ref([]);
   const calendarEventList = ref([]);
   const sourceDetailRef = ref();
+  const formRef = ref();
 
   const data = reactive({
     //参考:https://www.cnblogs.com/czk1634798848/p/13386178.html
@@ -319,6 +325,11 @@
   }
   /** 日历事件处理 end */
 
+  /** 新增按钮操作 */
+  function handleCreate(row) {
+    formRef.value.openForm(null, 'create');
+  }
+  
   /** 搜索按钮操作 */
   function handleQuery() {
     handleDateRangeChange();

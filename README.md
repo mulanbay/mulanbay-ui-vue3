@@ -125,7 +125,7 @@ release文件下载地址：https://gitee.com/mulanbay/mulanbay-ui-vue3/releases
         
         # 头像地址
         location /20 {
-            root   /mulanbay/server/mulanbayServer/avatar;
+            root   /your_path/avatar;
             try_files $uri $uri/ /index.html;
             index  index.html index.htm;
             charset   utf-8;
@@ -143,7 +143,8 @@ release文件下载地址：https://gitee.com/mulanbay/mulanbay-ui-vue3/releases
         
         # 前端地址
         location / {
-            root /mulanbay/server/mulanbayServer/ui/vue;
+            # (发布出的文件夹地址)
+            root /your_path/vue;
             charset   utf-8;
             try_files $uri $uri/ /index.html;
             index  index.html index.htm;            
@@ -152,6 +153,20 @@ release文件下载地址：https://gitee.com/mulanbay/mulanbay-ui-vue3/releases
 ```
 启动Nginx后，在浏览器输入: http://localhost/index,就可以访问了
 
+## 常见问题
+
+(1)npm install 运行失败
+解决方法:
+```
+Step 1:可以尝试先清除缓存
+npm cache clean -f
+
+Step 2:.删除node_modules目录
+
+Step 3:再次运行命令
+npm install
+
+```
 
 ## 项目截图
 
