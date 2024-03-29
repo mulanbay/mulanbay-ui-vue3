@@ -115,7 +115,12 @@
       </el-table-column>
       <el-table-column label="状态" align="center" width="80">
         <template #default="scope">
-          <el-switch v-model="scope.row.status" active-value="ENABLE" inactive-value="DISABLE"></el-switch>
+          <span v-if="scope.row.status=='ENABLE'">
+            <el-icon color="green"><CircleCheckFilled /></el-icon>
+          </span>
+          <span v-else>
+            <el-icon color="red"><CircleCloseFilled /></el-icon>
+          </span>
         </template>
       </el-table-column>
       <el-table-column label="角色授权" width="80" align="center">
@@ -274,43 +279,43 @@
 
   //强制离线
   function handleOffline() {
-    const id = this.ids.join(",")
-    this.$confirm('确认要强制离线编号为"' + id + '"的用户吗?', "警告", {
+    const id = ids.value.join(",");
+    proxy.$confirm('确认要强制离线编号为"' + id + '"的用户吗?', "警告", {
       confirmButtonText: "确定",
       cancelButtonText: "取消",
       type: "warning"
     }).then(function() {
       return offlineUser(id);
     }).then(() => {
-      this.msgSuccess("操作成功");
+      proxy.$modal.msgSuccess("操作成功");
     }).catch(function() {});
   }
 
   //格式化数据
   function handleDeleteUserData() {
-    const id = this.ids.join(",")
-    this.$confirm('确认要删除编号为"' + id + '"的用户数据吗?', "警告", {
+    const id = ids.value.join(",");
+    proxy.$confirm('确认要删除编号为"' + id + '"的用户数据吗?', "警告", {
       confirmButtonText: "确定",
       cancelButtonText: "取消",
       type: "warning"
     }).then(function() {
       return deleteUserData(id);
     }).then(() => {
-      this.msgSuccess("数据处理中，稍后请查收提醒消息及检查数据!");
+      proxy.$modal.msgSuccess("数据处理中，稍后请查收提醒消息及检查数据!");
     }).catch(function() {});
   }
 
   //初始化用户数据
   function handleInitUserData(row) {
-    const id = this.ids.join(",")
-    this.$confirm('确认要初始化编号为"' + id + '"的用户数据吗?', "警告", {
+    const id = ids.value.join(",");
+    proxy.$confirm('确认要初始化编号为"' + id + '"的用户数据吗?', "警告", {
       confirmButtonText: "确定",
       cancelButtonText: "取消",
       type: "warning"
     }).then(function() {
       return initUserData(id);
     }).then(() => {
-      this.msgSuccess("数据处理中，稍后请查收提醒消息及检查数据!");
+      proxy.$modal.msgSuccess("数据处理中，稍后请查收提醒消息及检查数据!");
     }).catch(function() {});
   }
 

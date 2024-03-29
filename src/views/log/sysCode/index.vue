@@ -92,17 +92,32 @@
       </el-table-column>
       <el-table-column label="是否提醒" align="center" width="100">
         <template #default="scope">
-          <el-switch v-model="scope.row.notifiable"></el-switch>
+          <span v-if="scope.row.notifiable==true">
+            <el-icon color="green"><CircleCheckFilled /></el-icon>
+          </span>
+          <span v-else>
+            <el-icon color="red"><CircleCloseFilled /></el-icon>
+          </span>
         </template>
       </el-table-column>
       <el-table-column label="实时提醒" align="center" width="100">
         <template #default="scope">
-          <el-switch v-model="scope.row.realtime"></el-switch>
+          <span v-if="scope.row.realtime==true">
+            <el-icon color="green"><CircleCheckFilled /></el-icon>
+          </span>
+          <span v-else>
+            <el-icon color="red"><CircleCloseFilled /></el-icon>
+          </span>
         </template>
       </el-table-column>
       <el-table-column label="记录日志" align="center" width="100">
         <template #default="scope">
-          <el-switch v-model="scope.row.loggable"></el-switch>
+          <span v-if="scope.row.loggable==true">
+            <el-icon color="green"><CircleCheckFilled /></el-icon>
+          </span>
+          <span v-else>
+            <el-icon color="red"><CircleCloseFilled /></el-icon>
+          </span>
         </template>
       </el-table-column>
       <el-table-column label="系统分类" align="center">
