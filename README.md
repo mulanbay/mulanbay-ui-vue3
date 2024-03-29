@@ -86,8 +86,7 @@ npm install --registry=https://registry.npm.taobao.org
 npm run dev
 ```
 
-浏览器访问 http://localhost
-（前后端可以联动访问，开发模式运行主要是修改代码后直接热部署看到实时修改的效果）
+浏览器访问 http://localhost/index，账号密码：mulanbay / 123456
 
 ### 正式环境
 
@@ -151,7 +150,8 @@ release文件下载地址：https://gitee.com/mulanbay/mulanbay-ui-vue3/releases
         }
     }
 ```
-启动Nginx后，在浏览器输入: http://localhost/index,就可以访问了
+
+启动Nginx后，在浏览器输入: http://localhost/index,账号密码：mulanbay / 123456
 
 ## 常见问题
 
