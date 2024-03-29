@@ -173,34 +173,27 @@ npm install
 ### 基于Vue的PC端
 <table>
     <tr>
-        <td><img src="https://images.gitee.com/uploads/images/2020/1116/153409_2b13c53b_352331.png"/></td>
-        <td><img src="https://images.gitee.com/uploads/images/2020/1116/153455_ed3c4b64_352331.png"/></td>
+        <td><img src="https://foruda.gitee.com/images/1711693189324687407/a51df822_352331.png"/></td>
+        <td><img src="https://foruda.gitee.com/images/1711693235503695130/4f105c03_352331.png"/></td>
     </tr>
     <tr>
-        <td><img src="https://images.gitee.com/uploads/images/2020/1116/153513_6448ba23_352331.png"/></td>
-        <td><img src="https://images.gitee.com/uploads/images/2020/1116/153529_a818b611_352331.png"/></td>
+        <td><img src="https://foruda.gitee.com/images/1711693264317884407/7ab05073_352331.png"/></td>
+        <td><img src="https://foruda.gitee.com/images/1711693286994521138/14032088_352331.png"/></td>
     </tr>
     <tr>
-        <td><img src="https://images.gitee.com/uploads/images/2020/1116/153547_c18e229c_352331.png"/></td>
-        <td><img src="https://images.gitee.com/uploads/images/2020/1116/153603_da9a31f2_352331.png"/></td>
+        <td><img src="https://foruda.gitee.com/images/1711693307354029381/4c82d80e_352331.png"/></td>
+        <td><img src="https://foruda.gitee.com/images/1711693329137030436/6607f869_352331.png"/></td>
     </tr>
     <tr>
-        <td><img src="https://images.gitee.com/uploads/images/2020/1215/175924_d4f8a9ac_352331.png"/></td>
-        <td><img src="https://images.gitee.com/uploads/images/2020/1215/175948_a77fa716_352331.png"/></td>
+        <td><img src="https://foruda.gitee.com/images/1711693349834291703/ad902327_352331.png"/></td>
+        <td><img src="https://foruda.gitee.com/images/1711693368615440821/e65729b1_352331.png"/></td>
     </tr>
     <tr>
-        <td><img src="https://images.gitee.com/uploads/images/2021/0324/163144_7da250d2_352331.png"/></td>
-        <td><img src="https://images.gitee.com/uploads/images/2021/0324/163209_772602c4_352331.png"/></td>
-    </tr>
-    <tr>
-        <td><img src="https://images.gitee.com/uploads/images/2021/0324/163237_935cfb98_352331.png"/></td>
-        <td><img src="https://images.gitee.com/uploads/images/2021/0324/163258_4e3143a0_352331.png"/></td>
-    </tr>
-    <tr>
-        <td><img src="https://images.gitee.com/uploads/images/2021/0324/163342_5eae1415_352331.png"/></td>
-        <td><img src="https://images.gitee.com/uploads/images/2021/0324/163359_69c7a4db_352331.png"/></td>
+        <td><img src="https://foruda.gitee.com/images/1711693388167077973/d06544c3_352331.png"/></td>
+        <td><img src="https://foruda.gitee.com/images/1711693405769701501/8c3e86a0_352331.png"/></td>
     </tr>
 </table>
+
 
 ### 微信公众号消息推送
 
