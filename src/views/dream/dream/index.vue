@@ -143,7 +143,13 @@
       </el-table-column>
       <el-table-column label="配置提醒" align="center" width="100">
         <template #default="scope">
-          <el-switch v-model="scope.row.remind" disabled ></el-switch>
+          <span v-if="scope.row.remind==true">
+            <el-icon color="green"><CircleCheckFilled /></el-icon>
+          </span>
+          <span v-else>
+            <el-icon color="red"><CircleCloseFilled /></el-icon>
+          </span>
+          <el-divider direction="vertical"></el-divider>
           <span class="link-type" @click="showRemind(scope.row)"><el-icon><Tools /></el-icon></span>
         </template>
       </el-table-column>
