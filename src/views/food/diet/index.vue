@@ -118,6 +118,11 @@
           </span>
         </template>
       </el-table-column>
+      <el-table-column label="就餐时间" align="center" width="180">
+        <template #default="scope">
+          <span>{{ scope.row.occurTime }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="标签" min-width="150px" :show-overflow-tooltip="true">
         <template #default="scope">
           <span>{{ scope.row.tags }}</span>
@@ -156,11 +161,6 @@
       <el-table-column label="地点" align="center">
         <template #default="scope">
           <span>{{ scope.row.location }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="就餐时间" align="center" width="180">
-        <template #default="scope">
-          <span>{{ scope.row.occurTime }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" width="140" fixed="right" class-name="small-padding fixed-width">

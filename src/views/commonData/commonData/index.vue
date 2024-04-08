@@ -78,7 +78,7 @@
           <span class="link-type" @click="handleEdit(scope.row)">{{ scope.row.dataName }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="类型" align="center" width="120">
+      <el-table-column label="类型" align="center" min-width="120px" :show-overflow-tooltip="true">
         <template #default="scope">
           <span>{{ scope.row.type.typeName }}</span>
         </template>
