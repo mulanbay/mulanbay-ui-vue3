@@ -33,6 +33,14 @@
           </el-icon>
         </el-tooltip>
       </el-form-item>
+      <el-form-item label="解锁码" prop="unlockCode">
+        <el-input v-model="form.unlockCode" placeholder="请输入解锁码" :style="{width: '300px'}" />
+        <el-tooltip content="如果不设置则由系统自动生成." effect="dark" placement="top">
+          <el-icon>
+            <QuestionFilled />
+          </el-icon>
+        </el-tooltip>
+      </el-form-item>
       <el-form-item >
           <el-row :gutter="20">
             <el-col :span="6"><div class="grid-content ep-bg-purple" /></el-col>
@@ -83,7 +91,8 @@
     form.value = {
       status: 9999,
       message: '系统被锁定',
-      expireTime: undefined
+      expireTime: undefined,
+      unlockCode: undefined
     };
     proxy.resetForm("formRef");
   }
