@@ -117,22 +117,24 @@
       <!--列表数据-->
       <el-table v-loading="loading" :data="consumeList">
         <el-table-column type="selection" width="55" align="center" />
-        <el-table-column label="商品名称" fixed="left" min-width="250px" :show-overflow-tooltip="true">
+        <el-table-column label="商品名称" fixed="left" min-width="280px" :show-overflow-tooltip="true">
           <template #default="scope">
+            <span v-if="scope.row.pid != null">
+              <span v-if="scope.row.pid == consumeInfo.consumeId">
+                <el-tag type="danger">下级商品</el-tag>
+              </span>
+            </span>
+            <span v-if="scope.row.consumeId == consumeInfo.consumeId" >
+              <el-tag type="danger">当前商品</el-tag>
+            </span>
             <span v-if="scope.row.tags != null">
-              <el-icon>
-                <Shop />
-              </el-icon>
+              <el-icon color="green"><Shop /></el-icon>
             </span>
             <span v-if="scope.row.pid != null">
-              <el-icon color="red">
-                <StarFilled />
-              </el-icon>
+              <el-icon color="red"><StarFilled /></el-icon>
             </span>
             <span v-if="scope.row.consumeType == 'TREAT'">
-              <el-icon color="yellowgreen">
-                <StarFilled />
-              </el-icon>
+              <el-icon color="yellowgreen"><StarFilled /></el-icon>
             </span>
             <span v-if="scope.row.secondhand==true" style="color: green;">
               <el-tag type="warning">二手</el-tag>
@@ -143,18 +145,6 @@
         <el-table-column label="购买日期" align="center" width="190">
           <template #default="scope">
             <span>{{ scope.row.buyTime }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="关联关系" fixed="left" align="center" width="80">
-          <template #default="scope">
-            <span v-if="scope.row.pid != null">
-              <span v-if="scope.row.pid == consumeInfo.consumeId" style="color: green;">
-                下级商品
-              </span>
-            </span>
-            <span v-if="scope.row.consumeId == consumeInfo.consumeId" style="color: rebeccapurple;">
-              当前商品
-            </span>
           </template>
         </el-table-column>
         <el-table-column label="购买来源" align="center" width="95">
@@ -178,7 +168,7 @@
               <el-button
                 link
                 type="success"
-                icon="plus"
+                icon="Connection"
                 @click="handleSetParent(scope.row)"
                 v-hasPermi="['consume:consume:setParent']">关联
               </el-button>

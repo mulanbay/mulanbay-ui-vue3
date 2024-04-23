@@ -218,7 +218,7 @@
     queryParams: {
       page: 1,
       pageSize: 10,
-      sortField: 'buyTime',
+      sortField: 'invalidTime',
       sortType: 'desc',
     }
   });

@@ -205,17 +205,17 @@
           <span>{{ scope.row.treat.confirmDisease }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="单价" align="center">
+      <el-table-column label="单价" align="center" width="100">
         <template #default="scope">
           <span>{{ formatMoney(scope.row.unitPrice) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="总价" align="center">
+      <el-table-column label="总价" align="center" width="100">
         <template #default="scope">
           <span>{{ formatMoney(scope.row.totalPrice) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="是否有效" align="center" width="100">
+      <el-table-column label="有效" align="center" width="60">
         <template #default="scope">
           <span v-if="scope.row.available==true">
             <el-icon color="green">
@@ -229,9 +229,14 @@
           </span>
         </template>
       </el-table-column>
-      <el-table-column label="提醒" align="center" width="100">
+      <el-table-column label="提醒" align="center" width="60">
         <template #default="scope">
-          <el-switch v-model="scope.row.remind" disabled=""></el-switch>
+          <span v-if="scope.row.remind==true">
+            <el-icon color="green"><CircleCheckFilled /></el-icon>
+          </span>
+          <span v-else>
+            <el-icon color="red"><CircleCloseFilled /></el-icon>
+          </span>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" width="80" fixed="right" class-name="small-padding fixed-width">

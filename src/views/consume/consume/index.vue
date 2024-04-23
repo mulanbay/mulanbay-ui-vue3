@@ -146,19 +146,13 @@
       <el-table-column label="商品名称" fixed="left" min-width="350px" :show-overflow-tooltip="true">
         <template #default="scope">
           <span v-if="scope.row.tags != null">
-            <el-icon>
-              <Shop />
-            </el-icon>
+            <el-icon color="green"><Shop /></el-icon>
           </span>
           <span v-if="scope.row.pid != null">
-            <el-icon color="red">
-              <StarFilled />
-            </el-icon>
+            <el-icon color="red"><StarFilled /></el-icon>
           </span>
           <span v-if="scope.row.consumeType == 'TREAT'">
-            <el-icon color="yellowgreen">
-              <StarFilled />
-            </el-icon>
+            <el-icon color="yellowgreen"><StarFilled /></el-icon>
           </span>
           <span v-if="scope.row.secondhand==true" style="color: green;">
             <el-tag type="warning">二手</el-tag>

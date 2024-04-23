@@ -1,7 +1,7 @@
 <template>
 
   <!-- 对话框 -->
-  <el-dialog :title="cascadeTitle" v-model="cascadeOpen" width="95%" append-to-body class="customDialogCss">
+  <el-dialog :title="cascadeTitle" v-model="cascadeOpen" width="950px" append-to-body class="customDialogCss">
 
     <el-tabs v-loading="loading" v-model="activeName" @tab-click="handleClick">
       <el-tab-pane label="上级商品" name="parentGoods">

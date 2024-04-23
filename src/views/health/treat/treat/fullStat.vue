@@ -234,6 +234,15 @@
     });
   }
   
+  /** 检测报告列表 */
+  function handleTreatTest(row) {
+    treatOperationTitle.value = '[' + row.tags + ']手术列表';
+    treatOperationOpen.value = true;
+    proxy.$nextTick(()=>{
+      treatOperationRef.value.showData(null,row.tags);
+    });
+  }
+  
   /** 查询列表 */
   function getList() {
     loading.value = true;

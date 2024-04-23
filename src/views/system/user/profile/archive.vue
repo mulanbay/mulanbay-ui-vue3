@@ -93,7 +93,7 @@
             </div>
             <div>
               <el-descriptions class="margin-top" :column="1" border labelStyle="width: 100px">
-                <el-descriptions-item>
+                <el-descriptions-item  label-class-name="my-label">
                   <template #label>
                     <el-icon>
                       <InfoFilled />
@@ -354,3 +354,11 @@
     });
   })
 </script>
+<style>
+  .my-label {
+    width: 100px;
+    color: #999;
+    font-weight: normal;
+    background: #fff;
+  }
+</style>

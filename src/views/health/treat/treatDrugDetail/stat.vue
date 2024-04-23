@@ -53,14 +53,9 @@
             <span>{{ scope.row.totalCount }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="用药天数" align="center">
+        <el-table-column label="用药天数" align="center" width="150px">
           <template #default="scope">
-            <span>{{ scope.row.days }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="用药周数" align="center">
-          <template #default="scope">
-            <span>{{ formatStar(scope.row) }}</span>
+            <span>{{ formatDrugDays(scope.row.days) }}</span>
           </template>
         </el-table-column>
         <el-table-column label="第一次用药时间" align="center" width="170px">
@@ -125,9 +120,9 @@
   defineExpose({ showData });
 
   /** 用药周数 */
-  function formatStar(row) {
-    let weeks = Math.round(row.days / 7);
-    return weeks;
+  function formatDrugDays(days) {
+    let weeks = Math.round(days / 7);
+    return days+'天'+'(计:'+weeks+'周)';
   }
 
   /** 搜索按钮操作 */

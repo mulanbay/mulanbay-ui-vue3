@@ -17,7 +17,7 @@
       <el-form-item v-if="queryParams.tags !=null" label="疾病标签" prop="tags">
         <el-input v-model="queryParams.tags" style="width: 240px" />
       </el-form-item>
-      <el-form-item label="名称" prop="name">
+      <el-form-item label="名称检索" prop="name">
         <el-input
           v-model="queryParams.name"
           placeholder="请输入名称"
