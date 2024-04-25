@@ -169,5 +169,7 @@ release download link：https://gitee.com/mulanbay/mulanbay-ui-vue3/releases
 ### Acknowledgment
 
 Thanks to JetBrains for their continued support of Mulanbay project by providing a free license for the full range of products.
+
 <img src="https://foruda.gitee.com/images/1712229322943756523/d28d99c2_352331.png" width="100px" height="100px">
+
 JetBrains OpenSourceSupport：https://jb.gg/OpenSourceSupport.
