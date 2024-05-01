@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <!-- 表单编辑对话框 -->
-    <el-dialog :title="title" v-model="open" width="870px" append-to-body>
+    <el-dialog :title="title" v-model="open" width="870px" append-to-body class="customDialogCss">
       <el-descriptions class="margin-top" :column="3" border v-loading="infoLoading">
         <el-descriptions-item>
           <template #label>
@@ -25,10 +25,10 @@
           <template #label>
             <div class="cell-item">
               <el-icon><Clock /></el-icon>
-              创建时间
+              预算/实际
             </div>
           </template>
-          {{ budgetLog.createdTime}}
+          {{ (budgetLog.totalAmount/budgetLog.budgetAmount*100).toFixed(0)+'%' }}
         </el-descriptions-item>
         <el-descriptions-item>
           <template #label>
@@ -61,7 +61,7 @@
           <template #label>
             <div class="cell-item">
               <el-icon><GoodsFilled /></el-icon>
-              总的消费值
+              总消费值
             </div>
           </template>
           {{ formatMoney(budgetLog.totalAmount)}}
@@ -79,10 +79,28 @@
           <template #label>
             <div class="cell-item">
               <el-icon><Shop /></el-icon>
-              收入
+              收入金额
             </div>
           </template>
           {{ formatMoney(budgetLog.incomeAmount)}}
+        </el-descriptions-item>
+        <el-descriptions-item>
+          <template #label>
+            <div class="cell-item">
+              <el-icon><Clock /></el-icon>
+              创建时间
+            </div>
+          </template>
+          {{ budgetLog.createdTime}}
+        </el-descriptions-item>
+        <el-descriptions-item>
+          <template #label>
+            <div class="cell-item">
+              <el-icon><Clock /></el-icon>
+              最后更新时间
+            </div>
+          </template>
+          {{ budgetLog.modifyTime}}
         </el-descriptions-item>
         <el-descriptions-item>
           <template #label>
@@ -97,7 +115,7 @@
       <el-divider content-position="center">
         <span class="table-title">
           <svg-icon icon-class="budget" />
-          明细
+          明细列表
         </span>
       </el-divider>
       

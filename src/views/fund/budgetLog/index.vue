@@ -68,7 +68,7 @@
       </el-table-column>
       <el-table-column label="名称" min-width="140px" fixed="left">
         <template #default="scope">
-          <span>{{ formartName(scope.row) }}</span>
+          <span class="link-type" @click="handleEdit(scope.row)">{{ formartName(scope.row) }}</span>
           <span v-if="scope.row.budget == null">
             <span v-if="scope.row.statPeriod == 'YEARLY'">
               <el-tag type="danger" >{{ scope.row.statPeriodName }}</el-tag>
@@ -76,13 +76,12 @@
            <span v-else>
              <el-tag type="success">{{ scope.row.statPeriodName }}</el-tag>
            </span>
-           <span class="link-type" @click="handlePeriodStat(scope.row)"><i class="el-icon-info"></i></span>
           </span>
         </template>
       </el-table-column>
       <el-table-column label="业务日期" align="center" width="100" fixed="left">
         <template #default="scope">
-          <span>{{ scope.row.bussKey }}</span>
+          <span class="link-type" @click="handleBudgetSnapshot(scope.row)">{{ scope.row.bussKey }}</span>
         </template>
       </el-table-column>
       <el-table-column label="来源" width="60px"  align="center">
@@ -116,29 +115,12 @@
           <span>{{ (scope.row.totalAmount/scope.row.budgetAmount*100).toFixed(0)+'%' }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="消费详情" align="center">
-      <el-table-column label="实际普通消费" align="center" width="160">
-        <template #default="scope">
-          <span>{{ formatMoney(scope.row.ncAmount) }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="实际突发消费" align="center" width="160">
-        <template #default="scope">
-          <span>{{ formatMoney(scope.row.bcAmount) }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="实际看病花费" align="center" width="160">
-        <template #default="scope">
-          <span>{{ formatMoney(scope.row.trAmount) }}</span>
-        </template>
-      </el-table-column>
-      </el-table-column>
       <el-table-column label="收入统计" align="center"  width="160">
         <template #default="scope">
           <span>{{ formatMoney(scope.row.incomeAmount) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="账户变化" align="center"  width="80">
+      <el-table-column label="账户变化" align="center" fixed="right" width="80">
         <template #default="scope">
           <span v-if="scope.row.accountChangeAmount == null&&scope.row.budget == null">
            <span class="link-type" @click="handleAccountChange(scope.row.bussKey)"><el-icon><EditPen /></el-icon></span>
@@ -146,37 +128,13 @@
           <span v-else>{{ formatMoney(scope.row.accountChangeAmount) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="重新统计" width="80"  align="center">
+      <el-table-column label="重新统计" width="80" fixed="right" align="center">
         <template #default="scope">
           <span v-if="scope.row.budget == null">
            <span class="link-type" @click="handleReStat(scope.row.logId)">
              <el-icon><Promotion /></el-icon>
            </span>
           </span>
-        </template>
-      </el-table-column>
-      <el-table-column label="预算快照" width="80"  align="center">
-        <template #default="scope">
-          <span v-if="scope.row.budget == null">
-           <span class="link-type" @click="handleBudgetSnapshot(scope.row)">
-             <el-icon><Grid /></el-icon>
-           </span>
-          </span>
-        </template>
-      </el-table-column>
-      <el-table-column label="说明" align="center" width="160" :show-overflow-tooltip="true">
-        <template #default="scope">
-          <span>{{ scope.row.remark }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="创建时间" align="center" width="180">
-        <template #default="scope">
-          <span>{{ scope.row.createdTime }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="最后更新时间" align="center" width="180">
-        <template #default="scope">
-          <span>{{ scope.row.lastModifyTime }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" width="160" fixed="right" class-name="small-padding fixed-width">
