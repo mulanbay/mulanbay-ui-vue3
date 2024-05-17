@@ -232,14 +232,14 @@
     getDietAnalyse(proxy.addDateRange(queryParams.value, dateRange.value)).then(
       response => {
         proxy.$modal.closeLoading();
-        if(response.xdata.length<=0){
+        let chartType=queryParams.value.chartType;
+        if(chartType!='TREE_MAP'&&response.xdata.length<=0){
           queryParams.value.page = 1;
           proxy.$modal.msgError("无更多数据");
           return;
         }
         //组装chart数据
         let option = null;
-        let chartType=queryParams.value.chartType;
         switch (chartType) {
           case 'BAR':
             //日历图
