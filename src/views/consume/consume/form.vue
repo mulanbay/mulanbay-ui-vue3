@@ -112,14 +112,34 @@
         </el-col>
         <el-col :span="12">
           <el-form-item label="品牌名称" prop="brand">
-            <el-input v-model="form.brand" placeholder="请输入品牌名称" />
+            <el-input v-model="form.brand" placeholder="请输入品牌名称" >
+              <template #append>
+                <el-popover :visible="brandPopOpen" placement="top" :width="350">
+                  <el-tag
+                    effect="plain"
+                    :key="tag"
+                    v-for="tag in goodsNameTags"
+                    :disable-transitions="false"
+                    @click="handleConfirmBrand(tag)">
+                    {{tag}}
+                  </el-tag>
+                  <div style="text-align: right; margin: 0">
+                    <el-button size="small" type="danger" icon="CircleClose" @click="brandPopOpen = false">关闭</el-button>
+                  </div>
+                  <template #reference>
+                    <el-button @click="openBrandSelect" ref="brandSelectBtnRef" type="success" :disabled="goodsNameTags.length<=0">选择</el-button>
+                  </template>
+                </el-popover>
+              </template>
+            </el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="12">
           <el-form-item label="商品单价" prop="price">
-            <el-input-number v-model="form.price" placeholder="单位:元" :style="{width: '100%'}" controls-position="right" :min="0" :controls="false" :precision="2" />
+            <el-input-number v-model="form.price" placeholder="单位:元" :style="{width: '100%'}" controls-position="right" :min="0" :controls="false" :precision="2" >
+            </el-input-number>
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -242,6 +262,7 @@
   import { getNowDateTimeString, getDayByDate } from "@/utils/datetime";
 
   const { proxy } = getCurrentInstance();
+  const brandSelectBtnRef = ref();
 
   //可执行时间段
   const title = ref('消费表单');
@@ -265,6 +286,9 @@
   const hisKeywordsTags = ref([]);
   const inputVisible = ref(false);
   const inputValue = ref('');
+  
+  const goodsNameTags = ref([]);
+  const brandPopOpen = ref(false);
 
   const data = reactive({
     form: {},
@@ -356,7 +380,17 @@
     inputValue.value = '';
   }
   /** 标签处理 end */
+  
+  /** 品牌选择开启 */
+  function openBrandSelect(){
+    brandPopOpen.value = true;
+  }
 
+  /** 品牌选择回调 */
+  function handleConfirmBrand(brand){
+    form.value.brand = brand;
+    brandPopOpen.value = false;
+  }
 
   /** 自动匹配 */
   function handleAIMatch() {
@@ -367,6 +401,9 @@
     }
     aiMatch(goodsName).then(response => {
       form.value.traceId = response.traceId;
+      if(!proxy.isEmpty(response.tags)){
+        goodsNameTags.value = response.tags.split(',');
+      }
       if (response != null) {
         if (response.goodsTypeId != null) {
           form.value.goodsTypeId = response.goodsTypeId;
@@ -466,6 +503,7 @@
     //proxy.resetForm("formRef");
     loadOptions();
     keywordsTags.value = [];
+    goodsNameTags.value=[];
   }
 
   /** 提交按钮 */

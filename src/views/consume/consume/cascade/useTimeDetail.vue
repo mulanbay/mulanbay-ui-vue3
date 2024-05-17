@@ -60,7 +60,7 @@
             </el-form>
             <!--列表数据-->
             <el-table :data="dataList" v-loading="loading">
-              <el-table-column label="项目" prop="key" align="center" width="150px">
+              <el-table-column label="项目" prop="key" align="center" width="120px">
                 <template #default="scope">
                   {{ scope.row.key }}
                 </template>

@@ -146,12 +146,15 @@
       <el-row>
         <el-col :span="24">
           <el-form-item label="日历标题" prop="calendarTitle">
-            <el-input v-model="form.calendarTitle" style="width: 580px" placeholder="" />
-            <el-tooltip content="显示在用户日历中的标题信息." effect="dark" placement="top">
-              <el-icon>
-                <QuestionFilled />
-              </el-icon>
-            </el-tooltip>
+            <el-input v-model="form.calendarTitle" style="width: 580px" placeholder="" >
+              <template #append>
+                <el-tooltip content="显示在用户日历中的标题信息." effect="dark" placement="top">
+                  <el-icon>
+                    <QuestionFilled />
+                  </el-icon>
+                </el-tooltip>
+              </template>  
+            </el-input>
           </el-form-item>
         </el-col>
       </el-row>
