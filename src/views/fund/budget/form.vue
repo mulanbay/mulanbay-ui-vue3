@@ -88,13 +88,36 @@
       </el-row>
       <el-row>
         <el-col :span="24">
-          <el-form-item label="商品标签" prop="keywords">
-            <el-input v-model="form.keywords" :style="{width: '500px'}" />
-            <el-tooltip content="商品名称或商品标签中包含的关键字." effect="dark" placement="top">
-              <el-icon>
-                <QuestionFilled />
-              </el-icon>
-            </el-tooltip>
+          <el-form-item label="商品标签" prop="tags">
+            <el-input v-model="form.tags" clearable>
+              <template #append>
+                <el-popover :visible="tagsPopOpen" placement="top" :width="350">
+                  <el-text class="mx-1" type="danger">商品名称或商品标签中包含的关键字</el-text>
+                  <el-divider content-position="center">
+                    <span class="table-title">
+                      <svg-icon icon-class="budget" />
+                      关键字
+                    </span>
+                  </el-divider>
+                  <el-tag
+                    effect="plain"
+                    :key="tag"
+                    v-for="tag in goodsNameTags"
+                    :disable-transitions="false"
+                    @click="handleConfirmTags(tag.text)">
+                    {{tag.text}}
+                  </el-tag>
+                  <br><br>
+                  <div style="text-align: right; margin: 0">
+                    <el-button size="small" type="primary" icon="refresh" @click="getNextTagsOption()">换一批</el-button>
+                    <el-button size="small" type="danger" icon="CircleClose" @click="tagsPopOpen = false">关闭</el-button>
+                  </div>
+                  <template #reference>
+                    <el-button @click="openTagsSelect" icon="Share" type="success">选择</el-button>
+                  </template>
+                </el-popover>
+              </template>
+            </el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -142,10 +165,10 @@
 <script setup name="BudgetForm">
   import { createBudget, editBudget, getBudget } from "@/api/fund/budget";
   import { getGoodsTypeTree } from "@/api/consume/goodsType";
+  import { getConsumeTagsTree } from "@/api/consume/consume";
 
   const { proxy } = getCurrentInstance();
 
-  //可执行时间段
   const title = ref('预算');
   const open = ref(false);
   const formLoading = ref(false);
@@ -154,6 +177,10 @@
   const typeOptions = ref([]);
   const periodOptions = ref([]);
   const goodsTypeOptions = ref([]);
+
+  const tagsPopOpen = ref(false);
+  const goodsNameTags = ref([]);
+  const tagsPage = ref(1);
 
   const data = reactive({
     form: {},
@@ -213,7 +240,8 @@
       period: "MONTHLY",
       status: 'ENABLE',
       remind: false,
-      icg: true
+      icg: true,
+      tags: undefined
     };
     proxy.resetForm("formRef");
   }
@@ -240,6 +268,39 @@
       }
     });
   }
+  
+  
+  /** 标签选择开启 */
+  function openTagsSelect(){
+    tagsPopOpen.value = true;
+    tagsPage.value = 0;
+    getNextTagsOption();
+  }
+  
+  /** 标签下一页 */
+  function getNextTagsOption(){
+    tagsPopOpen.value = true;
+    tagsPage.value = tagsPage.value+1;
+    let para = {
+      page: tagsPage.value,
+      pageSize:10
+    }
+    getConsumeTagsTree(para).then(response => {
+      if(response==null||response.length==0){
+        tagsPage.value = 0;
+        proxy.$modal.msgError('没有更多数据');
+        return;
+      }
+      goodsNameTags.value = response;
+    });
+  }
+  
+  /** 标签选择回调 */
+  function handleConfirmTags(tags){
+    form.value.tags = tags;
+    tagsPopOpen.value = false;
+  }
+  
 
   /** 初始化 **/
   onMounted(() => {

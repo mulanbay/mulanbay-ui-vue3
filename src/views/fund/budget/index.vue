@@ -150,6 +150,11 @@
               <Handbag />
             </el-icon>
           </span>
+          <span v-if="scope.row.tags != null">
+            <el-icon color="green">
+              <StarFilled />
+            </el-icon>
+          </span>
           <span class="link-type" @click="handleEdit(scope.row)">{{ scope.row.budgetName }}</span>
         </template>
       </el-table-column>

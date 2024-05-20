@@ -35,8 +35,13 @@
         </el-col>
         <el-col :span="12">
           <el-form-item label="超时时间" prop="timeout">
-            <el-input-number v-model="form.timeout" placeholder="" controls-position="right" :min="0" :controls="false" :precision="0" />
-            秒
+            <el-input-number v-model="form.timeout" placeholder="" controls-position="right" :min="-1" :controls="false" :precision="0" />
+            毫秒
+            <el-tooltip content="小于0则表示由系统自动决定." effect="dark" placement="top">
+              <el-icon>
+                <QuestionFilled />
+              </el-icon>
+            </el-tooltip>
           </el-form-item>
         </el-col>
       </el-row>

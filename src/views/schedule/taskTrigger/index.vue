@@ -134,15 +134,6 @@
           </span>
         </template>
       </el-table-column>
-      <el-table-column label="详情" align="center" width="80">
-        <template #default="scope">
-          <span class="link-type" @click="showScheduleDetail(scope.row)">
-            <el-icon>
-              <InfoFilled />
-            </el-icon>
-          </span>
-        </template>
-      </el-table-column>
       <el-table-column label="调度周期" align="center" width="160">
         <template #default="scope">
           <span v-if="scope.row.triggerIntervel==1">
@@ -197,19 +188,14 @@
           </span>
         </template>
       </el-table-column>
-      <el-table-column label="部署点" align="center" min-width="120px" :show-overflow-tooltip="true">
+      <el-table-column label="下一次执行时间" align="center" width="180">
         <template #default="scope">
-          <span>{{ scope.row.deployId }}</span>
+          <span>{{ scope.row.nextExecuteTime==null ? scope.row.firstExecuteTime : scope.row.nextExecuteTime }}</span>
         </template>
       </el-table-column>
       <el-table-column label="首次执行时间" align="center" width="180">
         <template #default="scope">
           <span>{{ scope.row.firstExecuteTime }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="下一次执行时间" align="center" width="180">
-        <template #default="scope">
-          <span>{{ scope.row.nextExecuteTime==null ? scope.row.firstExecuteTime : scope.row.nextExecuteTime }}</span>
         </template>
       </el-table-column>
       <el-table-column label="最后一次执行时间" align="center" min-width="200px">
@@ -220,6 +206,11 @@
           <span v-else>
             {{ scope.row.lastExecuteTime }}
           </span>
+        </template>
+      </el-table-column>
+      <el-table-column label="部署点" align="center" min-width="120px" :show-overflow-tooltip="true">
+        <template #default="scope">
+          <span>{{ scope.row.deployId }}</span>
         </template>
       </el-table-column>
       <el-table-column label="运行统计" width="80" align="center">
@@ -363,8 +354,15 @@
           <span>{{ scope.row.version }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" fixed="right" width="150" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" fixed="right" width="210" class-name="small-padding fixed-width">
         <template #default="scope">
+          <el-button
+            link
+            type="success"
+            icon="InfoFilled"
+            @click="showScheduleDetail(scope.row)"
+            v-hasPermi="['schedule:taskTrigger:get']">详情
+          </el-button>
           <el-button v-if="scope.row.triggerStatus=='DISABLE'"
             link
             type="success"

@@ -152,7 +152,7 @@
     proxy.getEnumDict('GoodsConsumeType', 'ORDINAL', false).then(response => {
       consumeTypeOptions.value = response;
     });
-    getConsumeTagsTree(null, null, false).then(response => {
+    getConsumeTagsTree({}).then(response => {
       tagsOptions.value = response;
     });
   }

@@ -84,15 +84,11 @@ export function getConsumeTreeStat(query) {
   })
 }
 
-export function getConsumeTagsTree(startDate,endDate,needRoot) {
+export function getConsumeTagsTree(query) {
   return request({
     url: '/consume/tagsTree',
     method: 'get',
-    params: {
-      startDate:startDate,
-      endDate:endDate ,
-      needRoot:needRoot
-    }
+    params: query
   })
 }
 

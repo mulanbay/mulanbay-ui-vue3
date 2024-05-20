@@ -86,6 +86,12 @@
             </el-input>
             <el-button v-else class="button-new-tag" type="primary" @click="showTagInput">+ 新建</el-button>
             <el-popover :visible="tagsPopOpen" placement="top" :width="450">
+              <el-divider content-position="center">
+                <span class="table-title">
+                  <svg-icon icon-class="budget" />
+                  关键字
+                </span>
+              </el-divider>
               <el-tag
                 effect="plain"
                 :key="tag"
@@ -94,11 +100,13 @@
                 @click="handleTagAppend(tag.text)">
                 {{tag.text}}
               </el-tag>
+              <br><br>
               <div style="text-align: right; margin: 0">
+                <el-button size="small" type="primary" icon="refresh" @click="getNextTagsOption()">换一批</el-button>
                 <el-button size="small" type="danger" icon="CircleClose" @click="tagsPopOpen = false">关闭</el-button>
               </div>
               <template #reference>
-                <el-button @click="tagsPopOpen = true" type="success" icon="Share">选择</el-button>
+                <el-button @click="openTagsSelect()" type="success" icon="Share">选择</el-button>
               </template>
             </el-popover>
           </el-form-item>
@@ -286,6 +294,7 @@
   const hisKeywordsTags = ref([]);
   const inputVisible = ref(false);
   const inputValue = ref('');
+  const tagsPage = ref(1);
   
   const goodsNameTags = ref([]);
   const brandPopOpen = ref(false);
@@ -381,6 +390,32 @@
   }
   /** 标签处理 end */
   
+  /** 标签选择开启 */
+  function openTagsSelect(){
+    tagsPopOpen.value = true;
+    tagsPage.value = 0;
+    getNextTagsOption();
+  }
+  
+  /** 标签下一页 */
+  function getNextTagsOption(){
+    tagsPopOpen.value = true;
+    tagsPage.value = tagsPage.value+1;
+    let para = {
+      page: tagsPage.value,
+      pageSize:10
+    }
+    getConsumeTagsTree(para).then(response => {
+      if(response==null||response.length==0){
+        tagsPage.value = 0;
+        proxy.$modal.msgError('没有更多数据');
+        return;
+      }
+      hisKeywordsTags.value = response;
+    });
+  }
+  
+  
   /** 品牌选择开启 */
   function openBrandSelect(){
     brandPopOpen.value = true;
@@ -461,9 +496,6 @@
     });
     proxy.getDictItemTree('CONSUME_INVALID_DATE_PERIOD', false).then(response => {
       invalidPeriodOptions.value = response;
-    });
-    getConsumeTagsTree().then(response => {
-      hisKeywordsTags.value = response;
     });
   }
 
