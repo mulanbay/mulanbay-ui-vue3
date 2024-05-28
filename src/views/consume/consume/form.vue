@@ -403,7 +403,7 @@
     tagsPage.value = tagsPage.value+1;
     let para = {
       page: tagsPage.value,
-      pageSize:10
+      pageSize:20
     }
     getConsumeTagsTree(para).then(response => {
       if(response==null||response.length==0){

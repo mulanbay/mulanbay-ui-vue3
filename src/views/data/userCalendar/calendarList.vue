@@ -29,18 +29,25 @@
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="条件筛选" v-if="moreCdn==true">
-        <el-checkbox v-model="queryParams.needFinished" label="包含完成" />
-        <el-checkbox v-model="queryParams.needPeriod" label="包含周期性" />
-        <el-checkbox v-model="queryParams.needBudget" label="包含预算" />
-        <el-checkbox v-model="queryParams.needTreatDrug" label="用药日历" />
-        <el-checkbox v-model="queryParams.needConsume" label="包含消费" />
-        <el-checkbox v-model="queryParams.needBandLog" label="日志绑定" />
-      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="TrendCharts" @click="handleQuery" v-hasPermi="['data:userCalendar:calendarList']">查询</el-button>
         <el-button icon="refresh" @click="resetQuery">重置</el-button>
-        <el-button type="warning" icon="more" @click="handleMoreCdn">{{cdnTitle}}</el-button>
+        <el-popover :visible="filterPopOpen" placement="top" :width="350">
+          <el-checkbox v-model="queryParams.needFinished" label="包含完成" />
+          <el-checkbox v-model="queryParams.needPeriod" label="包含周期性" />
+          <el-checkbox v-model="queryParams.needBudget" label="包含预算" />
+          <el-checkbox v-model="queryParams.needTreatDrug" label="用药日历" />
+          <el-checkbox v-model="queryParams.needConsume" label="包含消费" />
+          <el-checkbox v-model="queryParams.needBandLog" label="日志绑定" />
+          <el-checkbox v-model="queryParams.needExpired" label="包含过期" true-value="true" false-value="false"/>
+          <div style="text-align: right; margin: 0">
+            <el-button size="small" type="success" icon="CircleCheck" @click="handleFilter">确定</el-button>
+            <el-button size="small" type="danger" icon="CircleClose" @click="filterPopOpen = false">关闭</el-button>
+          </div>
+          <template #reference>
+            <el-button @click="filterPopOpen = true" type="success" icon="Filter">筛选</el-button>
+          </template>
+        </el-popover>
         <el-button type="primary" icon="plus" @click="handleCreate" v-hasPermi="['data:userCalendar:create']">新增</el-button>
       </el-form-item>
     </el-form>
@@ -78,7 +85,8 @@
   const calendarEventList = ref([]);
   const sourceDetailRef = ref();
   const formRef = ref();
-
+  const filterPopOpen = ref(false);
+  
   const data = reactive({
     //参考:https://www.cnblogs.com/czk1634798848/p/13386178.html
     calendarOptions: {
@@ -171,7 +179,8 @@
       needBudget:true,
       needTreatDrug:true,
       needConsume:true,
-      needBandLog:true
+      needBandLog:true,
+      needExpired:false
     },
     rules: {
     }
@@ -237,10 +246,18 @@
           let editable = item.sourceType=='MANUAL'&&item.period=='ONCE' ? true :false;
           let title = item.title;
           let allDay = item.allDay;
-          if(item.finishTime!=null){
-            textColor = 'green';
-            title = '[完成]'+title;
-            allDay = false;
+          if(item.finishType!=null){
+            if(item.finishType=='AUTO'){
+              textColor = 'green';
+              title = '[完成]'+title;
+            }else if(item.finishType=='MANUAL'){
+              textColor = 'blue';
+              title = '[完成]'+title;
+            }else{
+              title = '[过期]'+title;
+              textColor = 'red';
+            }
+            //allDay = false;
           }
           let event = {
             id: item.id,
@@ -324,7 +341,13 @@
 
   }
   /** 日历事件处理 end */
-
+  
+  /** 筛选按钮操作 */
+  function handleFilter(row) {
+    filterPopOpen.value= false;
+    handleDateRangeChange();
+  } 
+  
   /** 新增按钮操作 */
   function handleCreate(row) {
     formRef.value.openForm(null, 'create');

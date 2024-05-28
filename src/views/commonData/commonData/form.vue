@@ -82,7 +82,7 @@
 </template>
 
 <script setup name="CommonDataForm">
-  import { createCommonData, editCommonData, getCommonData,getNameTree } from "@/api/commonData/commonData";
+  import { createCommonData, editCommonData, getCommonData,getNameTree,getNearestCommonData } from "@/api/commonData/commonData";
   import { getCommonDataTypeTree,getCommonDataType } from "@/api/commonData/commonDataType";
   import CommonDataTypeForm from '../commonDataType/form.vue'
 
@@ -162,10 +162,12 @@
     getNameTree(para).then(response => {
       nameOptions.value = response;
     });
-    loadTypeinfo(typeId);
+    loadTypeInfo(typeId);
+    loadNearest(typeId);
   }
   
-  function loadTypeinfo(typeId){
+  /** 类型信息加载 */
+  function loadTypeInfo(typeId){
     getCommonDataType(typeId).then(response => {
       if(response!=null){
         valueUnit.value = response.unit;
@@ -173,6 +175,19 @@
         if(proxy.isEmpty(form.value.dataId)){
           form.value.dataName = response.typeName;
         }
+      }
+    });
+  }
+  
+  /** 加载最近信息 */
+  function loadNearest(typeId){
+    let para ={
+      typeId: typeId
+    }
+    getNearestCommonData(para).then(response => {
+      if(response!=null){
+        form.value.location = response.location;
+        form.value.value = response.value;
       }
     });
   }
