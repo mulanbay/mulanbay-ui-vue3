@@ -29,14 +29,19 @@
               <span>{{ scope.row.date }}</span>
             </template>
           </el-table-column>
+          <el-table-column label="名称" align="center">
+            <template #default="scope">
+              <span>{{ scope.row.name }}</span>
+            </template>
+          </el-table-column>
           <el-table-column label="统计数据" align="center">
             <template #default="scope">
               <span>{{ scope.row.value +scope.row.unit}}</span>
             </template>
           </el-table-column>
-          <el-table-column label="名称" align="center">
+          <el-table-column label="内容" align="center">
             <template #default="scope">
-              <span>{{ scope.row.name }}</span>
+              <span>{{ scope.row.content }}</span>
             </template>
           </el-table-column>
         </el-table>

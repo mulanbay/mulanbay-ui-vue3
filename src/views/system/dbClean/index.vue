@@ -75,9 +75,24 @@
           <span class="link-type" @click="handleCounts(scope.row)">{{ scope.row.tableName }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="时间字段" align="center" width="150px">
+      <el-table-column label="最近更新时间" align="center" width="160">
+        <template #default="scope">
+          <span>{{ scope.row.lastCleanTime }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="最近更新条数" align="center" width="160">
+        <template #default="scope">
+          <span>{{ scope.row.lastCleanCounts }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="时间字段" align="center" width="120px">
         <template #default="scope">
           <span>{{ scope.row.dateField }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="保留天数" align="center" width="120px">
+        <template #default="scope">
+          <span>{{ scope.row.days }}</span>
         </template>
       </el-table-column>
       <el-table-column label="含附加条件" align="center" width="120">
@@ -111,16 +126,6 @@
       <el-table-column label="删除类型" align="center" width="120">
         <template #default="scope">
           <span>{{ scope.row.cleanTypeName }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="最后一次更新时间" align="center" width="180">
-        <template #default="scope">
-          <span>{{ scope.row.lastCleanTime }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="最后一次更新条数" align="center" width="180">
-        <template #default="scope">
-          <span>{{ scope.row.lastCleanCounts }}</span>
         </template>
       </el-table-column>
       <el-table-column label="排序号" align="center">

@@ -33,16 +33,22 @@
         <el-button type="primary" icon="TrendCharts" @click="handleQuery" v-hasPermi="['data:userCalendar:calendarList']">查询</el-button>
         <el-button icon="refresh" @click="resetQuery">重置</el-button>
         <el-popover :visible="filterPopOpen" placement="top" :width="350">
-          <el-checkbox v-model="queryParams.needFinished" label="包含完成" />
-          <el-checkbox v-model="queryParams.needPeriod" label="包含周期性" />
-          <el-checkbox v-model="queryParams.needBudget" label="包含预算" />
-          <el-checkbox v-model="queryParams.needTreatDrug" label="用药日历" />
-          <el-checkbox v-model="queryParams.needConsume" label="包含消费" />
-          <el-checkbox v-model="queryParams.needBandLog" label="日志绑定" />
-          <el-checkbox v-model="queryParams.needExpired" label="包含过期" true-value="true" false-value="false"/>
+          <el-row>
+            <el-col :span="8"><el-checkbox v-model="queryParams.needFinished" label="包含完成" /></el-col>
+            <el-col :span="8"><el-checkbox v-model="queryParams.needPeriod" label="包含周期性" /></el-col>
+            <el-col :span="8"><el-checkbox v-model="queryParams.needBudget" label="包含预算" /></el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="8"><el-checkbox v-model="queryParams.needTreatDrug" label="用药日历" /></el-col>
+            <el-col :span="8"><el-checkbox v-model="queryParams.needConsume" label="包含消费" /></el-col>
+            <el-col :span="8"><el-checkbox v-model="queryParams.needBandLog" label="日志绑定" /></el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="8"><el-checkbox v-model="queryParams.needExpired" label="包含过期" true-value="true" false-value="false"/></el-col>
+          </el-row>
           <div style="text-align: right; margin: 0">
             <el-button size="small" type="success" icon="CircleCheck" @click="handleFilter">确定</el-button>
-            <el-button size="small" type="danger" icon="CircleClose" @click="filterPopOpen = false">关闭</el-button>
+            <el-button size="small" type="danger" icon="CircleClose" @click="filterPopOpen = false">取消</el-button>
           </div>
           <template #reference>
             <el-button @click="filterPopOpen = true" type="success" icon="Filter">筛选</el-button>

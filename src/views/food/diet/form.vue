@@ -131,14 +131,16 @@
             </el-input>
             <el-button v-else type="primary" class="button-new-tag" @click="showTagsTagInput">+ 新建</el-button>
             <el-popover :visible="tagsTagsPopOpen" placement="bottom" :width="400">
-              <el-tag
-                effect="plain"
-                :key="tag"
-                v-for="tag in hisTagsTags"
-                :disable-transitions="false"
-                @click="handleTagsTagAppend(tag.text)">
-                {{tag.text}}
-              </el-tag>
+              <span v-for="tag in hisTagsTags">
+                <el-tag
+                  effect="plain"
+                  :key="tag"
+                  :disable-transitions="false"
+                  @click="handleTagsTagAppend(tag.text)">
+                  {{tag.text}}
+                </el-tag>
+                <el-divider direction="vertical"></el-divider>
+              </span>
               <div style="text-align: right; margin: 0">
                 <el-button size="small" type="danger" icon="CircleClose" @click="tagsTagsPopOpen = false">关闭</el-button>
               </div>

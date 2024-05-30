@@ -182,7 +182,8 @@
   /** 加载最近信息 */
   function loadNearest(typeId){
     let para ={
-      typeId: typeId
+      typeId: typeId,
+      nearestType:'MAX_TIME'
     }
     getNearestCommonData(para).then(response => {
       if(response!=null){
