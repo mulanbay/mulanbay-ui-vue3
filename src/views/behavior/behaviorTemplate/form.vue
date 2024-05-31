@@ -73,24 +73,22 @@
         </el-col>
       </el-row>
       <el-row>
-        <el-col :span="23">
-          <el-form-item label="附加条件" prop="extraSql">
-            <el-input v-model="form.extraSql" style="width: 580px" placeholder="" />
-          </el-form-item>
-        </el-col>
-        <el-col :span="1">
-          <el-tooltip content="如果执行附加条件,则在上面的查询语句需要添加{extra_sql}替换占位符" raw-content effect="dark" placement="top">
-            <el-icon>
-              <QuestionFilled />
-            </el-icon>
-          </el-tooltip>
-        </el-col>
-      </el-row>
-      <el-row>
         <el-col :span="12">
           <el-form-item label="显示顺序" prop="orderIndex">
             <el-input-number v-model="form.orderIndex" style="width: 230px" controls-position="right" :min="0" :controls="true" :precision="0" />
           </el-form-item>
+        </el-col>
+        <el-col :span="11">
+          <el-form-item label="参数数量" prop="paras">
+            <el-input-number v-model="form.paras" style="width: 230px" controls-position="right" :min="0" :controls="true" :precision="0" />
+          </el-form-item>
+        </el-col>
+        <el-col :span="1">
+          <el-tooltip content="查询语句中已经绑定的参数数量,因为可变查询参数中需要这个索引值" raw-content effect="dark" placement="top">
+            <el-icon>
+              <QuestionFilled />
+            </el-icon>
+          </el-tooltip>
         </el-col>
       </el-row>
       <el-row>
@@ -160,7 +158,7 @@
       <el-row>
         <el-col :span="24">
           <el-form-item label="备注信息" prop="remark">
-            <el-input v-model="form.remark" style="width: 580px" type="textarea" placeholder="请输入内容"></el-input>
+            <el-input v-model="form.remark" style="width: 590px" type="textarea" placeholder="请输入内容"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -257,6 +255,9 @@
       ],
       level: [
         { required: true, message: "模版等级不能为空", trigger: "blur" }
+      ],
+      paras: [
+        { required: true, message: "参数数量不能为空", trigger: "blur" }
       ]
     }
   });
@@ -346,7 +347,8 @@
       allDay:true,
       orderIndex: 1,
       fromTemplateId: undefined,
-      copyItems: true
+      copyItems: true,
+      paras:3
     };
     proxy.resetForm("formRef");
   }

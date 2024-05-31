@@ -86,8 +86,25 @@
       </el-row>
       <el-row>
         <el-col :span="12">
+          <el-form-item label="字段/条件" prop="formField">
+            <el-input v-model="form.formField" style="width: 230px" placeholder="对应表单里面的字段名或者查询条件" />
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="默认值" prop="defaultValue">
+            <el-input v-model="form.defaultValue" style="width: 230px" placeholder="" />
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="12">
           <el-form-item label="可为空" prop="nullable">
             <el-switch v-model="form.nullable"></el-switch>
+            <el-tooltip content="该查询条件是否可选,否则为必须选择" effect="dark" placement="top">
+              <el-icon>
+                <QuestionFilled />
+              </el-icon>
+            </el-tooltip>
           </el-form-item>
         </el-col>
         <el-col :span="6">
@@ -127,18 +144,6 @@
         </el-col>
       </el-row>
       <el-row>
-        <el-col :span="12">
-          <el-form-item v-if="form.type=='CHART'" label="表单字段" prop="formField">
-            <el-input v-model="form.formField" style="width: 230px" placeholder="对应表单里面的字段名" />
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item v-if="form.type=='CHART'" label="默认值" prop="defaultValue">
-            <el-input v-model="form.defaultValue" style="width: 230px" placeholder="" />
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
         <el-col :span="24">
           <el-form-item label="提示信息" prop="msg">
             <el-input v-model="form.msg" style="width: 580px"  placeholder="" />
@@ -170,6 +175,7 @@
   const casCadeTypeOptions = ref([]);
   const enumIdTypeOptions = ref([]);
   const valueClassOptions = ref([]);
+  
   //模版
   const templateId = ref();
   const templateOptions = ref([]);
@@ -343,5 +349,6 @@
     proxy.getEnumDict('StatValueClass', 'FIELD', false).then(response => {
       valueClassOptions.value = response;
     });
+    
   })
 </script>

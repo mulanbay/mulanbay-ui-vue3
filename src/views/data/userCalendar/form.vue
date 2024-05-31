@@ -56,7 +56,7 @@
               :data="behaviorTemplateOptions"
               :props="{ value: 'id', label: 'text', children: 'children' }"
               value-key="id"
-              style="width: 730px"
+              style="width: 740px"
               clearable
               placeholder="选择模版"
               :check-strictly="false"

@@ -12,10 +12,7 @@ export function generateFcRules(dataRules) {
   const n = dataRules.length;
   for (let i = 0; i < n; i++) {
     let r = dataRules[i];
-    let field = "bindValue" + i;
-    if(r.formField!=null&&r.formField!=undefined&&r.formField!=''){
-      field = r.formField;
-    }
+    let field = r.model;
     let selectData=null;
     if(r.tree==true){
       //树形结构
@@ -44,18 +41,6 @@ export function generateFcRules(dataRules) {
         }
       }
     }else{
-      //field插件需要唯一
-      selectData = {
-        type: "select",
-        field: field,
-        title: r.name,
-        value: r.defaultValue,
-        options: [],
-        props: {
-          multiple: false,
-          clearable: r.nullable
-        }
-      };
       const ll = r.list.length;
       let os = new Array();
       for (let j = 0; j < ll; j++) {
@@ -63,7 +48,18 @@ export function generateFcRules(dataRules) {
         let o = { "value": opData.id, "label": opData.text, "disabled": false };
         os.push(o);
       }
-      selectData.options = os;
+      //field插件需要唯一
+      selectData = {
+        type: "select",
+        field: field,
+        title: r.name,
+        value: r.defaultValue,
+        options: os,
+        props: {
+          multiple: false,
+          clearable: r.nullable
+        }
+      };
     }
     selectData.validate = [
       { required: r.nullable==false, message: r.msg, trigger: 'blur' },
@@ -79,18 +75,7 @@ export function generateFcRules(dataRules) {
  */
 export function getBindValues(fcObject) {
   let formData = fcObject.formData();
-  //console.log(JSON.stringify(fcObject.form))
-  let values = new Array();
-  for (let key in formData) {
-    if (formData[key] != null) {
-      values.push(formData[key]);
-    }
-  }
-  if (values.length > 0) {
-    return values.join(',');
-  } else {
-    return undefined;
-  }
+  return JSON.stringify(formData);
 }
 
 /**
@@ -99,13 +84,7 @@ export function getBindValues(fcObject) {
  * @param {Object} fcObject
  */
 export function setBindValues(bindValues, fcObject) {
-  if (bindValues == undefined || bindValues == null) {
-    return;
-  }
-  let ss = bindValues.split(',');
-  for (let i = 0; i < ss.length; i++) {
-    fcObject.setValue("bindValue" + i, ss[i]);
-  }
+  setTriggerParasBindValues(bindValues, fcObject);
 }
 
 /**

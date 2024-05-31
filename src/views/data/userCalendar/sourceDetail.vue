@@ -98,7 +98,12 @@
                 完成状态
               </div>
             </template>
-            {{ beanData.finishTypeName==null ? '未完成':beanData.finishTypeName}}
+            <span v-if="beanData.period=='ONCE'">
+             {{ beanData.finishTypeName==null ? '未完成':beanData.finishTypeName}}
+            </span>
+            <span v-else>
+             周期性日历
+            </span>
             <span v-if="beanData.finishType!=null">
               {{ beanData.match ? '(时间匹配)':'(时间未匹配)'}}
             </span>

@@ -103,7 +103,7 @@
       form: {
         labelPosition: 'right',
         labelWidth: '90px',
-        size: undefined,
+        size: 'small',
         //是否同一行
         inline: true,
         hideRequiredAsterisk: false
