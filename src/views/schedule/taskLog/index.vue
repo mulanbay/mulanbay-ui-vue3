@@ -53,11 +53,11 @@
       </el-table-column>
       <el-table-column label="调度名称" fixed="left" min-width="200px" :show-overflow-tooltip="true">
         <template #default="scope">
-          <span class="link-type" @click="showTaskTrigger(scope.row)">
-            {{ scope.row.taskTrigger.triggerName }}
-          </span>
           <span v-if="scope.row.redoTimes>0">
             <el-tag type="danger" size="small">重做</el-tag>
+          </span>
+          <span class="link-type" @click="showTaskTrigger(scope.row)">
+            {{ scope.row.taskTrigger.triggerName }}
           </span>
         </template>
       </el-table-column>
@@ -109,9 +109,14 @@
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column label="调度执行ID" align="center" min-width="160px" :show-overflow-tooltip="true">
+      <el-table-column label="花费时间" align="center" width="80">
         <template #default="scope">
-          <span>{{ scope.row.scheduleIdentityId }}</span>
+          <span v-if="scope.row.costTime>=1000" style="color:red ;">
+            {{ (scope.row.costTime/1000).toFixed(1) +'秒' }}
+          </span>
+          <span v-else>
+            {{ scope.row.costTime+'毫秒'  }}
+          </span>
         </template>
       </el-table-column>
       <el-table-column label="运行开始时间" align="center" width="180">
@@ -124,14 +129,9 @@
           <span>{{ scope.row.endTime }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="花费时间" align="center" width="80">
+      <el-table-column label="调度执行ID" align="center" min-width="160px" :show-overflow-tooltip="true">
         <template #default="scope">
-          <span v-if="scope.row.costTime>=1000" style="color:red ;">
-            {{ (scope.row.costTime/1000).toFixed(1) +'秒' }}
-          </span>
-          <span v-else>
-            {{ scope.row.costTime+'毫秒'  }}
-          </span>
+          <span>{{ scope.row.scheduleIdentityId }}</span>
         </template>
       </el-table-column>
       <el-table-column label="服务器节点" align="center" min-width="120px" :show-overflow-tooltip="true">

@@ -102,6 +102,7 @@
         proxy.$modal.closeLoading();
         //组装chart数据
         let option = createLineChartOption(response);
+        option.smooth= true;
         createChart(option, analyseStatChartIns);
       }
     );

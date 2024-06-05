@@ -103,6 +103,8 @@
           </el-icon>
         </span>
         {{ lastInfo.executeResultName }}
+        <el-divider direction="vertical"></el-divider>
+        <el-button type="primary" icon="TrendCharts" @click="handleResultStat()" size="small">统计</el-button>
       </el-descriptions-item>
       <el-descriptions-item>
         <template #label>
@@ -169,6 +171,7 @@
           </div>
         </template>
         <el-button type="primary" icon="refresh" @click="handleRedo(lastInfo.logId)" size="small">重做</el-button>
+        <el-divider direction="vertical"></el-divider>
         <el-button type="success" icon="refresh" @click="loadLogInfo(null,lastInfo.logId)" size="small">刷新</el-button>
       </el-descriptions-item>
     </el-descriptions>
@@ -264,6 +267,11 @@
     lastInfo.value = {
       taskTrigger: {}
     };
+  }
+  
+  /** 结果统计 */
+  function handleResultStat(){
+    
   }
 
   /** 初始化 **/
