@@ -165,7 +165,7 @@
           <span>{{ scope.row.source.sourceName }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="商品类型" align="center" width="95">
+      <el-table-column label="商品类型" align="center" min-width="95px" :show-overflow-tooltip="true">
         <template #default="scope">
           <span>{{ scope.row.goodsType.typeName }}</span>
         </template>

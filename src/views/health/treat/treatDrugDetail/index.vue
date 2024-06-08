@@ -43,7 +43,7 @@
           <span v-if="scope.row.ec==null">
           </span>
           <span v-else-if="scope.row.ec!=scope.row.drug.ec" style="color: red;">
-           {{ row.ec+row.eu}}
+           {{ scope.row.ec+scope.row.eu}}
           </span>
           <span v-else style="color: green;">
            {{ scope.row.ec+scope.row.eu}}
