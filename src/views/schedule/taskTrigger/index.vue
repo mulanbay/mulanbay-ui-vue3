@@ -250,11 +250,13 @@
           <span>
             {{ scope.row.totalCount }}
           </span>
-          <span @click="handleResetTrigger(scope.row)">
-            <el-icon>
-              <RefreshRight />
-            </el-icon>
-          </span>
+          <el-tooltip class="box-item" effect="dark" content="重置" placement="top">
+            <span @click="handleResetTrigger(scope.row)">
+              <el-icon>
+                <RefreshRight />
+              </el-icon>
+            </span>
+          </el-tooltip>
         </template>
       </el-table-column>
       <el-table-column label="总失败次数" align="center" width="100">
@@ -262,11 +264,13 @@
           <span>
             {{ scope.row.failCount }}
           </span>
-          <span @click="handleResetTrigger(scope.row)">
-            <el-icon>
-              <RefreshRight />
-            </el-icon>
-          </span>
+          <el-tooltip class="box-item" effect="dark" content="重置" placement="top">
+            <span @click="handleResetTrigger(scope.row)">
+              <el-icon>
+                <RefreshRight />
+              </el-icon>
+            </span>
+          </el-tooltip>
         </template>
       </el-table-column>
       <el-table-column label="组名" align="center" width="100">
@@ -304,7 +308,7 @@
           <span>{{ scope.row.allowedRedoTimes }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="超时时间(秒)" align="center" width="100">
+      <el-table-column label="超时时间(毫秒)" align="center" width="120">
         <template #default="scope">
           <span>{{ scope.row.timeout }}</span>
         </template>
@@ -349,7 +353,7 @@
           <span>{{ scope.row.createdTime }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="版本号" align="center" min-width="200px" :show-overflow-tooltip="true">
+      <el-table-column label="版本号" align="center" min-width="80px" :show-overflow-tooltip="true">
         <template #default="scope">
           <span>{{ scope.row.version }}</span>
         </template>

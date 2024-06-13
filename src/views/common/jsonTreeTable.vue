@@ -5,7 +5,7 @@
     <el-table
       :data="dataList"
       row-key="id"
-	  ref="jsonTreeTableRef"
+	    ref="jsonTreeTableRef"
       :tree-props="{children: 'children', hasChildren: 'hasChildren'}">
       <el-table-column label="字段" prop="id" sortable="custom" :show-overflow-tooltip="true">
         <template #default="scope">

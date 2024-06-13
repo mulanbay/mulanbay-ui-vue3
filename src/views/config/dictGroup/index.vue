@@ -39,15 +39,6 @@
       </el-col>
       <el-col :span="1.5">
         <el-button
-          type="primary"
-          icon="plus"
-          :disabled="single"
-          @click="handleCopy"
-          v-hasPermi="['config:dictGroup:copy']">复制
-        </el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
           type="success"
           icon="edit"
           :disabled="single"
@@ -111,9 +102,9 @@
           <el-button
             link
             type="success"
-            icon="edit"
-            @click="handleEdit(scope.row)"
-            v-hasPermi="['config:dictGroup:edit']">修改
+            icon="plus"
+            @click="handleCopy(scope.row)"
+            v-hasPermi="['config:dictGroup:copy']">复制
           </el-button>
           <el-button
             link
@@ -240,7 +231,7 @@
 
   /** 复制按钮操作 */
   function handleCopy(row) {
-    const id = row.groupId || ids.value.join(",")
+    const id = row.groupId
     formRef.value.openForm(id, 'copy');
   }
 

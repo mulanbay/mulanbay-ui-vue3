@@ -24,6 +24,31 @@ export function getScheduleDetail(triggerId) {
   })
 }
 
+
+export function calcTimeout(query) {
+  return request({
+    url: '/taskTrigger/calcTimeout',
+    method: 'get',
+    params: query
+  })
+}
+
+export function getLockKeys(triggerId) {
+  return request({
+    url: '/taskTrigger/getLockKeys',
+    method: 'get',
+    params: { triggerId }
+  })
+}
+
+export function deleteLockKey(data) {
+  return request({
+    url: '/taskTrigger/deleteLockKey',
+    method: 'post',
+    data
+  })
+}
+
 export function createTaskTrigger(data) {
   return request({
     url: '/taskTrigger/create',

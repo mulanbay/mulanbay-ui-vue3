@@ -34,6 +34,18 @@
                   <i class="loading"></i>正在运行中
                 </span>
                 <span v-else>未运行</span>
+                <el-button link icon="refresh" type="success" @click="loadData" v-hasPermi="['schedule:taskTrigger:lockKey']">刷新</el-button>
+              </el-descriptions-item>
+              <el-descriptions-item width="150px">
+                <template #label>
+                  <div class="cell-item">
+                    <el-icon>
+                      <Tools />
+                    </el-icon>
+                    调度锁
+                  </div>
+                </template>
+                <el-button link icon="InfoFilled" type="success" @click="showLockKey" v-hasPermi="['schedule:taskTrigger:lockKey']">详情</el-button>
               </el-descriptions-item>
             </el-descriptions>
           </div>
@@ -56,14 +68,42 @@
       <el-col :span="12" class="card-box" align="center">
         <el-card>
           <div class="chart-wrapper">
-            <DBDataDetail ref="dbDataRef" />
+            <el-table
+              :data="dbDataList"
+              row-key="id"
+              :tree-props="{children: 'children', hasChildren: 'hasChildren'}">
+              <el-table-column label="字段" prop="id" sortable="custom" :show-overflow-tooltip="true">
+                <template #default="scope">
+                  <span>{{ scope.row.id }}</span>
+                </template>
+              </el-table-column>
+              <el-table-column label="值"  :show-overflow-tooltip="true">
+                <template #default="scope">
+                  <span>{{ scope.row.text }}</span>
+                </template>
+              </el-table-column>
+            </el-table>
           </div>
         </el-card>
       </el-col>
       <el-col :span="12" class="card-box" align="center">
         <el-card>
           <div class="chart-wrapper">
-            <ScheduleDataDetail ref="scheduleDataRef" />
+            <el-table
+              :data="scheduleDataList"
+              row-key="id"
+              :tree-props="{children: 'children', hasChildren: 'hasChildren'}">
+              <el-table-column label="字段" prop="id" sortable="custom" :show-overflow-tooltip="true">
+                <template #default="scope">
+                  <span>{{ scope.row.id }}</span>
+                </template>
+              </el-table-column>
+              <el-table-column label="值"  :show-overflow-tooltip="true">
+                <template #default="scope">
+                  <span>{{ scope.row.text }}</span>
+                </template>
+              </el-table-column>
+            </el-table>
           </div>
         </el-card>
       </el-col>
@@ -71,22 +111,27 @@
 
   </el-dialog>
 
+  <!-- 调度锁信息 -->
+  <LockKey ref="lockKeyRef" />
+  
 </template>
 
 <script setup name="TaskTriggerScheduleDetail">
   import { getScheduleDetail } from "@/api/schedule/taskTrigger";
   import { tillNowSeconds, tillNowString } from "@/utils/datetime";
-  import DBDataDetail from '../../common/jsonTreeTable'
-  import ScheduleDataDetail from '../../common/jsonTreeTable'
+  import {parseJsonToTree} from "@/utils/mulanbay";
+  import LockKey from './lockKey.vue'
 
   const { proxy } = getCurrentInstance();
+  const lockKeyRef = ref();
 
   //可执行时间段
   const scheduleDetailTitle = ref('调度详情');
   const scheduleDetailOpen = ref(false);
 
-  const dbDataRef = ref();
-  const scheduleDataRef = ref();
+  const dbDataList = ref([]);
+  const scheduleDataList = ref();
+  const formTriggerId = ref();
 
   const data = reactive({
     scheduleInfo: {}
@@ -99,11 +144,20 @@
   /** 打开弹窗 */
   const openScheduleDetail = async (triggerId) => {
     scheduleDetailOpen.value = true;
+    formTriggerId.value = triggerId;
+    loadData();
+  }
+
+  // 提供 open 方法，用于打开弹窗
+  defineExpose({ openScheduleDetail });
+  
+  /** 加载数据 */
+  function loadData(){
     resetForm();
-    getScheduleDetail(triggerId).then(response => {
-      dbDataRef.value.showData(response.dbInfo);
+    getScheduleDetail(formTriggerId.value).then(response => {
+      dbDataList.value = parseJsonToTree(response.dbInfo);
       if (response.scheduleInfo != null) {
-        scheduleDataRef.value.showData(response.scheduleInfo);
+        scheduleDataList.value = parseJsonToTree(response.scheduleInfo);
       }
       let ts = tillNowSeconds(null, response.addToScheduleTime);
       let tillNow = tillNowString(ts);
@@ -115,19 +169,11 @@
     });
   }
 
-  // 提供 open 方法，用于打开弹窗
-  defineExpose({ openScheduleDetail });
-
   // 表单重置
   function resetForm() {
     scheduleInfo.value = {};
-    setTimeout(function() {
-      dbDataRef.value.showData(null);
-    }, 100);
-    setTimeout(function() {
-      scheduleDataRef.value.showData(null);
-    }, 100);
-
+    dbDataList.value=[];
+    scheduleDataList.value=[];
   }
 
   /** 提交表单 */
@@ -142,6 +188,11 @@
         });
       }
     });
+  }
+
+  /** 调度锁详情 */
+  function showLockKey() {
+    lockKeyRef.value.showData(formTriggerId.value);
   }
 
   /** 初始化 **/

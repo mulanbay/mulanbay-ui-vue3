@@ -57,7 +57,7 @@
           <span>{{ scope.row.sleepId }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="睡眠日" align="center" width="120">
+      <el-table-column label="睡眠日" align="center" width="100">
         <template #default="scope">
           <span class="link-type" @click="handleEdit(scope.row)">{{ scope.row.sleepDate }}</span>
         </template>
@@ -135,7 +135,7 @@
           <span>{{ scope.row.createdTime }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" width="210" fixed="right" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" width="140" fixed="right" class-name="small-padding fixed-width">
         <template #default="scope">
           <el-button
             link

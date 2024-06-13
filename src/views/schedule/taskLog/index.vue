@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryRef" :inline="true">
-      <el-form-item label="起止日期" style="width: 308px">
+      <el-form-item label="起止日期" v-show="moreCdn==true"  style="width: 308px">
         <el-date-picker
           v-model="dateRange"
           unlink-panels
@@ -23,7 +23,7 @@
           placeholder="请选择调度器"
           :check-strictly="false" />
       </el-form-item>
-      <el-form-item label="执行结果" prop="executeResult">
+      <el-form-item label="执行结果" v-show="moreCdn==true"  prop="executeResult">
         <el-select
           v-model="queryParams.executeResult"
           placeholder="执行结果"
@@ -36,9 +36,34 @@
             :value="dict.id" />
         </el-select>
       </el-form-item>
+      <el-form-item label="排序方式" prop="sortField">
+        <el-select
+          v-model="queryParams.sortField"
+          placeholder="字段"
+          clearable
+          style="width: 120px">
+          <el-option
+            v-for="dict in sortFieldOptions"
+            :key="dict.id"
+            :label="dict.text"
+            :value="dict.id" />
+        </el-select>
+        <el-select
+          v-model="queryParams.sortType"
+          placeholder="方式"
+          clearable
+          style="width: 120px">
+          <el-option
+            v-for="dict in sortTypeOptions"
+            :key="dict.id"
+            :label="dict.text"
+            :value="dict.id" />
+        </el-select>
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="search" @click="handleQuery" v-hasPermi="['schedule:taskLog:list']">搜索</el-button>
         <el-button icon="refresh" @click="resetQuery">重置</el-button>
+        <el-button type="warning" icon="more" @click="handleMoreCdn">{{cdnTitle}}</el-button>
       </el-form-item>
     </el-form>
 
@@ -109,8 +134,11 @@
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column label="花费时间" align="center" width="80">
+      <el-table-column label="花费时间" align="center" width="120">
         <template #default="scope">
+          <span v-if="scope.row.taskTrigger.timeout>0&&scope.row.costTime>=scope.row.taskTrigger.timeout" >
+            <el-tag size="small" type="danger">超时</el-tag>
+          </span>
           <span v-if="scope.row.costTime>=1000" style="color:red ;">
             {{ (scope.row.costTime/1000).toFixed(1) +'秒' }}
           </span>
@@ -119,12 +147,12 @@
           </span>
         </template>
       </el-table-column>
-      <el-table-column label="运行开始时间" align="center" width="180">
+      <el-table-column label="执行开始时间" align="center" width="180">
         <template #default="scope">
           <span>{{ scope.row.startTime }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="运行结束时间" align="center" width="180">
+      <el-table-column label="执行结束时间" align="center" width="180">
         <template #default="scope">
           <span>{{ scope.row.endTime }}</span>
         </template>
@@ -209,6 +237,9 @@
   const executeResultOptions = ref([]);
   const taskTriggerOptions = ref([]);
 
+  const sortFieldOptions = ref([]);
+  const sortTypeOptions = ref([]);
+
   const logInfoFormRef = ref();
   const formRef = ref();
   
@@ -225,7 +256,9 @@
     form: {},
     queryParams: {
       page: 1,
-      pageSize: 10
+      pageSize: 10,
+      sortField: 'bussDate',
+      sortType: 'desc'
     },
     rules: {
 
@@ -234,6 +267,21 @@
 
   const { queryParams, form, rules } = toRefs(data);
 
+  //查询条件更多属性 start
+  const cdnTitle = ref("更多");
+  const moreCdn = ref(false);
+  
+  /** 更多查询条件处理 */
+  function handleMoreCdn() {
+    if (moreCdn.value == true) {
+      moreCdn.value = false;
+      cdnTitle.value = '更多';
+    } else {
+      moreCdn.value = true;
+      cdnTitle.value = '取消';
+    }
+  }
+  
   /** 查询列表 */
   function getList() {
     loading.value = true;
@@ -313,6 +361,12 @@
     });
     proxy.getEnumDict('cn.mulanbay.schedule.enums.JobResult', 'FIELD', false).then(response => {
       executeResultOptions.value = response;
+    });
+    proxy.getDictItemTree('TASK_LOG_SORT_FIELD', false).then(response => {
+      sortFieldOptions.value = response;
+    });
+    proxy.getDictItemTree('SORT_TYPE', false).then(response => {
+      sortTypeOptions.value = response;
     });
   })
 </script>

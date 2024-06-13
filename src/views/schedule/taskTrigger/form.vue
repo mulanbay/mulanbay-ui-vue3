@@ -34,14 +34,23 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="超时时间" prop="timeout">
-            <el-input-number v-model="form.timeout" placeholder="" controls-position="right" :min="-1" :controls="false" :precision="0" />
-            毫秒
-            <el-tooltip content="小于0则表示由系统自动决定." effect="dark" placement="top">
-              <el-icon>
-                <QuestionFilled />
-              </el-icon>
-            </el-tooltip>
+          <el-form-item label="调度周期" prop="redoType">
+            每
+            <el-input-number v-model="form.triggerInterval" style="width: 80px;" placeholder="" controls-position="right" :min="1" :controls="false" :precision="0" />
+            <el-select
+              v-model="form.triggerType"
+              placeholder="周期"
+              clearable
+              allow-create
+              collapse-tags
+              style="width: 100px">
+              <el-option
+                v-for="dict in triggerTypeOptions"
+                :key="dict.id"
+                :label="dict.text"
+                :value="dict.id" />
+            </el-select>
+            /次
           </el-form-item>
         </el-col>
       </el-row>
@@ -94,24 +103,26 @@
         </el-col>
       </el-row>
       <el-row>
-        <el-col :span="12">
-          <el-form-item label="调度周期" prop="redoType">
-            每
-            <el-input-number v-model="form.triggerInterval" style="width: 60px;" placeholder="" controls-position="right" :min="1" :controls="false" :precision="0" />
-            <el-select
-              v-model="form.triggerType"
-              placeholder="周期"
-              clearable
-              allow-create
-              collapse-tags
-              style="width: 120px">
-              <el-option
-                v-for="dict in triggerTypeOptions"
-                :key="dict.id"
-                :label="dict.text"
-                :value="dict.id" />
-            </el-select>
-            /次
+        <el-col :span="24">
+          <el-form-item label="超时时间" prop="timeout">
+            <el-input v-model="form.timeout" placeholder="" type="number" min="-1" style="width: 200px;" >
+              <template #append>
+                <el-tooltip content="小于0则表示由系统自动决定." effect="dark" placement="top">
+                  <el-icon>
+                    毫秒
+                  </el-icon>
+                </el-tooltip>
+              </template> 
+            </el-input>
+            <el-button type="primary" icon="HelpFilled" @click="handleTimeout" v-hasPermi="['schedule:taskTrigger:calcTimeout']">选取</el-button>
+            <el-text class="mx-1" type="success">
+              <span v-if="form.timeout<0">
+                由系统自动决定
+              </span>
+              <span v-else>
+                {{ form.timeout/1000 +'秒' }}
+              </span>
+            </el-text>
           </el-form-item>
         </el-col>
       </el-row>
@@ -125,7 +136,7 @@
       <el-row>
         <el-col :span="24">
           <el-form-item label="调度参数" prop="triggerParas">
-            <el-input v-model="form.triggerParas" style="width: 470px;" disabled placeholder="" />
+            <el-input v-model="form.triggerParas" style="width: 500px;" disabled placeholder="" />
             <el-button type="primary" icon="edit" @click="handleParasEdit" v-hasPermi="['schedule:taskTrigger:create']">编辑</el-button>
           </el-form-item>
         </el-col>
@@ -133,7 +144,7 @@
       <el-row>
         <el-col :span="24">
           <el-form-item label="执行时间段" prop="execTimePeriods">
-            <el-input v-model="form.execTimePeriods" style="width: 470px;" disabled placeholder="" />
+            <el-input v-model="form.execTimePeriods" style="width: 500px;" disabled placeholder="" />
             <el-button type="primary" icon="edit" @click="handleExecTimeEdit" v-hasPermi="['schedule:taskTrigger:create']">编辑</el-button>
           </el-form-item>
         </el-col>
@@ -248,6 +259,9 @@
   <!-- 时间段编辑 -->
   <TimePeriodsForm ref="timePeriodsFormRef" @success="confirmExecTimeEdit" />
 
+  <!-- 超时时间编辑 -->
+  <TimeoutForm ref="timeoutFormRef" @success="confirmTimeout" />
+  
 </template>
 
 <script setup name="TaskTriggerForm">
@@ -256,6 +270,7 @@
   import { encodeJsonString } from "@/utils/mulanbay";
   import TimePeriodsForm from './timePeriods.vue'
   import TriggerParasForm from './triggerParas.vue'
+  import TimeoutForm from './timeout.vue'
 
   const { proxy } = getCurrentInstance();
   const formRef = ref();
@@ -264,7 +279,9 @@
   const timePeriodsFormRef = ref();
   //调度参数编辑
   const triggerParasFormRef = ref();
-
+  //超时时间编辑
+  const timeoutFormRef = ref();
+  
   // 弹出层标题
   const title = ref("");
   // 是否显示弹出层
@@ -362,7 +379,7 @@
     form.value = {
       triggerId: undefined,
       triggerName: undefined,
-      timeout: 60,
+      timeout: 60000,
       distriable: true,
       redoType: 'MUNUAL_REDO',
       undoCheck: false,
@@ -429,7 +446,17 @@
   function confirmExecTimeEdit(data) {
     form.value.execTimePeriods = data;
   }
-
+  
+  /** 超时时间编辑 **/
+  function handleTimeout() {
+    timeoutFormRef.value.openForm(form.value.triggerId);
+  }
+  
+  /** 确认超时时间编辑 **/
+  function confirmTimeout(data) {
+    form.value.timeout = data;
+  }
+  
   /** 初始化 **/
   onMounted(() => {
     getTaskServerTree().then(response => {

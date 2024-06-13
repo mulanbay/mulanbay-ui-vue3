@@ -16,6 +16,30 @@
           clearable
           style="width: 240px" />
       </el-form-item>
+      <el-form-item label="排序" prop="sortField">
+        <el-select
+          v-model="queryParams.sortField"
+          placeholder="字段"
+          clearable
+          style="width: 120px">
+          <el-option
+            v-for="dict in sortFieldOptions"
+            :key="dict.id"
+            :label="dict.text"
+            :value="dict.id" />
+        </el-select>
+        <el-select
+          v-model="queryParams.sortType"
+          placeholder="方式"
+          clearable
+          style="width: 120px">
+          <el-option
+            v-for="dict in sortTypeOptions"
+            :key="dict.id"
+            :label="dict.text"
+            :value="dict.id" />
+        </el-select>
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="search" @click="handleQuery" v-hasPermi="['log:sysCode:list']">搜索</el-button>
         <el-button icon="refresh" @click="resetQuery">重置</el-button>
@@ -192,6 +216,8 @@
   const total = ref(0);
   // 查询列表数据
   const sysCodeList = ref([]);
+  const sortFieldOptions = ref([]);
+  const sortTypeOptions = ref([]);
 
   // 弹出层标题
   const title = ref("");
@@ -202,7 +228,9 @@
     form: {},
     queryParams: {
       page: 1,
-      pageSize: 10
+      pageSize: 10,
+      sortField: 'code',
+      sortType: 'asc'
     },
     rules: {
 
@@ -210,7 +238,7 @@
   });
 
   const { queryParams, form, rules } = toRefs(data);
-
+  
   /** 查询列表 */
   function getList() {
     loading.value = true;
@@ -282,5 +310,11 @@
   /** 初始化 **/
   onMounted(() => {
     getList();
+    proxy.getDictItemTree('SYS_CODE_SORT_FIELD', false).then(response => {
+      sortFieldOptions.value = response;
+    });
+    proxy.getDictItemTree('SORT_TYPE', false).then(response => {
+      sortTypeOptions.value = response;
+    });
   })
 </script>
