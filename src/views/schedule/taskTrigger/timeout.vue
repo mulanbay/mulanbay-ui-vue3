@@ -1,8 +1,7 @@
 <template>
 
   <!-- 调度详情对话框 -->
-  <el-dialog :title="timeoutTitle" v-model="timeoutOpen" width="620px" append-to-body class="customDialogCss">
-    <el-divider content-position="center">调度信息</el-divider>
+  <el-dialog :title="timeoutTitle" v-model="timeoutOpen" width="620px" append-to-body >
     <el-descriptions class="margin-top" :column="1" border v-loading="timeoutLoading">
       <el-descriptions-item width="180px">
         <template #label>
@@ -10,7 +9,7 @@
             <el-icon>
               <StarFilled />
             </el-icon>
-            调度器
+            调度器名称
           </div>
         </template>
         {{ scheduleData.triggerName}}
@@ -19,7 +18,27 @@
         <template #label>
           <div class="cell-item">
             <el-icon>
-              <ChatLineRound />
+              <BellFilled />
+            </el-icon>
+            当前超时时间
+          </div>
+        </template>
+        <span v-if="scheduleData.timeout<0" >
+          自动
+        </span>
+        <span v-else>
+          {{ scheduleData.timeout+'毫秒('  }}{{ (scheduleData.timeout/1000).toFixed(0) +'秒)' }}
+        </span>
+      </el-descriptions-item>
+    </el-descriptions>
+
+    <el-divider content-position="center">调度执行时长列表</el-divider>
+    <el-descriptions class="margin-top" :column="1" border v-loading="timeoutLoading">
+      <el-descriptions-item width="180px">
+        <template #label>
+          <div class="cell-item">
+            <el-icon>
+              <DataLine />
             </el-icon>
             计算周期
           </div>
@@ -30,7 +49,6 @@
       </el-descriptions-item>
     </el-descriptions>
 
-    <el-divider content-position="center">调度执行时长列表</el-divider>
     <el-table :data="dataList" v-loading="timeoutLoading">
       <el-table-column label="类型" prop="value" align="center" width="120">
         <template #default="scope">

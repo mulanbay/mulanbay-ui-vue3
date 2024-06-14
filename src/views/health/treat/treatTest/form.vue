@@ -169,7 +169,7 @@
     getLastTreatTest(newVal).then(response => {
       if (response != null) {
         const date = form.value.testTime;
-        form.value.operationId = response.operation.operationId;
+        //form.value.operationId = response.operation.operationId;
         form.value.testTime = date;
         form.value.name = response.name;
         form.value.unit = response.unit;
@@ -210,9 +210,7 @@
           editTreatTest(form.value).then(response => {
             proxy.$modal.msgSuccess("修改成功");
             if (ca == true) {
-              const date = form.value.testTime;
-              resetForm();
-              form.value.testTime = date;
+              copyFormData();
             } else {
               open.value = false;
             }
@@ -223,9 +221,7 @@
           createTreatTest(form.value).then(response => {
             proxy.$modal.msgSuccess("新增成功");
             if (ca == true) {
-              const date = form.value.testTime;
-              resetForm();
-              form.value.testTime = date;
+              copyFormData();
             } else {
               open.value = false;
             }
@@ -235,6 +231,15 @@
         }
       }
     });
+  }
+  
+  /** 复制表单数据 **/
+  function copyFormData(){
+    const date = form.value.testTime;
+    const operationId = form.value.operationId;
+    resetForm();
+    form.value.testTime = date;
+    form.value.operationId = operationId;
   }
 
   /** 初始化 **/

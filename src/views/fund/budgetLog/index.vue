@@ -86,15 +86,7 @@
       </el-table-column>
       <el-table-column label="来源" width="60px"  align="center">
         <template #default="scope">
-          <span v-if=" 'MANUAL' == scope.row.source">
-           <el-tag>{{ scope.row.sourceName }}</el-tag>
-          </span>
-          <span v-else-if=" 'AUTO' == scope.row.source">
-           <el-tag type="success">{{ scope.row.sourceName }}</el-tag>
-          </span>
-          <span v-else-if=" 'REAL_TIME' == scope.row.source">
-           <el-tag type="danger">{{ scope.row.sourceName }}</el-tag>
-          </span>
+          {{ scope.row.sourceName }}
         </template>
       </el-table-column>
       <el-table-column label="预算金额" align="center" width="160">
@@ -120,7 +112,7 @@
           <span>{{ formatMoney(scope.row.incomeAmount) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="账户变化" align="center" fixed="right" width="80">
+      <el-table-column label="账户变化" align="center" fixed="right" min-width="100px" :show-overflow-tooltip="true">
         <template #default="scope">
           <span v-if="scope.row.accountChangeAmount == null&&scope.row.budget == null">
            <span class="link-type" @click="handleAccountChange(scope.row.bussKey)"><el-icon><EditPen /></el-icon></span>
