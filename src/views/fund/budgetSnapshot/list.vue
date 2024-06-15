@@ -16,6 +16,16 @@
           <span>{{ formatMoney(scope.row.amount) }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="实际消费金额" prop="value" align="center" width="180px">
+        <template #default="scope">
+          <span v-if="scope.row.acAmount>scope.row.amount*scope.row.factor" style="color: red;">
+            {{ formatMoney(scope.row.acAmount) }}
+          </span>
+          <span v-else>
+            {{ formatMoney(scope.row.acAmount) }}
+          </span>
+        </template>
+      </el-table-column>
       <el-table-column label="类型" prop="value" align="center">
         <template #default="scope">
           <span>{{ scope.row.typeName }}</span>
@@ -29,16 +39,6 @@
       <el-table-column label="统计系数" prop="value" align="center">
         <template #default="scope">
           <span>{{ scope.row.factor }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="实际消费金额" prop="value" align="center" width="180px">
-        <template #default="scope">
-          <span v-if="scope.row.acAmount>scope.row.amount*scope.row.factor" style="color: red;">
-            {{ formatMoney(scope.row.acAmount) }}
-          </span>
-          <span v-else>
-            {{ formatMoney(scope.row.acAmount) }}
-          </span>
         </template>
       </el-table-column>
       <el-table-column label="预算占比" prop="value" align="center">

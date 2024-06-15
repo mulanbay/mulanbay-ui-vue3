@@ -95,28 +95,6 @@
           <span>{{ scope.row.days }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="疼痛级别" align="center">
-        <template #default="scope">
-          <el-rate
-            v-model="scope.row.painLevel"
-            disabled
-            show-score
-            text-color="#ff9900"
-            score-template="{value}">
-          </el-rate>
-        </template>
-      </el-table-column>
-      <el-table-column label="重要等级" align="center" >
-        <template #default="scope">
-          <el-rate
-            v-model="scope.row.important"
-            disabled
-            show-score
-            text-color="#ff9900"
-            score-template="{value}">
-          </el-rate>
-        </template>
-      </el-table-column>
       <el-table-column label="操作" align="center" width="140" fixed="right" class-name="small-padding fixed-width">
         <template #default="scope">
           <el-button

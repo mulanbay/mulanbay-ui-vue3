@@ -117,12 +117,12 @@
     <!--列表数据-->
     <el-table v-loading="loading" :data="treatList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="ID" fixed="left" prop="treatId" sortable="custom" align="center" width="120">
+      <el-table-column label="ID" fixed="left" prop="treatId" sortable="custom" align="center" width="70">
         <template #default="scope">
           <span>{{ scope.row.treatId }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="类型" align="center" width="95">
+      <el-table-column label="类型" align="center" width="80">
         <template #default="scope">
           <span class="link-type" @click="handleEdit(scope.row)">{{ scope.row.treatTypeName }}</span>
         </template>
