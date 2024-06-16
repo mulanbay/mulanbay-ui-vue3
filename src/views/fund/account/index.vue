@@ -68,7 +68,7 @@
     <!--列表数据-->
     <el-table v-loading="loading" :data="accountList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="编号" fixed="left" prop="accountId" sortable="custom" align="center" width="120">
+      <el-table-column label="编号" fixed="left" prop="accountId" sortable="custom" align="center" width="100">
         <template #default="scope">
           <span>{{ scope.row.accountId }}</span>
         </template>

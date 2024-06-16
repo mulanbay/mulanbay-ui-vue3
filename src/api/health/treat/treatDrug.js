@@ -52,14 +52,11 @@ export function deleteTreatDrug(ids) {
 }
 
 
-export function getTreatDrugCateTree(groupField,needRoot) {
+export function getTreatDrugCateTree(query) {
   return request({
     url: '/treatDrug/tree',
     method: 'get',
-    params: {
-      groupField:groupField,
-      needRoot:needRoot
-    }
+    params: query
   })
 }
 

@@ -4,8 +4,8 @@
   <el-dialog :title="title" v-model="open" width="850px" append-to-body>
     <el-form >
       <el-form-item>
-        <el-button type="primary" icon="Histogram" @click="handleNextAchieveMilestone('CURRENT')">待实现的下一个里程碑（针对当前）</el-button>
-        <el-button type="primary" icon="Histogram" @click="handleNextAchieveMilestone('WHOLE')">待实现的下一个里程碑(针对全部)</el-button>
+        <el-button type="success" icon="Histogram" @click="handleNextAchieveMilestone('CURRENT')">待实现的下一个里程碑（针对当前）</el-button>
+        <el-button type="success" icon="Histogram" @click="handleNextAchieveMilestone('WHOLE')">待实现的下一个里程碑(针对全部)</el-button>
         <el-button type="primary" icon="refresh" @click="handleQuery">刷新</el-button>
       </el-form-item>
     </el-form>

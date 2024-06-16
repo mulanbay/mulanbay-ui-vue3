@@ -1,7 +1,40 @@
 <template>
 
   <!-- 对话框 -->
-  <el-dialog :title="title" v-model="open" width="550px" append-to-body>
+  <el-dialog :title="title" v-model="open" width="550px" append-to-body class="customDialogCss">
+    
+    <el-row>
+      <el-col :span="24" align="center">
+        <div>
+          <el-descriptions class="margin-top" :column="1" border>
+            <el-descriptions-item width="150px">
+              <template #label>
+                <div class="cell-item">
+                  <el-icon>
+                    <house />
+                  </el-icon>
+                  累计次数
+                </div>
+              </template>
+              {{ statData.totalCount}}次
+            </el-descriptions-item>
+            <el-descriptions-item width="150px">
+              <template #label>
+                <div class="cell-item">
+                  <el-icon>
+                    <Tools />
+                  </el-icon>
+                  累计时长
+                </div>
+              </template>
+              {{ formatMinutes(statData.totalDuration)}}
+            </el-descriptions-item>
+          </el-descriptions>
+        </div>
+      </el-col>
+    </el-row>
+    <el-divider content-position="center">明细列表</el-divider>
+    
     <el-form :model="queryParams" ref="queryForm" :inline="true">
       <el-form-item>
         <el-button type="primary" icon="search" @click="handleQuery" v-hasPermi="['read:readDetail:list']">搜索</el-button>
@@ -38,9 +71,9 @@
           <span class="link-type" @click="handleEdit(scope.row)">{{ scope.row.readTime }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="阅读时长(分钟)" align="center">
+      <el-table-column label="阅读时长" align="center">
         <template #default="scope">
-          <span>{{ scope.row.duration }}</span>
+          <span>{{ formatMinutes(scope.row.duration) }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" width="80" fixed="right" class-name="small-padding fixed-width">
@@ -72,6 +105,8 @@
 
 <script setup name="ReadDetail">
   import { fetchList, deleteReadDetail } from "@/api/read/readDetail";
+  import { getBookCostTimes } from "@/api/read/book";
+  import { formatMinutes } from "@/utils/datetime";
   import ReadDetailForm from './form.vue'
 
   const { proxy } = getCurrentInstance();
@@ -93,6 +128,7 @@
   const total = ref(0);
 
   const data = reactive({
+    statData:{},
     queryParams: {
       page: 1,
       pageSize: 10
@@ -100,7 +136,7 @@
     rules: {}
   });
 
-  const { queryParams, rules } = toRefs(data);
+  const { statData,queryParams, rules } = toRefs(data);
 
   // 定义 success 事件，用于操作成功后的回调
   const emit = defineEmits(['success']);
@@ -111,6 +147,7 @@
     resetForm();
     queryParams.value.bookId = bookId;
     getList();
+    getCostTimes();
   }
 
   // 提供 open 方法，用于打开弹窗
@@ -179,6 +216,17 @@
     ids.value = selection.map(item => item.detailId)
     single.value = selection.length != 1
     multiple.value = !selection.length
+  }
+  
+  /** 花费时间 */
+  function getCostTimes() {
+    statData.value = {};
+    getBookCostTimes(queryParams.value.bookId).then(response => {
+      if(response==null){
+        return;
+      }
+      statData.value = response;
+    });
   }
 
 

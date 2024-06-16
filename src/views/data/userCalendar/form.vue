@@ -124,8 +124,8 @@
       </el-row>
       <el-row>
         <el-col :span="12">
-          <el-form-item label="完成时间" prop="finishedTime">
-            <el-date-picker type="datetime" v-model="form.finishedTime" format="YYYY-MM-DD HH:mm:ss" value-format="YYYY-MM-DD HH:mm:ss"
+          <el-form-item label="完成时间" prop="finishTime">
+            <el-date-picker type="datetime" v-model="form.finishTime" format="YYYY-MM-DD HH:mm:ss" value-format="YYYY-MM-DD HH:mm:ss"
               :style="{width: '100%'}" placeholder="请选择时间" clearable>
             </el-date-picker>
           </el-form-item>

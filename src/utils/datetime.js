@@ -109,6 +109,23 @@ export function formatSeconds(second) {
   return time;
 }
 
+//格式化分钟
+export function formatMinutes(minutes) {
+  var time = '';
+  if (minutes >= 60 * 24) {
+    time += parseInt(minutes / (60 * 24)) + '天';
+    minutes %= 60 * 24;
+  }
+  if (minutes >= 60) {
+    time += parseInt(minutes / 60) + '小时';
+    minutes %= 60;
+  }
+  if (minutes > 0) {
+    time += parseInt(minutes) + '分钟';
+  }
+  return time;
+}
+
 //距离现在的年月日
 export function formatDays(days) {
   var time = '';

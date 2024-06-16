@@ -43,14 +43,11 @@ export function deleteTreatOperation(ids) {
   })
 }
 
-export function getTreatOperationCateTree(groupField,needRoot) {
+export function getTreatOperationCateTree(query) {
   return request({
     url: '/treatOperation/tree',
     method: 'get',
-    params: {
-      groupField:groupField,
-      needRoot:needRoot
-    }
+    params: query
   })
 }
 

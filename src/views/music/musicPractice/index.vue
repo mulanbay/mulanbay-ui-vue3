@@ -23,13 +23,14 @@
           end-placeholder="结束日期"
           :shortcuts="datePickerOptions"></el-date-picker>
       </el-form-item>
-      <el-form-item label="练习时长">
+      <el-form-item label="练习时长" v-show="moreCdn==true">
         <el-input-number v-model="queryParams.minMinutes" clearable :min="0" label="分钟" style="width: 120px"></el-input-number>
         <el-input-number v-model="queryParams.maxMinutes" clearable :min="0" label="分钟" style="width: 120px"></el-input-number>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="search" @click="handleQuery" v-hasPermi="['music:musicPractice:list']">搜索</el-button>
         <el-button icon="refresh" @click="resetQuery">重置</el-button>
+        <el-button type="warning" icon="more" @click="handleMoreCdn">{{cdnTitle}}</el-button>
       </el-form-item>
     </el-form>
 
@@ -94,9 +95,9 @@
           <span>{{ formatPracticeRange(scope.row) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="时长(分钟)" align="center" width="120">
+      <el-table-column label="时长" align="center" width="120">
         <template #default="scope">
-          <span :style="{'color':getMinutesColor(scope.row.minutes)}">{{ scope.row.minutes }}</span>
+          <span>{{ formatMinutes(scope.row.minutes) }}</span>
         </template>
       </el-table-column>
       <el-table-column label="统计" width="80">
@@ -155,6 +156,7 @@
   import { fetchList, deleteMusicPractice, getMusicPractice } from "@/api/music/musicPractice";
   import { getInstrumentTree } from "@/api/music/instrument";
   import { getPercent, progressColors } from "@/utils/mulanbay";
+  import { formatMinutes } from "@/utils/datetime";
   import { getQueryObject } from "@/utils/index";
   import MusicPracticeForm from './form.vue'
   import MusicPracticeCopyForm from './copyForm.vue'
@@ -194,6 +196,7 @@
 
   const { queryParams } = toRefs(data);
 
+  
   /** 统计 */
   function handleStat() {
     //路由定向

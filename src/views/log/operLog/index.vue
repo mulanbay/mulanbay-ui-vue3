@@ -206,18 +206,23 @@
       <ParasDetail ref="parasDetailRef"></ParasDetail>
     </el-dialog>
 
+    <!-- 主键详情 -->
+    <BeanDetail ref="beanDetailRef" />
 
   </div>
 </template>
 
 <script setup name="OperLog">
-  import { fetchList, getBeanDetail } from "@/api/log/operLog";
+  import { fetchList } from "@/api/log/operLog";
   import { getFuncTree } from "@/api/auth/sysFunc";
   import { getDomainClassList } from "@/api/common";
-  import ParasDetail from '../../common/jsonTreeTable'
+  import ParasDetail from '../../common/jsonTreeTable';
+  import BeanDetail from './beanDetail';
+  
   //请求参数
   let parasDetailRef = ref({});
-
+  let beanDetailRef = ref({});
+  
   const { proxy } = getCurrentInstance();
   // 遮罩层
   const loading = ref(true);
@@ -312,15 +317,7 @@
 
   /** 主键值详情 */
   function showBeanDetail(row) {
-    proxy.$modal.loading("正在加载数据，请稍候！");
-    getBeanDetail(row.id).then(response => {
-      proxy.$modal.closeLoading();
-      parasDetailOpen.value = true;
-      parasDetailTitle.value = '操作对象(' + response.beanName + '),ID=' + response.idValue;;
-      setTimeout(function() {
-        parasDetailRef.value.showData(response.beanData);
-      }, 100);
-    });
+    beanDetailRef.value.showData(row.id);
   }
 
   /** 查询列表 */

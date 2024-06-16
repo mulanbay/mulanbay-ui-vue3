@@ -105,19 +105,11 @@
           </span>
         </template>
       </el-table-column>
-      <el-table-column label="阅读明细" width="80" align="center">
+      <el-table-column label="明细" width="80" align="center">
         <template #default="scope">
-          <el-tooltip class="box-item" effect="dark" content="明细列表" placement="top">
-            <span class="link-type" @click="handleReadList(scope.row)">
-              <el-icon><Grid /></el-icon>
-            </span>
-          </el-tooltip>
-          <el-divider direction="vertical"></el-divider>
-          <el-tooltip class="box-item" effect="dark" content="时间统计" placement="top">
-            <span class="link-type" @click="handleCostTimes(scope.row)">
-              <el-icon><Histogram /></el-icon>
-            </span>
-          </el-tooltip>
+          <span class="link-type" @click="handleReadList(scope.row)">
+            <el-icon><Grid /></el-icon>
+          </span>
         </template>
       </el-table-column>
       <el-table-column label="借入/购买日期" align="center" width="120">
@@ -239,7 +231,7 @@
 </template>
 
 <script setup name="Book">
-  import { fetchList, deleteBook, getBookCostTimes } from "@/api/read/book";
+  import { fetchList, deleteBook } from "@/api/read/book";
   import { getBookCategoryTree } from "@/api/read/bookCategory";
   import { getNowDateString, dateDiff, formatDays, formatSeconds } from "@/utils/datetime";
   import BookForm from './form.vue'
@@ -292,20 +284,6 @@
   /** 阅读明细列表 */
   function handleReadList(row) {
     readDetailListRef.value.showData(row.bookId);
-  }
-
-  /** 花费时间 */
-  function handleCostTimes(row) {
-    getBookCostTimes(row.bookId).then(response => {
-      if(response==null){
-        proxy.$modal.msgWarning("该书还没有开始阅读");
-        return;
-      }
-      let content = '图书['+row.bookName+'],累计阅读时间:'+response+'分钟';
-      ElMessageBox.alert(content, '阅读时间', {
-        confirmButtonText: 'OK',
-      })
-    });
   }
 
   /** 搜索按钮操作 */

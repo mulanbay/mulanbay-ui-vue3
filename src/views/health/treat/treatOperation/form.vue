@@ -11,6 +11,11 @@
               filterable
               allow-create
               default-first-option
+              remote
+              reserve-keyword
+              placeholder="输入手术名称"
+              remote-show-suffix
+              :remote-method="filterTreatOperationCateTree"
               :style="{width: '100%'}">
               <el-option
                 v-for="dict in operationNameOptions"
@@ -165,7 +170,11 @@
 
   /** 加载下拉选项 */
   function loadOptions() {
-    getTreatOperationCateTree('operationName', false).then(
+    let operationNamePara = {
+      groupField:'operationName',
+      needRoot:false
+    };
+    getTreatOperationCateTree(operationNamePara).then(
       response => {
         operationNameOptions.value = response;
       }
@@ -173,6 +182,20 @@
     proxy.getDictItemTree('OPERATION_CATEGORY', false).then(response => {
       categoryOptions.value = response;
     });
+  }
+  
+  /** 根据下拉框的输入筛选drug名称 */
+  function filterTreatOperationCateTree(name) {
+    let operationNamePara = {
+      groupField:'operationName',
+      needRoot:false,
+      name: name
+    }
+    getTreatOperationCateTree(operationNamePara).then(
+      response => {
+        operationNameOptions.value = response;
+      }
+    );
   }
 
   // 表单重置

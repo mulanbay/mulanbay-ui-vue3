@@ -10,6 +10,11 @@
               v-model="form.drugName"
               filterable
               allow-create
+              remote
+              reserve-keyword
+              placeholder="输入药品名称"
+              remote-show-suffix
+              :remote-method="filterTreatDrugCateTree"
               default-first-option
               :style="{width: '100%'}"
               @change="loadDrugProperties">
@@ -257,12 +262,20 @@
 
   /** 加载下拉选项 */
   function loadOptions() {
-    getTreatDrugCateTree('drugName', false).then(
+    let drugNamePara = {
+      groupField:'drugName',
+      needRoot:false
+    };
+    getTreatDrugCateTree(drugNamePara).then(
       response => {
         drugNameOptions.value = response;
       }
     );
-    getTreatDrugCateTree('disease', false).then(
+    let diseasePara = {
+      groupField:'disease',
+      needRoot:false
+    }
+    getTreatDrugCateTree(diseasePara).then(
       response => {
         diseaseOptions.value = response;
       }
@@ -276,6 +289,20 @@
     proxy.getDictItemTree('DRUG_UNIT', false).then(response => {
       unitOptions.value = response;
     });
+  }
+  
+  /** 根据下拉框的输入筛选drug名称 */
+  function filterTreatDrugCateTree(name) {
+    let drugNamePara = {
+      groupField:'drugName',
+      needRoot:false,
+      name: name
+    }
+    getTreatDrugCateTree(drugNamePara).then(
+      response => {
+        drugNameOptions.value = response;
+      }
+    );
   }
 
   // 表单重置

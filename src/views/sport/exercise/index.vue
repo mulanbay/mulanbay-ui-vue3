@@ -25,14 +25,7 @@
           end-placeholder="结束日期"
           :shortcuts="datePickerOptions"></el-date-picker>
       </el-form-item>
-      <el-form-item label="名称检索" prop="name">
-        <el-input
-          v-model="queryParams.name"
-          placeholder="请输入名称"
-          clearable
-          style="width: 240px"
-          @keyup.enter.native="handleQuery" />
-      </el-form-item>
+
       <el-form-item v-show="moreCdn==true" label="筛选最佳" prop="containBest">
         <el-switch v-model="queryParams.containBest" @change="handleQuery"></el-switch>
       </el-form-item>
@@ -121,7 +114,7 @@
     <!--列表数据-->
     <el-table v-loading="loading" :data="exerciseList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="ID" fixed="left" prop="exerciseId" sortable="custom" align="center" width="120">
+      <el-table-column label="ID" fixed="left" prop="exerciseId" sortable="custom" align="center" width="80">
         <template #default="scope">
           <span>{{ scope.row.exerciseId }}</span>
         </template>

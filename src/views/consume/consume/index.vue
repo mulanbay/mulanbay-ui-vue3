@@ -138,7 +138,7 @@
     <!--列表数据-->
     <el-table v-loading="loading" :data="consumeList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="ID" fixed="left" prop="consumeId" sortable="custom" align="center" width="120">
+      <el-table-column label="ID" fixed="left" prop="consumeId" sortable="custom" align="center" width="100">
         <template #default="scope">
           <span>{{ scope.row.consumeId }}</span>
         </template>

@@ -2,7 +2,6 @@
 
   <!-- 调度详情对话框 -->
   <el-dialog :title="scheduleDetailTitle" v-model="scheduleDetailOpen" width="850px" append-to-body class="customDialogCss">
-    <!--调度比较数据-->
     <el-row>
       <el-col :span="24" align="center">
         <el-card>
