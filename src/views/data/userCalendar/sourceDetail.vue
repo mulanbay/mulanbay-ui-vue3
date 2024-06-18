@@ -16,7 +16,7 @@
         <el-button type="danger" icon="delete" @click="handleDelete">删除</el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="warning" icon="CircleClose" @click="detailOpen=false">关闭</el-button>
+        <el-button type="success" icon="CircleClose" @click="handleFinish" v-if="beanData.finishTime==null" >关闭</el-button>
       </el-col>
     </el-row>
 
@@ -170,12 +170,21 @@
         <CalendarDataInfo ref="calendarDataInfoRef" />
       </el-tab-pane>
     </el-tabs>
+    
+    <template #footer>
+      <div class="dialog-footer">
+        <el-button type="danger" icon="CircleClose" @click="detailOpen=false">关闭</el-button>
+      </div>
+    </template>
 
     <!-- 表单 -->
     <UserCalendarForm ref="formRef" @success="loadData" />
    
    <!-- 流水日志 -->
    <FlowLogList ref="flowLogListRef" />
+    
+    <!-- 完成日历 -->
+    <FinishCalendar ref="finishCalendarRef" @success="loadData"/>
     
   </el-dialog>
 
@@ -188,10 +197,12 @@
   import CalendarDataInfo from '../../common/jsonTreeTable'
   import UserCalendarForm from './form.vue'
   import FlowLogList from './flowLogList.vue'
+  import FinishCalendar from './finish.vue'
 
   const { proxy } = getCurrentInstance();
   const formRef = ref();
   const flowLogListRef = ref();
+  const finishCalendarRef = ref();
 
   //可执行时间段
   const detailTitle = ref('日历详情');
@@ -307,6 +318,11 @@
         finishSourceMessage.value=response.finishSourceMessage;
       }
     });
+  }
+
+  /** 关闭按钮操作 */
+  function handleFinish() {
+    finishCalendarRef.value.openForm(calendarId.value);
   }
 
 

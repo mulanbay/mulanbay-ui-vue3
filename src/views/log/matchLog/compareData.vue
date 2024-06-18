@@ -138,13 +138,12 @@
   // 表单重置
   function resetForm() {
     matchLogInfo.value = {};
-    setTimeout(function() {
+    proxy.$nextTick(()=>{
       consumeDataRef.value.showData(null);
-    }, 100);
-    setTimeout(function() {
+    });
+    proxy.$nextTick(()=>{
       compareDataRef.value.showData(null);
-    }, 100);
-
+    });
   }
 
   /** 初始化 **/

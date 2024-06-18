@@ -120,7 +120,7 @@
             <el-icon><Share /></el-icon>
           </span>    
           <span v-if="scope.row.finishType!=null">
-           <span class="link-type" @click="handleEdit(scope.row)"><el-icon color="green"><Select /></el-icon>{{ scope.row.title }}</span>
+           <span class="link-type" @click="handleEdit(scope.row)"><el-icon color="green"><CircleCheck /></el-icon>{{ scope.row.title }}</span>
           </span>
           <span v-else>
            <span class="link-type" @click="handleEdit(scope.row)">{{ scope.row.title }}</span>
@@ -236,7 +236,7 @@
         <template #default="scope">
           <el-button
             link
-            type="success"
+            type="primary"
             icon="Promotion"
             v-if="scope.row.finishTime!=null"
             @click="handleReOpen(scope.row)"
@@ -244,7 +244,7 @@
           </el-button>
           <el-button
             link
-            type="warning"
+            type="success"
             icon="CircleCloseFilled"
             v-if="scope.row.finishTime==null"
             @click="handleFinish(scope.row)"
@@ -277,6 +277,9 @@
     <!-- 来源详情 -->
     <SourceDetail ref="sourceDetailRef" @success="getList"/>
     
+    <!-- 完成日历 -->
+    <FinishCalendar ref="finishCalendarRef" @success="getList"/>
+    
   </div>
 </template>
 
@@ -285,11 +288,13 @@
   import UserCalendarForm from './form.vue'
   import FlowLogList from './flowLogList.vue'
   import SourceDetail from './sourceDetail.vue'
+  import FinishCalendar from './finish.vue'
 
   const { proxy } = getCurrentInstance();
   const formRef = ref();
   const flowLogListRef = ref();
   const sourceDetailRef = ref();
+  const finishCalendarRef = ref();
 
   // 遮罩层
   const loading = ref(true);
@@ -384,7 +389,7 @@
   /** 关闭按钮操作 */
   function handleFinish(row) {
     const id = row.calendarId;
-    formRef.value.openForm(id, 'edit');
+    finishCalendarRef.value.openForm(id);
   }
 
   /** 修改按钮操作 */

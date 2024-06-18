@@ -15,7 +15,7 @@
             :shortcuts="datePickerOptions"></el-date-picker>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" icon="search" @click="handleQuery" v-hasPermi="['data:userCalendar:flowLogList']">统计</el-button>
+          <el-button type="primary" icon="search" @click="handleQuery" v-hasPermi="['data:userCalendar:flowLogList']">搜索</el-button>
           <el-button type="success" icon="HomeFilled" @click="gotoMain" v-hasPermi="['data:userCalendar:flowLogList']">首页</el-button>
           <el-button type="success" icon="DArrowLeft" :disabled="queryParams.page==1" @click="gotoNextPage(-1)" v-hasPermi="['data:userCalendar:flowLogList']">上一页</el-button>
           <el-button type="success" icon="DArrowRight" @click="gotoNextPage(1)" v-hasPermi="['data:userCalendar:flowLogList']">下一页</el-button>
@@ -44,6 +44,11 @@
               <span>{{ scope.row.content }}</span>
             </template>
           </el-table-column>
+          <el-table-column label="间隔" align="center" width="120">
+            <template #default="scope">
+              <span>{{ scope.row.gapDaysDesc }}</span>
+            </template>
+          </el-table-column>
         </el-table>
       </div>
 
@@ -54,6 +59,7 @@
 
 <script setup name="UserCalendarFlowLogList">
   import { getCalendarFlowLogList } from "@/api/data/userCalendar";
+  import { dateDiff, tillNowDays, formatDays } from "@/utils/datetime";
 
   const { proxy } = getCurrentInstance();
 
@@ -134,12 +140,23 @@
     dataList.value= [];
     getCalendarFlowLogList(proxy.addDateRange(queryParams.value, dateRange.value)).then(response => {
       loading.value = false;
-      if(response.length<=0){
+      const n = response.length;
+      if(n<=0){
         queryParams.value.page = 1;
         proxy.$modal.msgError("无更多数据");
         return;
       }
-      dataList.value=response;
+      for (let i = 0; i < n; i++) {
+        let d = response[i];
+        //计算记录间的间隔
+        if (i >= 1) {
+          let previousData = response[i - 1];
+          let gapDays = dateDiff(previousData.date, d.date);
+          let gapDaysDesc = formatDays(gapDays);
+          d.gapDaysDesc = gapDaysDesc;
+        }
+        dataList.value.push(d);
+      }
     });
   }
 

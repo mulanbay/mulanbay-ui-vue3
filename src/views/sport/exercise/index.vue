@@ -139,10 +139,14 @@
           <template #default="scope">
             <span>{{ scope.row.value+scope.row.sport.unit }}</span>
             <span v-if="'CURRENT' ==scope.row.mileageBest">
-              <el-tag type="success">当前最佳</el-tag>
+              <el-tooltip content="当前最佳" effect="dark" placement="top">
+                <el-icon color="green"><Flag /></el-icon>
+              </el-tooltip>
             </span>
             <span v-if="'ONCE' ==scope.row.mileageBest">
-              <el-tag type="success">历史最佳</el-tag>
+              <el-tooltip content="历史最佳" effect="dark" placement="top">
+                <el-icon color="blue"><StarFilled /></el-icon>
+              </el-tooltip>
             </span>
           </template>
         </el-table-column>
@@ -160,10 +164,14 @@
           <template #default="scope">
             <span>{{ scope.row.speed }}</span>
             <span v-if="'CURRENT' ==scope.row.fastBest">
-              <el-tag type="success">当前最佳</el-tag>
+              <el-tooltip content="当前最佳" effect="dark" placement="top">
+                <el-icon color="green"><Flag /></el-icon>
+              </el-tooltip>
             </span>
             <span v-if="'ONCE' ==scope.row.fastBest">
-              <el-tag type="success">历史最佳</el-tag>
+              <el-tooltip content="历史最佳" effect="dark" placement="top">
+                <el-icon color="blue"><StarFilled /></el-icon>
+              </el-tooltip>
             </span>
           </template>
         </el-table-column>

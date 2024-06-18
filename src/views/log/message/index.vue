@@ -235,7 +235,7 @@
 
   /** 系统代码详情 */
   function showSysCode(row) {
-    sysCodeFormRef.value.openForm(row.code, 'view');
+    sysCodeFormRef.value.openForm(row.code, 'edit');
   }
 
   /** 详情 */

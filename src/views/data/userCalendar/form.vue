@@ -2,7 +2,7 @@
 
   <!-- 表单编辑对话框 -->
   <el-dialog :title="title" v-model="open" width="750px" append-to-body class="customDialogCss">
-    <el-form ref="formRef" :model="form" :rules="rules" v-loading="formLoading" label-width="120px">
+    <el-form ref="formRef" :model="form" :rules="rules" v-loading="formLoading" label-width="100px">
       <el-row>
         <el-col :span="24">
           <el-form-item label="日历标题" prop="title">
@@ -234,7 +234,7 @@
         labelPosition: 'right',
         labelWidth: '120px',
         size: undefined,
-        inline: false,
+        inline: true,
         hideRequiredAsterisk: false
       },
       row: {

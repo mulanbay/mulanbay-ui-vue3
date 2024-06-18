@@ -77,3 +77,14 @@ export function reSaveBudgetLog(logId) {
     data
   })
 }
+
+export function updateAccountChange(logId) {
+  const data = {
+      logId
+  }
+  return request({
+    url: '/budgetLog/updateAccountChange',
+    method: 'post',
+    data
+  })
+}

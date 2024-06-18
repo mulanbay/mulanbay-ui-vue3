@@ -232,11 +232,11 @@ export function parseJsonToTree(jsonObj,prefix) {
     if(element==null||element==''){
       datas.push({id:pp+key,text:'--',label:'--'})
     }else if(element.length > 0 && typeof(element) == "object" || typeof(element) == "object") {
-        let eo = {id:pp+key,text:'详情',label:'详情'};
-        let nextPrefix = (pp=='' ? key : pp+'_'+key);
-        let children = parseJsonToTree(element,nextPrefix);
-        eo.children = children;
-        datas.push(eo);
+      let eo = {id:pp+key,text:'详情',label:'详情'};
+      let nextPrefix = (pp=='' ? key : pp+'_'+key);
+      let children = parseJsonToTree(element,nextPrefix);
+      eo.children = children;
+      datas.push(eo);
     } else {
       datas.push({id:pp+key,text:element,label:element})
     }
@@ -245,11 +245,11 @@ export function parseJsonToTree(jsonObj,prefix) {
   for(let j=0;j<datas.length-1;j++){
   //两两比较，如果前一个比后一个大，则交换位置。
    for(let i=0;i<datas.length-1-j;i++){
-        if(datas[i].id>datas[i+1].id){
-            let temp = datas[i];
-            datas[i] = datas[i+1];
-            datas[i+1] = temp;
-        }
+      if(datas[i].id>datas[i+1].id){
+        let temp = datas[i];
+        datas[i] = datas[i+1];
+        datas[i+1] = temp;
+      }
     }
   }
   return datas;

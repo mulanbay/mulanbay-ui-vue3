@@ -115,7 +115,7 @@
       <el-table-column label="账户变化" align="center" fixed="right" min-width="100px" :show-overflow-tooltip="true">
         <template #default="scope">
           <span v-if="scope.row.accountChangeAmount == null&&scope.row.budget == null">
-           <span class="link-type" @click="handleAccountChange(scope.row.bussKey)"><el-icon><EditPen /></el-icon></span>
+           <span class="link-type" @click="handleAccountChange(scope.row.logId)"><el-icon><EditPen /></el-icon></span>
           </span>
           <span v-else>{{ formatMoney(scope.row.accountChangeAmount) }}</span>
         </template>
@@ -166,9 +166,8 @@
 </template>
 
 <script setup name="BudgetLog">
-  import { fetchList, deleteBudgetLog,reSaveBudgetLog } from "@/api/fund/budgetLog";
+  import { fetchList, deleteBudgetLog,reSaveBudgetLog,updateAccountChange } from "@/api/fund/budgetLog";
   import {getBudgetTree} from "@/api/fund/budget";
-  import {updateBudgetLogAccountChange} from "@/api/fund/account";
   import { getPercent, progressColors } from "@/utils/mulanbay";
   import { getQueryObject } from "@/utils/index";
   import BudgetLogForm from './form.vue'
@@ -212,16 +211,21 @@
   }
   
   /** 账户变化统计 */
-  function handleAccountChange(bussKey){
+  function handleAccountChange(logId){
     proxy.$confirm('是否要统计该条记录的账户变化值?', "警告", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
       }).then(function() {
-        return updateBudgetLogAccountChange(bussKey);
+        let b = updateAccountChange(logId);
+        if(b){
+          proxy.$modal.msgSuccess("统计成功");
+          getList();
+        }else{
+          proxy.$modal.msgWarning("统计失败或者无法统计");
+        }
       }).then(() => {
-        getList();
-        proxy.$modal.msgSuccess("统计成功");
+        
       }).catch(function() {});
   }
   

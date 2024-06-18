@@ -12,16 +12,18 @@
 
     <!--列表数据-->
     <el-table v-loading="loading" :data="dataList">
-      <el-table-column label="ID" fixed="left" prop="milestoneId" sortable="custom" align="center" width="120">
+      <el-table-column label="ID" fixed="left" prop="milestoneId" sortable="custom" align="center" width="80">
         <template #default="scope">
           <span>{{ scope.row.milestoneId }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="名称" fixed="left" min-width="180px" :show-overflow-tooltip="true">
+      <el-table-column label="名称" fixed="left" min-width="140px" :show-overflow-tooltip="true">
         <template #default="scope">
           <span class="link-type" @click="handleEdit(scope.row)">{{ scope.row.milestoneName }}</span>
           <span v-if="scope.row.exercise != null">
-           <el-tag type="success">已实现</el-tag>
+            <el-tooltip content="已实现" effect="dark" placement="top">
+              <el-icon color="green"><Flag /></el-icon>
+            </el-tooltip>
           </span>
         </template>
       </el-table-column>
@@ -50,7 +52,7 @@
           <span>{{ scope.row.duration+'分钟' }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="花费天数" align="center" min-width="140px" :show-overflow-tooltip="true">
+      <el-table-column label="花费时长" align="center" min-width="140px" :show-overflow-tooltip="true">
         <template #default="scope">
           <span v-if="scope.row.costDays!=null">{{ formatDays(scope.row.costDays) }}</span>
         </template>

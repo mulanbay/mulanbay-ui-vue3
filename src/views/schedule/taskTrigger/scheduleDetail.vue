@@ -99,7 +99,8 @@
               </el-table-column>
               <el-table-column label="值"  :show-overflow-tooltip="true">
                 <template #default="scope">
-                  <span>{{ scope.row.text }}</span>
+                  <span v-if="isChanged(scope.row.text)" style="color: red;">{{ scope.row.text }}</span>
+                  <span v-else>{{ scope.row.text }}</span>
                 </template>
               </el-table-column>
             </el-table>
@@ -151,12 +152,33 @@
   defineExpose({ openScheduleDetail });
   
   /** 加载数据 */
+  function isChanged(s){
+    if(proxy.isEmpty(s)){
+      return false;
+    }else{
+      s=''+s;
+      return s.indexOf("***")!=-1;
+    }
+  }
+  
+  /** 加载数据 */
   function loadData(){
     resetForm();
     getScheduleDetail(formTriggerId.value).then(response => {
-      dbDataList.value = parseJsonToTree(response.dbInfo);
+      let diTree = parseJsonToTree(response.dbInfo);
+      dbDataList.value = diTree;
       if (response.scheduleInfo != null) {
-        scheduleDataList.value = parseJsonToTree(response.scheduleInfo);
+        let dbData = response.dbInfo ; 
+        let siData = response.scheduleInfo ; 
+        let datas = new Array();
+        //不相同的增加标识
+        for(let key in siData){
+          if(siData[key]!= dbData[key]){
+            siData[key] = siData[key]+'***';
+          }
+        }
+        let siTree = parseJsonToTree(siData);
+        scheduleDataList.value = siTree;
       }
       let ts = tillNowSeconds(null, response.addToScheduleTime);
       let tillNow = tillNowString(ts);
