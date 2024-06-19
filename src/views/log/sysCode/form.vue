@@ -52,33 +52,41 @@
         </el-col>
       </el-row>
       <el-row>
-        <el-col :span="12">
+        <el-col :span="8">
           <el-form-item label="发送消息" prop="notifiable">
             <el-switch
               v-model="form.notifiable">
             </el-switch>
           </el-form-item>
         </el-col>
-        <el-col :span="12">
+        <el-col :span="8">
           <el-form-item label="实时提醒" prop="realtime">
             <el-switch
               v-model="form.realtime">
             </el-switch>
           </el-form-item>
         </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="12">
+        <el-col :span="8">
           <el-form-item label="记录日志" prop="loggable">
             <el-switch
               v-model="form.loggable">
             </el-switch>
           </el-form-item>
         </el-col>
+      </el-row>
+      <el-row>
         <el-col :span="12">
-          <el-form-item label="消息限流" prop="limitPeriod">
-            <el-input-number v-model="form.limitPeriod" controls-position="right" :min="0" :controls="true" :precision="0" style="width: 80%;" />
-            秒
+          <el-form-item label="消息限流" prop="userPeriod">
+            每
+            <el-input-number v-model="form.userPeriod" controls-position="right" :min="0" :controls="true" :precision="0" style="width: 120px;" />
+            秒一次
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="系统限流" prop="sysLimit">
+            每天
+            <el-input-number v-model="form.sysLimit" controls-position="right" :min="0" :controls="true" :precision="0" style="width: 120px;" />
+            次
           </el-form-item>
         </el-col>
       </el-row>
@@ -152,6 +160,12 @@
       ],
       causes: [
         { required: true, message: "产生原因不能为空", trigger: "blur" }
+      ],
+      userPeriod: [
+        { required: true, message: "用户不能为空", trigger: "blur" }
+      ],
+      sysLimit: [
+        { required: true, message: "系统限制次数不能为空", trigger: "blur" }
       ]
     }
   });
@@ -199,7 +213,8 @@
       realtime: false,
       notifiable: true,
       loggable: true,
-      limitPeriod: 0
+      userPeriod: 0,
+      sysLimit: 0
     };
     proxy.resetForm("formRef");
   }

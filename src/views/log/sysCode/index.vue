@@ -154,9 +154,32 @@
           <span>{{ scope.row.count }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="限流秒数" align="center">
+      <el-table-column label="消息限流" align="center" width="100">
         <template #default="scope">
-          <span>{{ scope.row.limitPeriod }}</span>
+          <span v-if="scope.row.userPeriod<=0" style="color: green;">
+            不限流
+          </span>
+          <span v-else>
+            {{ scope.row.userPeriod }}秒/次
+          </span>
+        </template>
+      </el-table-column>
+      <el-table-column label="系统限流" align="center" width="100">
+        <template #default="scope">
+          <span v-if="scope.row.sysLimit<=0" style="color: green;">
+            不限流
+          </span>
+          <span v-else>
+            {{ scope.row.sysLimit }}次/天
+          </span>
+        </template>
+      </el-table-column>
+      <el-table-column label="缓存" width="80" align="center">
+        <template #default="scope">
+          <span class="link-type" @click="showCacheInfo(scope.row)"><el-icon>
+              <Compass />
+            </el-icon>
+          </span>
         </template>
       </el-table-column>
       <el-table-column label="创建时间" width="180">
@@ -193,6 +216,9 @@
 
     <!-- 表单弹窗：添加/修改 -->
     <SysCodeForm ref="formRef" @success="getList" />
+    
+    <!-- 缓存信息 -->
+    <CacheInfo ref="cacheInfoRef" />
 
   </div>
 </template>
@@ -200,10 +226,13 @@
 <script setup name="SysCode">
   import { fetchList, deleteSysCode, refreshCache } from "@/api/log/sysCode";
   import SysCodeForm from './form.vue'
+  import CacheInfo from './cacheInfo.vue'
 
   const { proxy } = getCurrentInstance();
 
   const formRef = ref();
+  const cacheInfoRef = ref();
+  
   // 遮罩层
   const loading = ref(true);
   // 选中数组
@@ -274,7 +303,13 @@
     const code = row.code || ids.value.join(",");
     formRef.value.openForm(code, 'edit');
   }
-
+  
+  /** 缓存信息操作 */
+  function showCacheInfo(row) {
+    const code = row.code;
+    cacheInfoRef.value.showData(code);
+  }
+  
   /** 刷新缓存按钮操作 */
   function handleRefreshCache(row) {
     const refreshIds = row.code || ids.value.join(",");

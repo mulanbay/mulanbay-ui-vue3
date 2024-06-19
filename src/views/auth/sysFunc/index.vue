@@ -392,7 +392,18 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="系统代码" prop="code">
-              <el-input-number v-model="form.code" controls-position="right" :min="0" :controls="true" :precision="0" style="width: 200px" />
+              <el-select
+                v-model="form.code"
+                placeholder="系统代码"
+                allow-create
+                style="width: 200px"
+                collapse-tags>
+                <el-option
+                  v-for="dict in codeOptions"
+                  :key="dict.id"
+                  :label="dict.text"
+                  :value="dict.id" />
+              </el-select>
               <el-tooltip content="如果设置非0值，则该功能类型操作将通过错误代码表判断是否需要消息通知." effect="dark" placement="top">
                 <el-icon>
                   <QuestionFilled />
@@ -540,6 +551,8 @@
   const beanNameOptions = ref([]);
   const idFieldTypeOptions = ref([]);
   const funcTypeOptions = ref([]);
+  const codeOptions = ref([]);
+  
   const commonStatusOptions = ref(proxy.commonStatusOptions);
   const iconSelectRef = ref(null);
 
@@ -858,6 +871,10 @@
     //请求方式
     proxy.getDictItemTree('URL_SUPPORT_METHODS', false).then(response => {
       supportMethodsOptions.value = response;
+    });
+    //系统代码
+    proxy.getDictItemTree('FUNC_CODE', false).then(response => {
+      codeOptions.value = response;
     });
     //主键列类型
     proxy.getEnumDict('IdFieldType', 'FIELD', false).then(response => {

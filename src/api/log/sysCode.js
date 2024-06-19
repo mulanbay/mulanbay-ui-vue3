@@ -16,6 +16,14 @@ export function getSysCode(code) {
   })
 }
 
+export function cacheInfo(code) {
+  return request({
+    url: '/sysCode/cacheInfo',
+    method: 'get',
+    params: { code }
+  })
+}
+
 
 export function createSysCode(data) {
   return request({
