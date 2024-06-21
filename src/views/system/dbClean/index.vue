@@ -75,9 +75,10 @@
           <span class="link-type" @click="handleCounts(scope.row)">{{ scope.row.tableName }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="最近更新时间" align="center" width="160">
+      <el-table-column label="最近更新时间" align="left" width="200">
         <template #default="scope">
           <span>{{ scope.row.lastCleanTime }}</span>
+          <span v-if="compareNow(scope.row.lastCleanTime)<=0"><el-tag type="success" effect="dark" round size="small">新</el-tag></span>
         </template>
       </el-table-column>
       <el-table-column label="最近更新条数" align="center" width="160">
@@ -85,6 +86,20 @@
           <span>{{ scope.row.lastCleanCounts }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="状态" align="center" width="100">
+        <template #default="scope">
+          <span v-if="scope.row.status=='DISABLE'">
+            <el-icon color="red">
+              <CircleCloseFilled />
+            </el-icon>
+          </span>
+          <span v-else>
+            <el-icon color="green">
+              <CircleCheckFilled />
+            </el-icon>
+          </span>
+        </template>
+      </el-table-column>s
       <el-table-column label="时间字段" align="center" width="120px">
         <template #default="scope">
           <span>{{ scope.row.dateField }}</span>
@@ -98,20 +113,6 @@
       <el-table-column label="含附加条件" align="center" width="120">
         <template #default="scope">
           <span v-if="scope.row.extraCondition==null">
-            <el-icon color="red">
-              <CircleCloseFilled />
-            </el-icon>
-          </span>
-          <span v-else>
-            <el-icon color="green">
-              <CircleCheckFilled />
-            </el-icon>
-          </span>
-        </template>
-      </el-table-column>
-      <el-table-column label="状态" align="center" width="100">
-        <template #default="scope">
-          <span v-if="scope.row.status=='DISABLE'">
             <el-icon color="red">
               <CircleCloseFilled />
             </el-icon>
@@ -176,6 +177,7 @@
 
 <script setup name="DBCLean">
   import { fetchList, deleteDBClean, getTableCounts } from "@/api/system/dbClean";
+  import { dateDiff,getDay } from "@/utils/datetime";
   import DBCleanForm from './form.vue'
   import CleanForm from './clean.vue'
 
@@ -217,6 +219,15 @@
   /** 清理 */
   function handleClean(row) {
     cleanFormRef.value.openClean(row.id);
+  }
+  
+  /** 清理时间与今天比较 */
+  function compareNow(lastCleanTime){
+    if(proxy.isEmpty(lastCleanTime)){
+      return null;
+    }
+    let days = dateDiff(lastCleanTime, getDay(0));
+    return days;
   }
 
   /** 查询列表 */

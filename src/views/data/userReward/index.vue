@@ -85,16 +85,9 @@
           <span>{{ scope.row.sourceName }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="详情" align="center" width="60">
+      <el-table-column label="得分" align="center" width="100">
         <template #default="scope">
-          <span class="link-type" @click="showDetail(scope.row)">
-            <el-icon><InfoFilled /></el-icon>
-          </span>
-        </template>
-      </el-table-column>
-      <el-table-column label="得分" align="center">
-        <template #default="scope">
-          <span>{{ scope.row.rewards }}</span>
+          <span class="link-type" @click="showDetail(scope.row)">{{ scope.row.rewards }}</span>
         </template>
       </el-table-column>
       <el-table-column label="累计积分" align="center">

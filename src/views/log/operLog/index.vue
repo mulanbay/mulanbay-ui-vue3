@@ -127,7 +127,7 @@
         <template #default="scope">
           <span class="link-type" @click="showParasDetail(scope.row)">
             <el-icon>
-              <Message />
+              <Grid />
             </el-icon>
           </span>
         </template>

@@ -42,6 +42,8 @@
         <el-popover :visible="tagsPopOpen" placement="top" :width="400">
           <el-tag
             effect="plain"
+            type="primary"
+            round
             :key="tag"
             v-for="tag in hisKeywordsTags"
             :disable-transitions="false"

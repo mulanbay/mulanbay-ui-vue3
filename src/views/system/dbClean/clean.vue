@@ -77,13 +77,13 @@
 
 </template>
 
-<script setup name="TaskTriggerclean">
+<script setup name="DBCleanClean">
   import { getDBClean, manualClean } from "@/api/system/dbClean";
 
   const { proxy } = getCurrentInstance();
 
   //可执行时间段
-  const cleanTitle = ref('清理数据库表数据');
+  const cleanTitle = ref('手动清理数据库表数据');
   const cleanOpen = ref(false);
   const cleanFormRef = ref();
 
@@ -142,7 +142,7 @@
           useEc: cleanForm.value.useEc
         }
         manualClean(para).then(response => {
-          proxy.$modal.msgSuccess("清理成功");
+          proxy.$modal.msgSuccess("清理成功,共清理条数:"+response);
           cleanOpen.value = false;
           proxy.$modal.closeLoading();
           // 发送操作成功的事件

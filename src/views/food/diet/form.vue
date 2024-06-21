@@ -62,6 +62,7 @@
             <el-popover :visible="foodsTagsPopOpen" placement="bottom" :width="500">
               <el-tag
                 effect="plain"
+                round
                 :key="tag"
                 v-for="tag in hisFoodsTags"
                 :disable-transitions="false"
@@ -134,12 +135,12 @@
               <span v-for="tag in hisTagsTags">
                 <el-tag
                   effect="plain"
+                  round
                   :key="tag"
                   :disable-transitions="false"
                   @click="handleTagsTagAppend(tag.text)">
                   {{tag.text}}
                 </el-tag>
-                <el-divider direction="vertical"></el-divider>
               </span>
               <div style="text-align: right; margin: 0">
                 <el-button size="small" type="danger" icon="CircleClose" @click="tagsTagsPopOpen = false">关闭</el-button>
@@ -181,6 +182,7 @@
             <el-popover :visible="shopTagsPopOpen" placement="top" :width="400">
               <el-tag
                 effect="plain"
+                round
                 :key="tag"
                 v-for="tag in hisShopTags"
                 :disable-transitions="false"

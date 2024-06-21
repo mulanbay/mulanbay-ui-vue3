@@ -88,6 +88,13 @@
           <span>{{ scope.row.orderIndex }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="排序" align="center" width="95">
+        <template #default="scope">
+          <span class="link-type" @click="changeOrder(scope.row,-1)"><el-icon><Top /></el-icon></span>
+          <el-divider direction="vertical"></el-divider>
+          <span class="link-type" @click="changeOrder(scope.row,1)"><el-icon><Bottom /></el-icon></span>
+        </template>
+      </el-table-column>
       <el-table-column label="状态" align="center" width="95">
         <template #default="scope">
           <span v-if="scope.row.status=='ENABLE'">
@@ -228,6 +235,23 @@
     }
     editDictItem(changeForm).then(response => {
       proxy.$modal.msgSuccess("修改成功");
+      getList();
+    });
+  }
+  
+  /** 修改按钮操作 */
+  function changeOrder(row,idx) {
+    let formData = {
+      groupId: row.group.groupId,
+      itemId: row.itemId,
+      itemName: row.itemName,
+      code: row.code,
+      valueClass: row.valueClass,
+      orderIndex: row.orderIndex+idx,
+      status: row.status
+    };
+    editDictItem(formData).then(response => {
+      //proxy.$modal.msgSuccess("修改成功");
       getList();
     });
   }

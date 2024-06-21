@@ -25,7 +25,9 @@
       </el-table-column>
       <el-table-column label="名称" min-width="160px">
         <template #default="scope">
-          <span>{{ scope.row.handlerName }}</span>
+          <span class="link-type" @click="handleHandlerInfo(scope.row)">
+            {{ scope.row.handlerName }}
+          </span>
         </template>
       </el-table-column>
       <el-table-column label="类名" min-width="200px" :show-overflow-tooltip="true">
@@ -46,15 +48,6 @@
           <span v-else>
             <el-icon color="red">
               <CircleCloseFilled />
-            </el-icon>
-          </span>
-        </template>
-      </el-table-column>
-      <el-table-column label="详情" align="center" width="80">
-        <template #default="scope">
-          <span class="link-type" @click="handleHandlerInfo(scope.row)">
-            <el-icon>
-              <InfoFilled />
             </el-icon>
           </span>
         </template>

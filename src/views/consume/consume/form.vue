@@ -94,6 +94,7 @@
               </el-divider>
               <el-tag
                 effect="plain"
+                round
                 :key="tag"
                 v-for="tag in hisKeywordsTags"
                 :disable-transitions="false"
@@ -125,6 +126,7 @@
                 <el-popover :visible="brandPopOpen" placement="top" :width="350">
                   <el-tag
                     effect="plain"
+                    round
                     :key="tag"
                     v-for="tag in goodsNameTags"
                     :disable-transitions="false"

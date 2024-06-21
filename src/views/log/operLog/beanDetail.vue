@@ -34,7 +34,7 @@
         </el-card>
       </el-col>
     </el-row>
-    <el-divider content-position="center">参数详情</el-divider>
+    <el-divider content-position="center">对象详情</el-divider>
     <el-row>
       <el-col :span="24" class="card-box" align="center">
         <el-card>

@@ -26,11 +26,6 @@
       </el-row>
       <el-row>
         <el-col :span="12">
-          <el-form-item label="保留天数" prop="days">
-            <el-input-number v-model="form.days" style="width: 225px" :min="0" :precision="0" />
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
           <el-form-item label="删除类型" prop="cleanType">
             <el-select
               v-model="form.cleanType"
@@ -46,8 +41,13 @@
             </el-select>
           </el-form-item>
         </el-col>
+        <el-col :span="12" v-if="form.cleanType=='DATE_COMPARE'">
+          <el-form-item label="保留天数" prop="days">
+            <el-input-number v-model="form.days" style="width: 225px" :min="0" :precision="0" />
+          </el-form-item>
+        </el-col>
       </el-row>
-      <el-row>
+      <el-row v-if="form.cleanType=='DATE_COMPARE'">
         <el-col :span="24">
           <el-form-item label="附加条件" prop="extraCondition">
             <el-input v-model="form.extraCondition"  type="textarea" placeholder="请输入附加条件" />
@@ -88,7 +88,7 @@
 
 </template>
 
-<script setup name="MessageForm">
+<script setup name="DBCleaForm">
   import { createDBClean, editDBClean, getDBClean } from "@/api/system/dbClean";
 
   const { proxy } = getCurrentInstance();

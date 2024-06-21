@@ -47,7 +47,10 @@
             奖励积分
           </div>
         </template>
-        {{ rewardData.rewards}}
+        {{ rewardData.rewards}}分
+        <span v-if="rewardData.rewards>0"><el-tag type="success" effect="dark" round size="small">奖</el-tag></span>
+        <span v-else-if="rewardData.rewards<0"><el-tag type="danger" effect="dark" round size="small">罚</el-tag></span>
+        <span v-else><el-tag type="primary" effect="dark" round size="small">无</el-tag></span>
       </el-descriptions-item>
       <el-descriptions-item>
         <template #label>
