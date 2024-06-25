@@ -80,6 +80,11 @@
             每
             <el-input-number v-model="form.userPeriod" controls-position="right" :min="0" :controls="true" :precision="0" style="width: 120px;" />
             秒一次
+            <el-tooltip content="0为不限流." effect="dark" placement="top">
+              <el-icon>
+                <QuestionFilled />
+              </el-icon>
+            </el-tooltip>
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -87,6 +92,11 @@
             每天
             <el-input-number v-model="form.sysLimit" controls-position="right" :min="0" :controls="true" :precision="0" style="width: 120px;" />
             次
+            <el-tooltip content="0为不限流." effect="dark" placement="top">
+              <el-icon>
+                <QuestionFilled />
+              </el-icon>
+            </el-tooltip>
           </el-form-item>
         </el-col>
       </el-row>

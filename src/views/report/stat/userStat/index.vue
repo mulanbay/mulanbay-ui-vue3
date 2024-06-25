@@ -109,9 +109,9 @@
           </span>
         </template>
       </el-table-column>
-      <el-table-column label="日历时间" align="center">
+      <el-table-column label="关联日历" align="center" width="80">
         <template #default="scope">
-          <span>{{ scope.row.calendarTime }}</span>
+          <span class="link-type" @click="showRelateCalendar(scope.row)"><el-icon><Clock /></el-icon></span>
         </template>
       </el-table-column>
       <el-table-column label="配置提醒" align="center">
@@ -167,21 +167,26 @@
     <!-- 统计 -->
     <UserStatStat ref="userStatStatRef" />
     
+    <!-- 相关日历 -->
+    <RelateCalendar ref="relateCalendarRef" />
+    
   </div>
 </template>
 
 <script setup name="UserStat">
-  import { fetchList, deleteUserStat } from "@/api/report/stat/userStat";
+  import { fetchList, deleteUserStat,getBussIdentityKey } from "@/api/report/stat/userStat";
   import { getStatTemplateTree } from "@/api/report/stat/statTemplate";
   import UserStatForm from './form.vue'
   import UserStatRemindForm from '../userStatRemind/form.vue'
   import UserStatStat from './stat.vue'
+  import RelateCalendar from '../../../data/userCalendar/relateCalendar.vue'
 
   const { proxy } = getCurrentInstance();
   const formRef = ref();
   const userStatRemindFormRef = ref();
   const userStatStatRef = ref();
   const statTemplateOptions = ref();
+  const relateCalendarRef = ref();
 
   // 遮罩层
   const loading = ref(true);
@@ -229,6 +234,15 @@
   /** 提醒配置 */
   function showRemindSet(row){
     userStatRemindFormRef.value.openForm(row.statId);
+  }
+  
+  /** 相关日历 */
+  function showRelateCalendar(row){
+    getBussIdentityKey(row.statId).then(
+      response => {
+        relateCalendarRef.value.showData(response);
+      }
+    );
   }
   
   /** 查询列表 */

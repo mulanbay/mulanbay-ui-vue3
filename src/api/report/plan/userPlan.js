@@ -66,3 +66,11 @@ export function getUserPlanStatList(query) {
     params: query
   })
 }
+
+export function getBussIdentityKey(planId) {
+  return request({
+    url: '/userPlan/getBussIdentityKey',
+    method: 'get',
+    params: { planId }
+  })
+}

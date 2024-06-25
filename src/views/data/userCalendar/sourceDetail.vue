@@ -30,7 +30,7 @@
                 标题
               </div>
             </template>
-            {{ beanData.title}}
+            {{ beanData.title +'(BussID:'+beanData.bussIdentityKey+')'}}
           </el-descriptions-item>
           <el-descriptions-item>
             <template #label>

@@ -98,11 +98,6 @@
           <span>{{ scope.row.path }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="组件路径" min-width="140px" :show-overflow-tooltip="true">
-        <template #default="scope">
-          <span>{{ scope.row.component }}</span>
-        </template>
-      </el-table-column>
       <el-table-column label="路由" align="center" width="95">
         <template #default="scope">
           <span v-if="scope.row.router==true">
@@ -128,11 +123,6 @@
           <span>{{ scope.row.urlAddress }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="请求方式" align="center" width="100">
-        <template #default="scope">
-          <span>{{ scope.row.supportMethods }}</span>
-        </template>
-      </el-table-column>
       <el-table-column label="状态" align="center" width="95">
         <template #default="scope">
           <span v-if="scope.row.status=='ENABLE'">
@@ -143,8 +133,15 @@
           </span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" fixed="right" width="200" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" fixed="right" width="280" class-name="small-padding fixed-width">
         <template #default="scope">
+          <el-button
+            link
+            type="success"
+            icon="InfoFilled"
+            @click="showCacheInfo(scope.row)"
+            v-hasPermi="['auth:sysFunc:cacheInfo']">详情
+          </el-button>
           <el-button
             type="primary"
             link
@@ -434,8 +431,13 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="树形统计" prop="treeStat">
-              <el-switch v-model="form.treeStat"></el-switch>
+            <el-form-item label="记录日志" prop="doLog">
+              <el-switch v-model="form.doLog"></el-switch>
+              <el-tooltip content="是否记录操作日志." effect="dark" placement="top">
+                <el-icon>
+                  <QuestionFilled />
+                </el-icon>
+              </el-tooltip>
             </el-form-item>
           </el-col>
           <el-col :span="6">
@@ -445,62 +447,82 @@
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="12">
+          <el-col :span="6">
             <el-form-item label="更多设置">
-              <el-switch v-model="moreSetting"></el-switch>
+              <el-switch v-model="moreSet"></el-switch>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
-            <el-form-item label="URL类型" v-if="true == moreSetting">
-              <el-radio-group v-model="form.urlType">
-                <el-radio label="NORMAL">普通</el-radio>
-                <el-radio label="REST_FULL">RestFull</el-radio>
-              </el-radio-group>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="12">
-            <el-form-item label="记录返回" v-if="true == moreSetting" prop="recordReturnData">
-              <el-switch v-model="form.logRes"></el-switch>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="记录日志" v-if="true == moreSetting" prop="doLog">
-              <el-switch v-model="form.doLog"></el-switch>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="12">
-            <el-form-item label="用户触发" v-if="true == moreSetting" prop="triggerStat">
-              <el-switch v-model="form.triggerStat"></el-switch>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="数据区分用户" v-if="true == moreSetting" prop="diffUser">
-              <el-switch v-model="form.diffUser"></el-switch>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="5">
-            <el-form-item label="IP认证" v-if="true == moreSetting" prop="ipAuth">
+          <el-col :span="6">
+            <el-form-item label="IP认证" v-if="true == moreSet" prop="ipAuth">
               <el-switch v-model="form.ipAuth"></el-switch>
             </el-form-item>
           </el-col>
-          <el-col :span="5">
-            <el-form-item label="请求限制" v-if="true == moreSetting" prop="requestLimit">
-              <el-switch v-model="form.requestLimit"></el-switch>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="用户限流" prop="userPeriod" v-if="true == moreSet">
+              每
+              <el-input-number v-model="form.userPeriod" controls-position="right" :min="0" :controls="true" :precision="0" style="width: 120px;" />
+              毫秒一次
+              <el-tooltip content="0为不限流." effect="dark" placement="top">
+                <el-icon>
+                  <QuestionFilled />
+                </el-icon>
+              </el-tooltip>
             </el-form-item>
           </el-col>
-          <el-col :span="14">
-            <el-form-item v-if="form.requestLimit == true&&true == moreSetting" label="请求频率">
-              每
-              <el-input-number v-model="form.requestLimitPeriod" style="width: 100px;" controls-position="right" :min="0" :controls="true" :precision="0" />
-              秒
-              <el-input-number v-model="form.dayLimit" style="width: 100px;" controls-position="right" :min="0" :controls="true" :precision="0" />
+          <el-col :span="12">
+            <el-form-item label="系统限流" prop="sysLimit" v-if="true == moreSet">
+              每天
+              <el-input-number v-model="form.sysLimit" controls-position="right" :min="0" :controls="true" :precision="0" style="width: 120px;" />
               次
+              <el-tooltip content="0为不限流." effect="dark" placement="top">
+                <el-icon>
+                  <QuestionFilled />
+                </el-icon>
+              </el-tooltip>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="6">
+            <el-form-item label="记录返回" v-if="true == moreSet" prop="recordReturnData">
+              <el-switch v-model="form.logRes"></el-switch>
+              <el-tooltip content="操作日志记录返回数据." effect="dark" placement="top">
+                <el-icon>
+                  <QuestionFilled />
+                </el-icon>
+              </el-tooltip>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="树形统计" v-if="true == moreSet" prop="treeStat">
+              <el-switch v-model="form.treeStat"></el-switch>
+              <el-tooltip content="日志在树形统计中显示." effect="dark" placement="top">
+                <el-icon>
+                  <QuestionFilled />
+                </el-icon>
+              </el-tooltip>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="用户触发" v-if="true == moreSet" prop="triggerStat">
+              <el-switch v-model="form.triggerStat"></el-switch>
+              <el-tooltip content="该请求为用户触发的,因为有些请求(如筛选项)为系统触发." effect="dark" placement="top">
+                <el-icon>
+                  <QuestionFilled />
+                </el-icon>
+              </el-tooltip>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="区分用户" v-if="true == moreSet" prop="diffUser">
+              <el-switch v-model="form.diffUser"></el-switch>
+              <el-tooltip content="该功能的数据是否区分用户." effect="dark" placement="top">
+                <el-icon>
+                  <QuestionFilled />
+                </el-icon>
+              </el-tooltip>
             </el-form-item>
           </el-col>
         </el-row>
@@ -519,7 +541,9 @@
         </div>
       </template>
     </el-dialog>
-
+    
+    <!-- 缓存信息 -->
+    <CacheInfo ref="cacheInfoRef" />
 
   </div>
 </template>
@@ -527,12 +551,15 @@
 <script setup name="SysFunc">
   import { treeList, getMenuTree, getSysFunc, editSysFunc, createSysFunc, deleteSysFunc, refreshCache } from "@/api/auth/sysFunc";
   import { getDomainClassList } from "@/api/common";
+  import CacheInfo from './cacheInfo.vue'
 
   import SvgIcon from "@/components/SvgIcon";
   import IconSelect from "@/components/IconSelect";
 
   const { proxy } = getCurrentInstance();
-  const moreSetting = ref(false);
+  const moreSet = ref(false);
+  const cacheInfoRef = ref();
+  
   // 遮罩层
   const loading = ref(true);
   // 选中数组
@@ -584,9 +611,6 @@
       status: [
         { required: true, message: "状态不能为空", trigger: "blur" }
       ],
-      statable: [
-        { required: true, message: "加入统计不能为空", trigger: "blur" }
-      ],
       urlAddress: [
         { required: true, message: "请求地址不能为空", trigger: "blur" }
       ],
@@ -601,6 +625,45 @@
       ],
       funcType: [
         { required: true, message: "功能类型不能为空", trigger: "blur" }
+      ],
+      doLog: [
+        { required: true, message: "是否记录日志不能为空", trigger: "blur" }
+      ],
+      triggerStat: [
+        { required: true, message: "是否计入触发统计不能为空", trigger: "blur" }
+      ],
+      diffUser: [
+        { required: true, message: "是否区分用户不能为空", trigger: "blur" }
+      ],
+      loginAuth: [
+        { required: true, message: "是否登录认证不能为空", trigger: "blur" }
+      ],
+      permissionAuth: [
+        { required: true, message: "是否授权认证不能为空", trigger: "blur" }
+      ],
+      ipAuth: [
+        { required: true, message: "是否IP认证不能为空", trigger: "blur" }
+      ],
+      alwaysShow: [
+        { required: true, message: "是否始终显示不能为空", trigger: "blur" }
+      ],
+      userPeriod: [
+        { required: true, message: "用户限流不能为空", trigger: "blur" }
+      ],
+      sysLimit: [
+        { required: true, message: "系统限流不能为空", trigger: "blur" }
+      ],
+      logRes: [
+        { required: true, message: "是否记录返回数据不能为空", trigger: "blur" }
+      ],
+      rewardPoint: [
+        { required: true, message: "奖励积分不能为空", trigger: "blur" }
+      ],
+      code: [
+        { required: true, message: "系统代码定义不能为空", trigger: "blur" }
+      ],
+      treeStat: [
+        { required: true, message: "是否树形统计不能为空", trigger: "blur" }
       ]
     }
   });
@@ -621,6 +684,12 @@
     let r = name.charAt(0).toUpperCase() + name.slice(1);
     form.value.beanName = r;
   }
+  
+  /** 缓存信息操作 */
+  function showCacheInfo(row) {
+    const funcId = row.funcId;
+    cacheInfoRef.value.showData(funcId);
+  }
 
   /** 展示下拉图标 */
   function showSelectIcon() {
@@ -634,9 +703,13 @@
   /** 查询列表 */
   function getList() {
     loading.value = true;
-    if (queryParams.name != null) {
+    if (!proxy.isEmpty(queryParams.value.name)) {
       //如果采用关键字查询则不取第一级
-      queryParams.pid = undefined;
+      queryParams.value.pid = undefined;
+      queryParams.value.page =1;
+    } else{
+      queryParams.value.pid = 0;
+      queryParams.value.page =0;
     }
     sysFuncList.value = [];
     treeList(queryParams.value).then(
@@ -658,15 +731,14 @@
     form.value = {
       funcId: undefined,
       funcName: undefined,
-      urlType: 'NORMAL',
       funcType: 'CREATE',
       funcDataType: 'F',
       loginAuth: true,
       permissionAuth: false,
       ipAuth: false,
       alwaysShow: false,
-      requestLimit: false,
-      requestLimitPeriod: 5,
+      userPeriod: 0,
+      sysLimit: 0,
       doLog: true,
       triggerStat: false,
       diffUser: true,
@@ -676,7 +748,6 @@
       orderIndex: 0,
       rewardPoint: 0,
       groupId: 1,
-      dayLimit: 0,
       treeStat: true,
       logRes: false,
       code: 0,
@@ -852,13 +923,13 @@
 
   /** 刷新系统缓存 */
   function handleRefreshCache() {
-    proxy.$confirm('是否确认要刷新系统功能的所有缓存数据,可能会有一点慢?', "警告", {
+    proxy.$confirm('是否确认要刷新系统功能的所有缓存数据?操作可能会有一点慢.', "警告", {
       confirmButtonText: "确定",
       cancelButtonText: "取消",
       type: "warning"
     }).then(function() {
       proxy.$modal.loading("正在刷新，请稍候！");
-      return refreshCache();
+      return refreshCache(null);
     }).then(() => {
       proxy.$modal.closeLoading();
       proxy.$modal.msgSuccess("刷新成功");

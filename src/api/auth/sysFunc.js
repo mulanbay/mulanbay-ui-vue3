@@ -30,11 +30,23 @@ export function getSysFunc(funcId) {
   return request({
     url: '/sysFunc/get',
     method: 'get',
-	params: {
-		funcId: funcId
-	}
+    params: {
+      funcId: funcId
+    }
   })
 }
+
+// 查询缓存
+export function cacheInfo(funcId) {
+  return request({
+    url: '/sysFunc/cacheInfo',
+    method: 'get',
+    params: {
+      funcId: funcId
+    }
+  })
+}
+
 
 // 新增
 export function createSysFunc(data) {
@@ -68,9 +80,13 @@ export function deleteSysFunc(ids) {
 
 
 // 刷新配置
-export function refreshCache() {
+export function refreshCache(funcId) {
+  let data={
+    funcId: funcId
+  }
   return request({
     url: '/sysFunc/refreshCache',
-    method: 'post'
+    method: 'post',
+    data: data
   })
 }

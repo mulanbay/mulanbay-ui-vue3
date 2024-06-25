@@ -75,3 +75,11 @@ export function deleteStatCache(data) {
     data
   })
 }
+
+export function getBussIdentityKey(statId) {
+  return request({
+    url: '/userStat/getBussIdentityKey',
+    method: 'get',
+    params: { statId }
+  })
+}
