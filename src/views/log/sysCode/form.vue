@@ -79,7 +79,7 @@
           <el-form-item label="消息限流" prop="userPeriod">
             每
             <el-input-number v-model="form.userPeriod" controls-position="right" :min="0" :controls="true" :precision="0" style="width: 120px;" />
-            秒一次
+            毫秒一次
             <el-tooltip content="0为不限流." effect="dark" placement="top">
               <el-icon>
                 <QuestionFilled />
