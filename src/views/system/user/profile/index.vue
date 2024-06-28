@@ -84,6 +84,9 @@
             <el-tab-pane label="人生档案" name="archive">
               <Archive ref="archiveRef" />
             </el-tab-pane>
+            <el-tab-pane label="便签信息" name="note">
+              <Note ref="noteRef" />
+            </el-tab-pane>
           </el-tabs>
         </el-card>
       </el-col>
@@ -101,11 +104,13 @@
   import UserInfo from "./userInfo.vue";
   import ResetPwd from "./resetPwd.vue";
   import FastMenu from "./fastMenu.vue";
-  import Archive from "./archive.vue";
+  import Archive from "../../../life/archive/index.vue";
+  import Note from "../../../life/note/index.vue";
   import UserSet from "./userSet.vue";
   import LevelSelfJedge from '../../../config/levelConfig/selfJedge'
 
   const archiveRef = ref();
+  const noteRef = ref();
   const activeTab = ref("userinfo");
   const levelSelfJedgeRef = ref();
   
@@ -120,6 +125,7 @@
     getProfile().then(response => {
       user.value = response;
       archiveRef.value.showData(response);
+      noteRef.value.showData();
     });
   };
 

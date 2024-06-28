@@ -43,6 +43,12 @@
             <svg-icon icon-class="calendar" @click="dispatchFastMenu('UserCalendarCalendarList')"/>
           </span>
         </el-tooltip>
+        
+        <el-tooltip content="清除缓存" effect="dark" placement="bottom">
+          <span class="right-menu-item hover-effect">
+            <svg-icon icon-class="cache" @click="showMyCache()"/>
+          </span>
+        </el-tooltip>
 
         <screenfull id="screenfull" class="right-menu-item hover-effect" />
 
@@ -88,6 +94,10 @@
         </el-dropdown>
       </div>
     </div>
+    
+    <!-- 缓存 -->
+    <MyCacheList ref="myCacheRef" />
+    
   </div>
 </template>
 
@@ -106,9 +116,11 @@
 	import useUserStore from '@/store/modules/user'
 	import useSettingsStore from '@/store/modules/settings'
 	import {getIndexFastMenu} from "@/api/auth/fastMenu";
+	import MyCacheList from '@/views/system/cache/myList'
 
 	const { proxy } = getCurrentInstance();
   const systemLockFormRef = ref();
+  const myCacheRef = ref();
 
 	const appStore = useAppStore()
 	const userStore = useUserStore()
@@ -120,6 +132,11 @@
 	function toggleSideBar() {
 	  appStore.toggleSideBar()
 	}
+  
+  /** 我的缓存 */
+  function showMyCache(){
+    myCacheRef.value.showData();
+  }
 	
 	/** 快捷菜单 */
 	function loadFastMenus(){

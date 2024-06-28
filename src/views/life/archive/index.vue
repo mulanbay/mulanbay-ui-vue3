@@ -149,8 +149,8 @@
   import { fetchList, deleteArchive, getArchiveSource } from "@/api/life/archive";
   import { getBussIconClass } from "@/utils/planUtils";
   import { dateDiff, tillNowDays, formatDays } from "@/utils/datetime";
-  import ArchiveForm from '../../../life/archive/form.vue';
-  import SourceDetail from '../../../common/jsonTreeTable';
+  import ArchiveForm from './form.vue';
+  import SourceDetail from '../../common/jsonTreeTable';
 
   const { proxy } = getCurrentInstance();
 

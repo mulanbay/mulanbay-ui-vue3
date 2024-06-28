@@ -27,7 +27,7 @@
             <template #label>
               <div class="cell-item">
                 <el-icon><HomeFilled /></el-icon>
-                标题
+                日历标题
               </div>
             </template>
             {{ beanData.title +'(BussID:'+beanData.bussIdentityKey+')'}}
@@ -36,7 +36,7 @@
             <template #label>
               <div class="cell-item">
                 <el-icon><Comment /></el-icon>
-                内容
+                日历内容
               </div>
             </template>
             {{ beanData.content}}

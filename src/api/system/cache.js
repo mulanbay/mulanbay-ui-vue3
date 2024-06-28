@@ -65,3 +65,19 @@ export function deleteAllCache() {
     method: 'post'
   })
 }
+
+// 清理我的全部缓存
+export function clearMe() {
+  return request({
+    url: '/cache/clearMe',
+    method: 'post'
+  })
+}
+
+// 我的列表
+export function getMyCacheList() {
+  return request({
+    url: '/cache/myList',
+    method: 'get'
+  })
+}
