@@ -432,8 +432,8 @@
   /** 自动匹配 */
   function handleAIMatch() {
     const goodsName = form.value.goodsName;
-    //编辑状态、没填商品名都不再智能匹配（不包含已经选择过商品类型）
-    if (form.value.consumeId != null || proxy.isEmpty(goodsName)) {
+    //编辑状态、没填商品名都不再智能匹配
+    if (form.value.consumeId != null || proxy.isEmpty(goodsName)|| form.value.goodsTypeId != null) {
       return;
     }
     aiMatch(goodsName).then(response => {
