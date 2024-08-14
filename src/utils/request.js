@@ -3,7 +3,7 @@ import { ElNotification, ElMessageBox, ElMessage, ElLoading } from 'element-plus
 import store from '@/store'
 import { getToken } from '@/utils/auth'
 import errorCode from '@/utils/errorCode'
-import { tansParams, blobValidate } from '@/utils/ruoyi'
+import { tansParams, blobValidate } from '@/utils/mulanbay'
 import useUserStore from '@/store/modules/user'
 
 // 是否显示重新登录

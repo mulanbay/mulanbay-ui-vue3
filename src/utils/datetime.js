@@ -283,7 +283,6 @@ export function minuteDiff(sDate1, sDate2) {
   return iDays;
 }
 
-
 // 小时的描述
 export function getHourDesc(date) {
   var hs = date.substr(11, 2);
@@ -299,6 +298,7 @@ export function getHourDesc(date) {
   }
 }
 
+//时间选择快捷菜单
 export const datePickerOptions = [{
     text: '最近一周',
     value: () => {

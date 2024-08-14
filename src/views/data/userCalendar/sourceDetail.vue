@@ -180,8 +180,8 @@
     <!-- 表单 -->
     <UserCalendarForm ref="formRef" @success="loadData" />
    
-   <!-- 流水日志 -->
-   <FlowLogList ref="flowLogListRef" />
+    <!-- 流水日志 -->
+    <FlowLogList ref="flowLogListRef" />
     
     <!-- 完成日历 -->
     <FinishCalendar ref="finishCalendarRef" @success="loadData"/>
