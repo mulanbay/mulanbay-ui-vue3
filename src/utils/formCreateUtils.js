@@ -15,17 +15,15 @@ export function generateFcRules(dataRules) {
     let field = r.model;
     let selectData=null;
     if(r.tree==true){
-      //树形结构
+      //树形结构(treeSelect无效)
       selectData = {
-        type:"treeSelect",
+        type:"tree",
         title:r.name,
         field:field,
         value:r.defaultValue,
         props:{
-            data:r.list,
-            props: {
-                "label": "title"
-            }
+          data:createTree(r.list),
+          multiple: true
         }
       };
     }else if (r.list == null || r.list.length == 0) {
@@ -187,4 +185,43 @@ export function setTriggerParasBindValues(paras, fcObject) {
   for (let key in pp) {
     fcObject.setValue(key, pp[key]);
   }
+}
+
+/**
+ * 创建树
+ * 
+ * @param {Object} dataList
+ */
+export function createTree(dataList){
+  return getChildren('0',dataList);
+}
+
+/**
+ * 获取子类
+ * 
+ * @param {Object} pid
+ * @param {Object} dataList
+ */
+export function getChildren(pid,dataList) {
+  let result = new Array();
+  dataList.forEach(item => {
+    let myPid = item.pid;
+    if(myPid!=null&&myPid!=undefined&&myPid==pid){
+      let child = {
+        title: item.text,
+        expand: true,
+        selected: false,
+        id: item.id,
+        "value": item.id, 
+        "label": item.text, 
+        "disabled": false
+      };
+      //寻找下一个子列表
+      let c2 = getChildren(child.id, dataList);
+      child.children = c2;;
+      //加入到结果集
+      result.push(child);
+    }
+  });
+  return result;
 }
