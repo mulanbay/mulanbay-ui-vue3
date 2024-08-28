@@ -55,6 +55,14 @@
           v-hasPermi="['system:command:delete']">删除
         </el-button>
       </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="success"
+          icon="Setting"
+          @click="handleProperties"
+          v-hasPermi="['system:system:getProperties']">系统配置
+        </el-button>
+      </el-col>
     </el-row>
 
     <!--列表数据-->
@@ -138,15 +146,20 @@
     <!-- 表单 -->
     <CommandForm ref="formRef" @success="getList" />
 
+    <!-- 配置 -->
+    <PropertiesForm ref="propertiesRef" />
+
   </div>
 </template>
 
 <script setup name="DBCLean">
   import { fetchList, deleteCommand, exeCmd } from "@/api/system/command";
   import CommandForm from './form.vue'
+  import PropertiesForm from './properties.vue'
 
   const { proxy } = getCurrentInstance();
   const formRef = ref();
+  const propertiesRef = ref();
 
   // 遮罩层
   const loading = ref(true);
@@ -211,6 +224,11 @@
     proxy.resetForm("queryRef");
     queryParams.value.page = 1;
     handleQuery();
+  }
+  
+  /** 系统配置项按钮操作 */
+  function handleProperties() {
+    propertiesRef.value.showData();
   }
 
   /** 新增按钮操作 */

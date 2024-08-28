@@ -20,16 +20,16 @@
             </template>
             {{ beanData.title}}
           </el-descriptions-item>
-          <el-descriptions-item>
+          <el-descriptions-item label-class-name="my-label">
             <template #label>
               <div class="cell-item">
                 <el-icon><HomeFilled /></el-icon>
                 日志内容
               </div>
             </template>
-            {{ beanData.content}}
+            <el-text class="mx-1" type="primary">{{ beanData.content}}</el-text>
           </el-descriptions-item>
-          <el-descriptions-item>
+          <el-descriptions-item label-class-name="my-label">
             <template #label>
               <div class="cell-item">
                 <el-icon><Comment /></el-icon>
@@ -119,7 +119,7 @@
 </script>
 <style>
   .my-label {
-    width: 140px;
+    width: 120px;
     color: #999;
     font-weight: normal;
     background: #fff;

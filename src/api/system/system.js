@@ -31,3 +31,10 @@ export function editAutoLock(data) {
   })
 }
 
+//获取配置
+export function getProperties() {
+  return request({
+    url: '/system/getProperties',
+    method: 'get'
+  })
+}
