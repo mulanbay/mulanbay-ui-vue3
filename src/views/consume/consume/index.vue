@@ -170,7 +170,7 @@
           <span>{{ scope.row.goodsType.typeName }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="总价" align="center" width="95">
+      <el-table-column label="总价" align="center" width="120">
         <template #default="scope">
           <span>{{ formatMoney(scope.row.totalPrice) }}</span>
         </template>
@@ -200,7 +200,7 @@
           <span>{{ scope.row.amount }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="单价" align="center" width="95">
+      <el-table-column label="单价" align="center" width="120">
         <template #default="scope">
           <span>{{ formatMoney(scope.row.price) }}</span>
         </template>

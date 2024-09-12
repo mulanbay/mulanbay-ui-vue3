@@ -5,7 +5,7 @@
         <template #extra>
           <el-button type="danger" v-if="consumeInfo.pid!=null" icon="delete" @click="handleDeleteParent" v-hasPermi="['consume:consume:deleteParent']">取消上级关联</el-button>
         </template>
-        <el-descriptions-item>
+        <el-descriptions-item label-class-name="my-label">
           <template #label>
             <div class="cell-item">
               <el-icon>
@@ -169,7 +169,7 @@
             <span>{{ scope.row.goodsType.typeName }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="总价" align="center" width="95">
+        <el-table-column label="总价" align="center" width="120">
           <template #default="scope">
             <span>{{ formatMoney(scope.row.totalPrice) }}</span>
           </template>
@@ -383,3 +383,11 @@
 
   })
 </script>
+<style>
+  .my-label {
+    width: 120px;
+    color: #999;
+    font-weight: normal;
+    background: #fff;
+  }
+</style>

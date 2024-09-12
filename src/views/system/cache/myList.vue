@@ -17,17 +17,17 @@
     
     <el-divider content-position="center">我的缓存列表</el-divider>
     <el-table :data="cacheList" v-loading="cacheInfoLoading">
-      <el-table-column label="KEY" prop="key" align="center" >
+      <el-table-column label="KEY" prop="key" >
         <template #default="scope">
           <span>{{ scope.row.cacheKey }}</span>
         </template>
       </el-table-column>
       <el-table-column label="值" prop="key" align="center" width="160">
         <template #default="scope">
-          <span>{{ formatValue(scope.row.cacheValue) }}</span>
+          <span class="link-type" @click="showValueDetail(scope.row.cacheValue)">{{ formatValue(scope.row.cacheValue) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="过期时间" prop="key" align="center" width="120">
+      <el-table-column label="过期时间" prop="key" align="center" width="140">
         <template #default="scope">
           <span v-if="scope.row.expire<0" style="color: red;">{{ formatExpire(scope.row.expire) }}</span>
           <span v-else>{{ formatExpire(scope.row.expire) }}</span>
@@ -45,6 +45,16 @@
         </template>
       </el-table-column>
     </el-table>
+    
+    <!-- 值详情 -->
+    <el-dialog title="缓存值详情" width="600px" v-model="valueDetailOpen" append-to-body>
+      <ValueDetail ref="valueDetailRef"></ValueDetail>
+      <template #footer>
+        <div class="dialog-footer">
+          <el-button type="danger" icon="CircleClose" @click="valueDetailOpen=false">关闭</el-button>
+        </div>
+      </template>
+    </el-dialog>
 
   </el-dialog>
 
@@ -53,6 +63,7 @@
 <script setup name="MyCacheList">
   import { deleteCacheKey,getMyCacheList,clearMe } from "@/api/system/cache";
   import { formatSeconds } from "@/utils/datetime";
+  import ValueDetail from '../../common/jsonTreeTable';
 
   const { proxy } = getCurrentInstance();
 
@@ -62,7 +73,10 @@
   const cacheInfoLoading = ref(false);
 
   const cacheList = ref([]);
-
+  
+  let valueDetailRef = ref({});
+  let valueDetailOpen = ref(false);
+  
   // 定义 success 事件，用于操作成功后的回调
   const emit = defineEmits(['success']);
 
@@ -79,6 +93,19 @@
     getMyCacheList().then(response => {
       cacheInfoLoading.value = false;
       cacheList.value = response;
+    });
+  }
+  
+  /** 显示值详情 */
+  function showValueDetail(v){
+    let fv = formatValue(v);
+    if(fv!='Object'){
+      proxy.$modal.msgWarning('没有更多详情数据');
+      return;
+    }
+    valueDetailOpen.value = true;
+    proxy.$nextTick(()=>{
+      valueDetailRef.value.showData(v);
     });
   }
   

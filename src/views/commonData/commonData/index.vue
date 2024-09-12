@@ -100,7 +100,7 @@
           <span>{{ scope.row.occurTime }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="地点" align="center" width="160">
+      <el-table-column label="地点" align="center" min-width="120px" :show-overflow-tooltip="true">
         <template #default="scope">
           <span>{{ scope.row.location }}</span>
         </template>

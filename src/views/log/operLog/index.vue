@@ -310,9 +310,9 @@
     }
     parasDetailOpen.value = true;
     parasDetailTitle.value = 'ID[' + row.id + ']请求参数详情';
-    setTimeout(function() {
+    proxy.$nextTick(()=>{
       parasDetailRef.value.showData(JSON.parse(paras));
-    }, 100);
+    });
   }
 
   /** 主键值详情 */
