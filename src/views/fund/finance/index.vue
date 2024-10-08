@@ -21,7 +21,35 @@
               <div ref="consumeChart" :style="{height:consumeHeight,margin:0 }" />
             </div>
             <div align="center">
-              <el-button type="primary" icon="Histogram" @click="consumeChartStat">消费分析</el-button>
+              <el-button-group class="ml-4">
+                <el-button type="primary" icon="Histogram" @click="consumeChartStat">消费分析</el-button>
+                <el-popover :visible="filterPopOpen" placement="top" :width="300">
+                  消费方式：
+                  <el-select
+                    v-model="queryParams.consumeType"
+                    placeholder="消费方式"
+                    clearable
+                    style="width: 120px">
+                    <el-option
+                      v-for="dict in consumeTypeOptions"
+                      :key="dict.id"
+                      :label="dict.text"
+                      :value="dict.id" />
+                  </el-select>
+                  <el-divider content-position="center">
+                    ...
+                  </el-divider>
+                  <div style="text-align: right; margin: 0">
+                    <el-button size="small" type="success" icon="CircleCheck" @click="handleFilter">确定</el-button>
+                    <el-button size="small" type="danger" icon="CircleClose" @click="filterPopOpen = false">取消</el-button>
+                    <el-button size="small" type="warning" icon="Refresh" @click="queryParams.consumeType = null">复原</el-button>
+                  </div>
+                  <template #reference>
+                    <el-button @click="filterPopOpen = true" type="success" icon="Filter"></el-button>
+                  </template>
+                </el-popover>
+              </el-button-group>
+              <el-divider direction="vertical"></el-divider>
               <el-button type="primary" icon="Histogram" @click="incomeChartStat">收入分析</el-button>
             </div>
           </el-card>
@@ -132,6 +160,11 @@
   const accountChart = ref(null);
   //echarts实例
   let accountChartIns = ref(null);
+  //左侧饼图
+  let consumeType = ref(null);
+  let consumeTypeOptions = ref([]);
+  let filterPopOpen = ref(false);
+  
   const consumeHeight = ref('450px');
   const accountHeight = ref('480px');
   const budgetList = ref([]);
@@ -159,6 +192,12 @@
   /** 展示历史 */
   function showHistory(row) {
     proxy.$router.push({ name: 'BudgetSnapshotHistory', query: { budgetId: row.budgetId } })
+  }
+  
+  /** 消费分析条件筛选 */  
+  function handleFilter(){
+    filterPopOpen.value= false;
+    consumeChartStat();
   }
 
   // 消费图表统计
@@ -258,6 +297,9 @@
 
   /** 初始化 **/
   onMounted(() => {
+    proxy.getEnumDict('GoodsConsumeType', 'ORDINAL', false).then(response => {
+      consumeTypeOptions.value = response;
+    });
     consumeChartIns = echarts.init(consumeChart.value, "macarons");
     accountChartIns = echarts.init(accountChart.value, "macarons");
     consumeChartStat();
