@@ -122,7 +122,7 @@
             option = createScatterChartOption(response);
             break;
           default:
-            option = createBarChartOption(response);
+            option = createMixLineBarChartOption(response);
         }
         createChart(option, dateStatChartIns);
       }

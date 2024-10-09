@@ -21,7 +21,7 @@
       <el-form-item>
         <el-button type="primary" icon="TrendCharts" @click="handleQuery" v-hasPermi="['report:stat:userStat:statList']">统计</el-button>
         <el-button icon="refresh" @click="resetQuery">重置</el-button>
-        <el-button type="primary" icon="refresh" @click="resetStat" v-hasPermi="['report:stat:userStat:deleteStatCache']">强制刷新</el-button>
+        <el-button type="success" icon="refresh" @click="resetStat" v-hasPermi="['report:stat:userStat:deleteStatCache']">强制刷新</el-button>
       </el-form-item>
     </el-form>
 

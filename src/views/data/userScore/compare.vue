@@ -12,21 +12,6 @@
           end-placeholder="结束日期"
           :shortcuts="datePickerOptions"></el-date-picker>
       </el-form-item>
-      <el-form-item label="数据类型" prop="dataType">
-        <el-select
-          v-model="queryParams.dataType"
-          placeholder="数据类型"
-          collapse-tags
-          style="width: 120px"
-        >
-          <el-option
-            v-for="dict in dataTypeOptions"
-            :key="dict.id"
-            :label="dict.text"
-            :value="dict.id"
-          />
-        </el-select>
-      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="TrendCharts" @click="handleQuery" v-hasPermi="['data:userScore:compare']">统计</el-button>
         <el-button icon="refresh" @click="resetQuery">重置</el-button>
@@ -43,7 +28,7 @@
   import { getUserScoreCompare } from "@/api/data/userScore";
   import {deepClone} from "@/utils/index";
   import * as echarts from 'echarts';
-  import { createChart, createLineChartOption } from "@/utils/mulanbay_echarts";
+  import { createChart, createMixLineBarChartOption } from "@/utils/mulanbay_echarts";
 
   const { proxy } = getCurrentInstance();
   //图形实例
@@ -52,16 +37,6 @@
   let statChartIns = ref(null);
   
   const height = ref((document.body.clientHeight - 240).toString() + 'px');
-  const dataTypeOptions = ref([
-    {
-      id: 'OPPOSITE',
-      text: '相对值'
-    },
-    {
-      id: 'ABSOLUTE',
-      text: '绝对值'
-    }
-  ]);
 
   //日期范围快速选择
   const datePickerOptions = ref(proxy.datePickerOptions);
@@ -69,7 +44,7 @@
 
   const data = reactive({
     queryParams: {
-      dataType:'OPPOSITE'
+      
     }
   });
 
@@ -111,8 +86,9 @@
     getUserScoreCompare(proxy.addDateRange(queryParams.value, dateRange.value)).then(
       response => {
         proxy.$modal.closeLoading();
+        response.serieTypes = ['line', 'line'];
         //组装chart数据
-        let option = createLineChartOption(response);
+        let option = createMixLineBarChartOption(response);
         createChart(option, statChartIns);
       }
     );

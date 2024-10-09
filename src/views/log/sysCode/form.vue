@@ -78,7 +78,7 @@
         <el-col :span="12">
           <el-form-item label="消息限流" prop="userPeriod">
             每
-            <el-input-number v-model="form.userPeriod" controls-position="right" :min="0" :controls="true" :precision="0" style="width: 120px;" />
+            <el-input-number v-model="form.userPeriod" controls-position="right" :min="0" :controls="true" :precision="0" style="width: 90px;" />
             毫秒一次
             <el-tooltip content="0为不限流." effect="dark" placement="top">
               <el-icon>
@@ -102,7 +102,7 @@
       </el-row>
       <el-row>
         <el-col :span="24">
-          <el-form-item label="移动端连接" prop="mobileUrl">
+          <el-form-item label="移动端地址" prop="mobileUrl">
             <el-input v-model="form.mobileUrl" style="width: 505px" placeholder="请输入连接地址" />
           </el-form-item>
         </el-col>

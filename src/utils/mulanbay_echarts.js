@@ -173,13 +173,13 @@ export function createBarChartOption(data) {
 export function createLineChartOption(data) {
   const unit = data.unit == null ? '' : data.unit;
   //是否显示折线上的图标
-  let showItemStyle = true;
+  let showItemStyle = data.showItemStyle == null ? true : data.showItemStyle;
   //显示最大最小值
-  let showMarkPoint = true;
+  let showMarkPoint = data.showMarkPoint == null ? true : data.showMarkPoint;
   //显示平均值
-  let showMarkLine = false;
+  let showMarkLine = data.showMarkLine == null ? false : data.showMarkLine;
   //显示右上角的菜单
-  let showToolbox = true;
+  let showToolbox = data.showToolbox == null ? true : data.showToolbox;
   const ln = data.xdata.length;
   //根据x轴长度动态显示
   if (ln > 20) {
@@ -2471,6 +2471,8 @@ export function formatDateGroupLabel(val, dateGroup, unit) {
  * @param {Object} chartData
  */
 export function createWorldCloudChartOption(chartData) {
+  //角度
+  let rotation = chartData.rotation == null ? 0 : chartData.rotation;
   let option = {
     title: {
       text: chartData.title,
@@ -2511,8 +2513,8 @@ export function createWorldCloudChartOption(chartData) {
       sizeRange: [24, 128],
       // 字体旋转角度的范围
       //文本旋转范围和步进度。文本将通过rotationStep:45在[- 90,90]范围内随机旋转
-      //rotationRange: [-90, 90],
-      rotationRange: [0, 0],
+      rotationRange: [0-rotation, rotation],
+      //rotationRange: [0, 0],
       rotationStep: 45,
       //可用的形状有(circle)圆形(默认)、(cardioid)心形，(diamond)菱形，(triangle-forward)三角形向前，(triangle)三角形，(pentagon)五边形和(star)星形。*/
       shape: 'diamond',

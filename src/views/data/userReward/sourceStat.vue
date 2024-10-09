@@ -57,7 +57,7 @@
             :check-strictly="false"/>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" icon="search" @click="handleQuery" v-hasPermi="['data:userReward:sourceStat']">统计</el-button>
+          <el-button type="primary" icon="TrendCharts" @click="handleQuery" v-hasPermi="['data:userReward:sourceStat']">统计</el-button>
           <el-button icon="refresh" @click="resetQuery">重置</el-button>
         </el-form-item>
       </el-form>

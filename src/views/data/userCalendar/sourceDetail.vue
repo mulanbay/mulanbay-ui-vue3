@@ -16,7 +16,7 @@
         <el-button type="danger" icon="delete" @click="handleDelete">删除</el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="success" icon="CircleClose" @click="handleFinish" v-if="beanData.finishTime==null" >关闭</el-button>
+        <el-button type="success" icon="Finished" @click="handleFinish" v-if="beanData.finishTime==null" >完成</el-button>
       </el-col>
     </el-row>
 

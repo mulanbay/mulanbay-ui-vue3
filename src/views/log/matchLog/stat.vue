@@ -100,9 +100,10 @@
     statMatchLog(proxy.addDateRange(queryParams.value, dateRange.value)).then(
       response => {
         proxy.$modal.closeLoading();
+        response.smooth= true;
+        response.showMarkLine= true;
         //组装chart数据
         let option = createLineChartOption(response);
-        option.smooth= true;
         createChart(option, analyseStatChartIns);
       }
     );

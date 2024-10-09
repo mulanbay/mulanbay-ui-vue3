@@ -48,6 +48,7 @@
           </el-form-item>
         </el-col>
       </el-row>
+      <el-card>
       <el-row>
         <el-col :span="23">
           <el-form-item label="绑定行为" prop="templateId">
@@ -77,6 +78,8 @@
           <FormCreate :option="peOption" v-model:api="peApi" :rule="peRule"></FormCreate>
         </el-col>
       </el-row>
+      </el-card>
+      <el-divider />
       <el-row>
         <el-col :span="12">
           <el-form-item label="开始时间" prop="bussDay">
@@ -232,7 +235,7 @@
       resetBtn: false,
       form: {
         labelPosition: 'right',
-        labelWidth: '120px',
+        labelWidth: '100px',
         size: undefined,
         inline: true,
         hideRequiredAsterisk: false
