@@ -5,13 +5,13 @@
     <el-form ref="formRef" :model="form" :rules="rules" v-loading="formLoading" label-width="80px">
       <el-form-item label="提醒周期" prop="triggerInterval">
         每
-        <el-input-number v-model="form.triggerInterval" placeholder="" controls-position="right" :min="0" :controls="false" :precision="0" style="width: 100px" />
+        <el-input-number v-model="form.triggerInterval" placeholder="" controls-position="right" :min="0" :controls="false" :precision="0" style="width: 120px" />
         <el-select
           v-model="form.triggerType"
           placeholder="周期"
           clearable
           collapse-tags
-          style="width: 100px">
+          style="width: 110px">
           <el-option
             v-for="dict in triggerTypeOptions"
             :key="dict.id"
@@ -25,12 +25,12 @@
           v-model="form.remindTime"
           :picker-options="{selectableRange: '18:30:00 - 20:30:00'}"
           format="HH:mm" value-format="HH:mm"
-          style="width: 200px"
+          style="width: 280px"
           placeholder="任意时间点">
         </el-time-picker>
       </el-form-item>
       <el-form-item label="数据超过" prop="fromRate">
-        <el-input-number v-model="form.fromRate" style="width: 145px" controls-position="right" :min="0" :controls="true" :precision="0"/>
+        <el-input-number v-model="form.fromRate" style="width: 220px" controls-position="right" :min="0" :controls="true" :precision="0"/>
         %时提醒
       </el-form-item>
       <el-form-item label="完成提醒" prop="finishRemind">

@@ -31,7 +31,7 @@
             :shortcuts="datePickerOptions">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="统计分组" prop="statType">
+        <el-form-item label="统计分组" prop="statType" >
           <el-select
             v-model="queryParams.statType"
             placeholder="统计分组"
@@ -45,6 +45,9 @@
               :value="dict.id"
             />
           </el-select>
+        </el-form-item>
+        <el-form-item label="大类分组" v-if="queryParams.statType=='CONSUME_TYPE'" prop="groupTop">
+          <el-switch v-model="queryParams.groupTop" @change="handleQuery"></el-switch>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" icon="TrendCharts" @click="handleQuery" v-hasPermi="['life:experience:costStat']">统计</el-button>
@@ -74,7 +77,6 @@
   let chartInited = ref(false);
   const height = ref((document.body.clientHeight - 250).toString() + 'px');
 
-  //可执行时间段
   const title = ref('消费统计');
   const open = ref(false);
   const formRef = ref();
@@ -87,7 +89,8 @@
   
   const data = reactive({
     queryParams: {
-      statType:'CONSUME_TYPE'
+      statType:'CONSUME_TYPE',
+      groupTop:true
     },
     rules: {}
   });

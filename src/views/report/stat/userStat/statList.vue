@@ -42,7 +42,7 @@
                     </template>
                     <div class="cell">
                       <el-tooltip class="item" effect="dark" :content="item.userStat.title" placement="top">
-                        <el-button round plain type="success">
+                        <el-button round plain type="success" @click="handleStat(item.userStat)">
                           {{ formatTitle(item.userStat.title) }}
                         </el-button>
                       </el-tooltip>
@@ -139,6 +139,9 @@
     <!-- 提醒表单 -->
     <UserStatRemindForm ref="userStatRemindFormRef" />
     
+    <!-- 统计 -->
+    <UserStatStat ref="userStatStatRef" />
+    
   </div>
 </template>
 
@@ -146,9 +149,11 @@
   import { getUserStatStatList,deleteStatCache } from "@/api/report/stat/userStat";
   import { getPercent,ellipsis,progressColors,progressColors2,getQueryObject } from "@/utils/mulanbay";
   import UserStatRemindForm from '../userStatRemind/form.vue'
+  import UserStatStat from './stat.vue'
 
   const { proxy } = getCurrentInstance();
   const userStatRemindFormRef = ref();
+  const userStatStatRef = ref();
 
   const loading = ref(false);
   // 总条数
@@ -169,6 +174,11 @@
     proxy.getEnumDict('BussType', 'FIELD', false).then(response => {
       bussTypeOptions.value = response;
     });
+  }
+  
+  /** 统计 */
+  function handleStat(row){
+    userStatStatRef.value.showData(row.statId,row.title);
   }
   
   /** 提醒配置 */

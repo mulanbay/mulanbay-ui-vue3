@@ -84,7 +84,7 @@
                     </template>
                     <div class="cell">
                       <el-tooltip class="item" effect="dark" :content="item.title" placement="top">
-                        <el-button round plain type="success">
+                        <el-button round plain type="success" @click="handleStat(item)">
                           {{ formatTitle(item.title) }}
                         </el-button>
                       </el-tooltip>
@@ -267,6 +267,9 @@
     <!-- 手动统计 -->
     <ManualStatForm ref="manualStatFormRef" @success="getList"/>
     
+    <!-- 统计 -->
+    <UserPlanStat ref="userPlanStatRef" />
+    
   </div>
 </template>
 
@@ -276,10 +279,12 @@
   import { getPercent,ellipsis,progressColors,progressColors2,getQueryObject } from "@/utils/mulanbay";
   import UserPlanRemindForm from '../userPlanRemind/form.vue'
   import ManualStatForm from '../planReport/manualStat.vue'
+  import UserPlanStat from './stat.vue'
 
   const { proxy } = getCurrentInstance();
   const userPlanRemindFormRef = ref();
   const manualStatFormRef = ref();
+  const userPlanStatRef = ref();
 
   //日期范围快速选择
   const datePickerOptions = ref(proxy.datePickerOptions);
@@ -330,6 +335,11 @@
     proxy.getEnumDict('PlanType', 'FIELD', false).then(response => {
       planTypeOptions.value = response;
     });
+  }
+  
+  /** 统计 */
+  function handleStat(row){
+    userPlanStatRef.value.showData(row.planId,row.title);
   }
   
   /** 提醒配置 */

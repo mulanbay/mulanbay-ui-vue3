@@ -147,14 +147,14 @@
           </span>
         </template>
       </el-table-column>
-      <el-table-column label="药品" width="80" align="center">
+      <el-table-column label="药品" width="60" align="center">
         <template #default="scope">
           <span class="link-type" @click="handleDrugList(scope.row)"><el-icon>
               <Grid />
             </el-icon></span>
         </template>
       </el-table-column>
-      <el-table-column label="手术" width="80" align="center">
+      <el-table-column label="手术" width="60" align="center">
         <template #default="scope">
           <span class="link-type" @click="handleOperationList(scope.row)"><el-icon>
               <Grid />
@@ -164,6 +164,11 @@
       <el-table-column label="确诊疾病" min-width="120" :show-overflow-tooltip="true">
         <template #default="scope">
           <span class="link-type" style="color:darkgreen" @click="showBodyAnalyse(scope.row.confirmDisease,'DISEASE')">{{ scope.row.confirmDisease }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="看病日期" align="center" width="180">
+        <template #default="scope">
+          <span>{{ scope.row.treatTime }}</span>
         </template>
       </el-table-column>
       <el-table-column label="科室" min-width="100" :show-overflow-tooltip="true">
@@ -184,11 +189,6 @@
           <span v-else style="color: green;">
             <el-tag type="success">无</el-tag>
           </span>
-        </template>
-      </el-table-column>
-      <el-table-column label="看病日期" align="center" width="180">
-        <template #default="scope">
-          <span>{{ scope.row.treatTime }}</span>
         </template>
       </el-table-column>
       <el-table-column label="费用" align="center" width="120">
