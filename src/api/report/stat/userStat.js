@@ -76,9 +76,25 @@ export function deleteStatCache(data) {
   })
 }
 
+export function deleteNotifyCache(data) {
+  return request({
+    url: '/userStat/deleteNotifyCache',
+    method: 'post',
+    data
+  })
+}
+
 export function getBussIdentityKey(statId) {
   return request({
     url: '/userStat/getBussIdentityKey',
+    method: 'get',
+    params: { statId }
+  })
+}
+
+export function getCacheInfo(statId) {
+  return request({
+    url: '/userStat/cacheInfo',
     method: 'get',
     params: { statId }
   })

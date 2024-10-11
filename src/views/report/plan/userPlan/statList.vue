@@ -130,7 +130,16 @@
                       计划次数
                     </template>
                     <div class="cell">
-                    {{ item.compareTypeName+item.planReport.planCountValue+'次' }}
+                      <span v-if="item.compareType == 'MORE'">
+                        <el-text class="mx-1" type="primary">
+                          {{ item.compareTypeName+item.planReport.planCountValue+'次' }}
+                        </el-text>
+                      </span>
+                      <span v-else>
+                        <el-text class="mx-1" type="success">
+                          {{ item.compareTypeName+item.planReport.planCountValue+'次' }}
+                        </el-text>
+                      </span>
                     </div>
                   </el-descriptions-item>
                   <el-descriptions-item>
@@ -139,7 +148,16 @@
                       计划数值
                     </template>
                     <div class="cell">
-                    {{ item.compareTypeName+item.planReport.planValue+item.unit }}
+                      <span v-if="item.compareType == 'MORE'">
+                        <el-text class="mx-1" type="primary">
+                          {{ item.compareTypeName+item.planReport.planValue+item.unit }}
+                        </el-text>
+                      </span>
+                      <span v-else>
+                        <el-text class="mx-1" type="success">
+                          {{ item.compareTypeName+item.planReport.planValue+item.unit }}
+                        </el-text>
+                      </span>
                     </div>
                   </el-descriptions-item>
                   <el-descriptions-item>

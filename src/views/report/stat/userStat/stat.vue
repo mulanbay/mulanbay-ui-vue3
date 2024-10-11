@@ -18,6 +18,7 @@
           <el-button type="primary" icon="TrendCharts" @click="handleQuery" v-hasPermi="['report:stat:userStat:stat']">统计</el-button>
           <el-button icon="refresh" @click="resetQuery">重置</el-button>
           <el-button type="success" icon="refresh" @click="refreshStat(queryParams.statId)" v-hasPermi="['report:stat:userStat:deleteCache']">刷新</el-button>
+          <el-button type="success" icon="MessageBox" @click="handleCacheInfo(queryParams.statId)" v-hasPermi="['report:stat:userStat:cacheInfo']">缓存</el-button>
         </el-form-item>
       </el-form>
 
@@ -54,6 +55,9 @@
       <!--图表数据-->
       <div ref="statChart" :style="{height:height,margin:0 }" />
       
+      <!-- 缓存信息 -->
+      <CacheInfo ref="cacheInfoRef" />
+      
     </div>
   </el-dialog>
 
@@ -64,8 +68,11 @@
   import { getPercent } from "@/utils/mulanbay";
   import * as echarts from 'echarts';
   import { createChart, createGaugeChartOption } from "@/utils/mulanbay_echarts";
+  import CacheInfo from './cacheInfo.vue'
 
   const { proxy } = getCurrentInstance();
+  const cacheInfoRef = ref();
+  
   //图形实例
   const statChart = ref(null);
   //echarts实例
@@ -113,6 +120,11 @@
   /** 用户统计变化 */
   function handleUserStatChange(statId) {
     handleQuery();
+  }
+  
+  /** 缓存信息 */
+  function handleCacheInfo(statId) {
+    cacheInfoRef.value.showData(statId);
   }
   
   function loadOptions(){

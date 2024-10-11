@@ -58,7 +58,7 @@
         <div style="padding: 0px 20px 0px 20px;">
           <el-steps align-center>
             <el-step title="数据库中数据" status="success" icon="coin"></el-step>
-            <el-step title="调度服务器中数据" status="finish" icon="upload"></el-step>
+            <el-step title="调度服务器中数据" status="finish" icon="MessageBox"></el-step>
           </el-steps>
         </div>
       </el-col>

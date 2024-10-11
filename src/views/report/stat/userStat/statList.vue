@@ -69,7 +69,18 @@
                       <el-icon><Ticket /></el-icon>
                       期望值
                     </template>
-                    <div class="cell">{{ item.userStat.compareTypeName+item.userStat.expectValue+item.userStat.unit }}</div>
+                    <div class="cell">
+                      <span v-if="item.userStat.compareType == 'MORE'">
+                        <el-text class="mx-1" type="primary">
+                          {{ item.userStat.compareTypeName+item.userStat.expectValue+item.userStat.unit }}
+                        </el-text>
+                      </span>
+                      <span v-else>
+                        <el-text class="mx-1" type="success">
+                          {{ item.userStat.compareTypeName+item.userStat.expectValue+item.userStat.unit }}
+                        </el-text>
+                      </span>
+                    </div>
                   </el-descriptions-item>
                   <el-descriptions-item>
                     <template #label>
