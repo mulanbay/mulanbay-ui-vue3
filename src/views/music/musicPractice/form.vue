@@ -1,7 +1,7 @@
 <template>
 
   <!-- 表单编辑对话框 -->
-  <el-dialog :title="title" v-model="open" width="750px" append-to-body>
+  <el-dialog :title="title" v-model="open" width="750px" append-to-body >
     <el-form ref="formRef" :model="form" :rules="rules" v-loading="formLoading" label-width="120px">
       <el-row>
         <el-col :span="12">
@@ -22,8 +22,9 @@
       <el-row>
         <el-col :span="12">
           <el-form-item label="练习时长" prop="minutes">
-            <el-input-number v-model="form.minutes" placeholder="分钟" controls-position="right" :min="0" :controls="false" :precision="0" :style="{width: '100%'}">
-            </el-input-number>
+            <el-input v-model="form.minutes" style="{width: '100%'}" placeholder="练习时长">
+              <template #append>分钟</template>
+            </el-input>
           </el-form-item>
         </el-col>
         <el-col :span="12">

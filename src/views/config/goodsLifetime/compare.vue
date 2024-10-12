@@ -163,7 +163,7 @@
       let n = configList.length;
       if (n <= 0) {
         proxy.$modal.msgError('没有更多数据');
-        queryParams.value.page = 1;
+        queryParams.value.page = 0;
         return;
       }
       lifetimeOptions.value = [];

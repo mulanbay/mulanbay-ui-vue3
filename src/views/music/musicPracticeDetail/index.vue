@@ -28,7 +28,7 @@
           <span class="link-type" @click="handleEdit(scope.row)">{{ scope.row.tune }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="练习周期" align="center" width="100">
+      <el-table-column label="时长" align="center" width="80">
         <template #default="scope">
           <span v-if="scope.row.tuneType=='TECH'">
            {{ scope.row.times }}分钟
@@ -38,12 +38,12 @@
           </span>
         </template>
       </el-table-column>
-      <el-table-column label="练习类型" align="center">
+      <el-table-column label="类型" align="center" width="70">
         <template #default="scope">
           <span>{{ scope.row.tuneTypeName }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="水平" align="center">
+      <el-table-column label="水平" align="center" width="70">
         <template #default="scope">
           <span>{{ scope.row.levelName }}</span>
         </template>

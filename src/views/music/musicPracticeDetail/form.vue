@@ -78,7 +78,7 @@
 
   const unit = ref('遍');
   const tuneLable = ref('曲子名称');
-  const timesLable = ref('练习遍数');
+  const timesLable = ref('练习时长');
 
   const data = reactive({
     form: {},
@@ -145,11 +145,11 @@
     if (form.value.tuneType == 'TUNE') {
       unit.value = '遍';
       tuneLable.value = '曲子名称';
-      timesLable.value = '练习遍数';
+      timesLable.value = '练习时长';
     } else {
       unit.value = '分钟';
       tuneLable.value = '曲子名称';
-      timesLable.value = '练习遍数';
+      timesLable.value = '练习时长';
     }
     loadTuneTree(form.value.tuneType);
   }

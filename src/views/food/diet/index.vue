@@ -108,7 +108,7 @@
           <span>{{ scope.row.dietId }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="食物" fixed="left" min-width="280px" :show-overflow-tooltip="true">
+      <el-table-column label="食物" fixed="left" min-width="220px" :show-overflow-tooltip="true">
         <template #default="scope">
           <span v-if="scope.row.score<3">
             <span class="link-type" style="color: red;" @click="handleEdit(scope.row)">{{ scope.row.foods }}</span>
@@ -123,7 +123,7 @@
           <span>{{ scope.row.occurTime }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="标签" min-width="150px" :show-overflow-tooltip="true">
+      <el-table-column label="标签" min-width="120px" :show-overflow-tooltip="true">
         <template #default="scope">
           <span>{{ scope.row.tags }}</span>
         </template>
