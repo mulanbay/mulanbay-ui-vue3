@@ -119,9 +119,16 @@
           <span>{{ scope.row.exerciseId }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="运动类型" align="center" min-width="120px">
+      <el-table-column label="运动类型" align="center" min-width="80px">
         <template #default="scope">
-          <span class="link-type" @click="handleEdit(scope.row)">{{ scope.row.sport.sportName }}</span>
+          <span class="link-type" @click="handleEdit(scope.row)">
+            {{ scope.row.sport.sportName }}
+          </span>
+          <span v-if="scope.row.expId!=null">
+            <el-tooltip content="关联人生经历" effect="dark" placement="top">
+              <el-icon color="green"><BellFilled /></el-icon>
+            </el-tooltip>
+          </span>
         </template>
       </el-table-column>
       <el-table-column label="锻炼时间" align="center" width="180">
@@ -150,12 +157,12 @@
             </span>
           </template>
         </el-table-column>
-        <el-table-column label="锻炼时长(分钟)" align="center">
+        <el-table-column label="锻炼时长" align="center">
           <template #default="scope">
             <span v-if="scope.row.duration<60" style="color: red;">
-              {{ scope.row.duration }}
+              {{ formatMinutes(scope.row.duration) }}
             </span>
-            <span v-else>{{ scope.row.duration }}</span>
+            <span v-else>{{ formatMinutes(scope.row.duration) }}</span>
           </template>
         </el-table-column>
       </el-table-column>
@@ -267,8 +274,7 @@
 <script setup name="Exercise">
   import { fetchList, deleteExercise, getExercise } from "@/api/sport/exercise";
   import { getSportTree } from "@/api/sport/sport";
-  import { formatDays } from "@/utils/datetime";
-  import { getHourDesc } from "@/utils/datetime";
+  import { formatDays,formatMinutes,getHourDesc } from "@/utils/datetime";
   import ExerciseForm from './form.vue'
   import ArchiveForm from '../../life/archive/form.vue';
   import MultiStat from './multiStat.vue';
@@ -394,13 +400,13 @@
 
   /** 新增按钮操作 */
   function handleCreate() {
-    formRef.value.openForm(null, 'create');
+    formRef.value.openForm(null, 'create',null);
   }
 
   /** 修改按钮操作 */
   function handleEdit(row) {
     const id = row.exerciseId || ids.value.join(",");
-    formRef.value.openForm(id, 'edit');
+    formRef.value.openForm(id, 'edit',null);
   }
 
   /** 删除按钮操作 */

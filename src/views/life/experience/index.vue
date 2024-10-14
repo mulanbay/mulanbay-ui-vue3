@@ -104,16 +104,25 @@
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column label="类型" align="center" width="95">
+      <el-table-column label="类型" align="center" width="60">
         <template #default="scope">
           <span>{{ scope.row.typeName }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="行程明细" width="100" align="center">
+      <el-table-column label="行程" width="60" align="center">
         <template #default="scope">
           <span class="link-type" @click="handleDetailList(scope.row)">
             <el-icon>
               <Grid />
+            </el-icon>
+          </span>
+        </template>
+      </el-table-column>
+      <el-table-column label="锻炼" width="60" align="center">
+        <template #default="scope">
+          <span class="link-type" @click="handleExercise(scope.row)">
+            <el-icon>
+              <Bicycle />
             </el-icon>
           </span>
         </template>
@@ -171,6 +180,9 @@
     <!-- 明细列表 -->
     <ExperienceDetailList ref="experienceDetailListRef"/>
     
+    <!-- 锻炼 -->
+    <ExerciseList ref="exerciseListRef"/>
+    
     <!-- 旅行地图 -->
     <TransferDetailMap ref="transferDetailMapRef"/>
     
@@ -184,6 +196,7 @@
   import { fetchList, deleteExperience } from "@/api/life/experience";
   import {deepClone} from "@/utils/index";
   import ExperienceForm from './form.vue';
+  import ExerciseList from './exercise.vue';
   import TransferDetailMap from './transferDetailMap.vue';
   import CostStat from './costStat.vue';
   import ExperienceDetailList from '../experienceDetail/index.vue';
@@ -194,6 +207,7 @@
   const experienceDetailListRef = ref();
   const transferDetailMapRef = ref();
   const costStatRef = ref();
+  const exerciseListRef = ref();
   
   // 遮罩层
   const loading = ref(true);
@@ -235,6 +249,11 @@
   /** 明细列表 */
   function handleDetailList(row) {
     experienceDetailListRef.value.showData(row.expId);
+  }
+  
+  /** 锻炼 */
+  function handleExercise(row) {
+    exerciseListRef.value.showData(row.expId);
   }
   
   /** 位置信息 */

@@ -145,7 +145,7 @@
   const emit = defineEmits(['success']);
 
   /** 打开弹窗 */
-  const openForm = async (id,type) => {
+  const openForm = async (id,type,expId) => {
     open.value = true;
     resetForm();
     loadSportTree();
@@ -160,6 +160,7 @@
       });
     } else {
       title.value = "新增";
+      form.value.expId = expId;
     }
   }
 
