@@ -124,8 +124,8 @@
           <span class="link-type" @click="handleEdit(scope.row)">
             {{ scope.row.sport.sportName }}
           </span>
-          <span v-if="scope.row.expId!=null">
-            <el-tooltip content="关联人生经历" effect="dark" placement="top">
+          <span v-if="scope.row.expId!=null" class="link-type" @click="showExperience(scope.row.expId)">
+            <el-tooltip content="人生经历" effect="dark" placement="top">
               <el-icon color="green"><BellFilled /></el-icon>
             </el-tooltip>
           </span>
@@ -258,6 +258,9 @@
 
     <!-- 档案表单 -->
     <ArchiveForm ref="archiveFormRef" />
+    
+    <!-- 人生经历表单 -->
+    <ExperienceForm ref="experienceFormRef" />
 
     <!-- 统计 -->
     <MultiStat ref="multiStatRef" />
@@ -277,6 +280,7 @@
   import { formatDays,formatMinutes,getHourDesc } from "@/utils/datetime";
   import ExerciseForm from './form.vue'
   import ArchiveForm from '../../life/archive/form.vue';
+  import ExperienceForm from '../../life/experience/form.vue';
   import MultiStat from './multiStat.vue';
   import RefreshMaxStat from './refreshMaxStat.vue';
   import AchieveMilestoneList from '../sportMilestone/achieveList.vue';
@@ -284,6 +288,7 @@
   const { proxy } = getCurrentInstance();
   const formRef = ref();
   const archiveFormRef = ref();
+  const experienceFormRef = ref();
   const multiStatRef = ref();
   const refreshMaxStatRef = ref();
   const achieveMilestoneRef = ref();
@@ -332,6 +337,11 @@
       moreCdn.value = true;
       cdnTitle.value = '取消';
     }
+  }
+  
+  /** 人生经历 */
+  function showExperience(expId){
+    experienceFormRef.value.openForm(expId, 'edit');
   }
 
   /** 身体分析 */
