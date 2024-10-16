@@ -91,6 +91,14 @@ export function getExerciseDateStat(query) {
   })
 }
 
+export function getExerciseItemStat(query) {
+  return request({
+    url: '/exercise/itemStat',
+    method: 'get',
+    params: query
+  })
+}
+
 export function getExerciseOverallStat(query) {
   return request({
     url: '/exercise/overallStat',
