@@ -1,7 +1,7 @@
 <template>
 
   <!-- 表单编辑对话框 -->
-  <el-dialog :title="title" v-model="open" width="750px" append-to-body >
+  <el-dialog :title="title" v-model="open" width="750px" append-to-body class="customDialogCss">
     <el-form ref="formRef" :model="form" :rules="rules" v-loading="formLoading" label-width="120px">
       <el-row>
         <el-col :span="12">
@@ -58,10 +58,10 @@
         <el-button type="danger" @click="closeForm">关 闭</el-button>
       </div>
     </template>
-
-    <!-- 表单 -->
+    
+    <!-- 曲子列表 -->
     <DetailList ref="detailListRef" />
-
+    
   </el-dialog>
 
 </template>
@@ -192,6 +192,9 @@
             // 发送操作成功的事件
             //emit('success');
             showDetailList(response.practiceId);
+            //需要重新设置
+            form.value.practiceId = response.practiceId;
+            title.value = "修改";
           });
         }
       }

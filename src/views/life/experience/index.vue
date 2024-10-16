@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryRef" :inline="true">
-      <el-form-item label="起止日期" style="width: 308px">
+      <el-form-item label="起止日期" style="width: 308px" v-show="moreCdn==true">
         <el-date-picker
           v-model="dateRange"
           unlink-panels
@@ -21,7 +21,7 @@
           style="width: 240px"
           @keyup.enter.native="handleQuery" />
       </el-form-item>
-      <el-form-item label="经历类型" prop="types">
+      <el-form-item label="经历类型" prop="types" v-show="moreCdn==true">
         <el-select
           v-model="queryParams.types"
           placeholder="类型"
@@ -39,6 +39,7 @@
       <el-form-item>
         <el-button type="primary" icon="search" @click="handleQuery" v-hasPermi="['life:experience:list']">搜索</el-button>
         <el-button icon="refresh" @click="resetQuery">重置</el-button>
+        <el-button type="warning" icon="more" @click="handleMoreCdn">{{cdnTitle}}</el-button>
       </el-form-item>
     </el-form>
 
@@ -236,6 +237,21 @@
 
   const { queryParams } = toRefs(data);
 
+  //查询条件更多属性 start
+  const cdnTitle = ref("更多");
+  const moreCdn = ref(false);
+  
+  /** 更多查询条件处理 */
+  function handleMoreCdn() {
+    if (moreCdn.value == true) {
+      moreCdn.value = false;
+      cdnTitle.value = '更多';
+    } else {
+      moreCdn.value = true;
+      cdnTitle.value = '取消';
+    }
+  }
+  
   /** 花费统计 */
   function handleCostStat(row) {
     costStatRef.value.showData(row.expId,row.expName);
