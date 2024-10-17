@@ -134,19 +134,13 @@
           </span>
         </template>
       </el-table-column>
-      <el-table-column label="调度周期" align="center" width="160">
+      <el-table-column label="调度周期" align="center" width="120">
         <template #default="scope">
-          <span v-if="scope.row.triggerIntervel==1">
-            {{ '每'+scope.row.triggerTypeName+"一次" }}
-          </span>
-          <span v-else>
-            每
-            <el-tag type="danger">{{ scope.row.triggerInterval+scope.row.triggerTypeName }}</el-tag>
-            一次
-          </span>
+          <el-tag type="success">{{ scope.row.triggerInterval+scope.row.triggerTypeName }}</el-tag>
+          /次
         </template>
       </el-table-column>
-      <el-table-column label="距离下一次执行" align="center" min-width="140px" :show-overflow-tooltip="true">
+      <el-table-column label="距离下一次执行" align="center" min-width="120px" :show-overflow-tooltip="true">
         <template #default="scope">
           <span v-if="scope.row.tillNextExecuteTime<=60" style="color:red ;">
             {{ tillNowString(scope.row.tillNextExecuteTime) }}
@@ -162,7 +156,7 @@
           </span>
         </template>
       </el-table-column>
-      <el-table-column label="最新执行结果" align="center" width="120">
+      <el-table-column label="最新结果" align="center" width="80">
         <template #default="scope">
           <span v-if="scope.row.lastExecuteResult==null || scope.row.lastExecuteResult==''">
             --
@@ -377,7 +371,7 @@
           <el-button v-if="scope.row.triggerStatus=='ENABLE'"
             link
             type="warning"
-            icon="close"
+            icon="Stopwatch"
             @click="handleEditStatus(scope.row.triggerId,'DISABLE')"
             v-hasPermi="['schedule:taskTrigger:editStatus']">关闭
           </el-button>

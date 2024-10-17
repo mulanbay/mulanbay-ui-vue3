@@ -1,19 +1,6 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryRef" :inline="true">
-      <el-form-item label="运动类型" prop="sportId">
-        <el-select
-          v-model="queryParams.sportId"
-          placeholder="运动"
-          clearable
-          style="width: 240px">
-          <el-option
-            v-for="dict in sportOptions"
-            :key="dict.id"
-            :label="dict.text"
-            :value="dict.id" />
-        </el-select>
-      </el-form-item>
       <el-form-item label="锻炼日期" style="width: 308px">
         <el-date-picker
           v-model="dateRange"
@@ -25,11 +12,24 @@
           end-placeholder="结束日期"
           :shortcuts="datePickerOptions"></el-date-picker>
       </el-form-item>
+      <el-form-item label="运动类型" prop="sportId">
+        <el-select
+          v-model="queryParams.sportId"
+          placeholder="运动"
+          clearable
+          style="width: 120px">
+          <el-option
+            v-for="dict in sportOptions"
+            :key="dict.id"
+            :label="dict.text"
+            :value="dict.id" />
+        </el-select>
+      </el-form-item>
       <el-form-item label="统计项目" prop="field">
         <el-select
           v-model="queryParams.field"
           placeholder="统计项目"
-          style="width: 240px"
+          style="width: 120px"
         >
           <el-option
             v-for="dict in fieldOptions"
