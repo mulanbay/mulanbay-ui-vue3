@@ -172,7 +172,7 @@
       let percent = getPercent(response.statValue, response.userStat.expectValue);
       chartData.value = percent;
       chartData.title = '统计值/期望值-比例';
-      chartData.name = "期望值:" + response.userStat.expectValue + unit;
+      chartData.name = valueDesc;
       
       let option = createGaugeChartOption(chartData);
       createChart(option, statChartIns);

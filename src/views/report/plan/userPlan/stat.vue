@@ -190,7 +190,7 @@
       let cp = getPercent(countData.statValue, countData.planValue);
       countChartData.value = cp;
       countChartData.title = '统计次数/计划次数-比例';
-      countChartData.name = "计划次数:" + countData.planValue + '次';
+      countChartData.name = "统计次数:" + countData.statValue + '次,'+"计划次数:" + countData.planValue + '次';
       let countOption = createGaugeChartOption(countChartData);
       createChart(countOption, countStatChartIns);
       
@@ -208,7 +208,7 @@
       let vp = getPercent(valueData.statValue, valueData.planValue);
       valueChartData.value = vp;
       valueChartData.title = '统计值/计划值-比例';
-      valueChartData.name = "计划值:" + valueData.planValue + unit;
+      valueChartData.name = "统计值:" + valueData.statValue + unit+",计划值:" + valueData.planValue + unit;
       let valueOption = createGaugeChartOption(valueChartData);
       createChart(valueOption, valueStatChartIns);
     });

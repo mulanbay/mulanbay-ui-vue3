@@ -11,6 +11,12 @@
             </div>
           </template>
           {{ beanData.bussName}}
+          <span v-if="beanData.source=='STAT'">
+           <el-button link type="success" icon="InfoFilled" @click="showStatInfo(beanData)" >详情</el-button>
+          </span>
+          <span v-else-if="beanData.source=='PLAN'">
+           <el-button link type="success" icon="InfoFilled" @click="showPlanInfo(beanData)" >详情</el-button>
+          </span>
         </el-descriptions-item>
         <el-descriptions-item>
           <template #label>
@@ -51,12 +57,23 @@
       </el-descriptions>
     </el-col>
   </el-row>
-
+  
+  <!-- 统计 -->
+  <UserStatStat ref="userStatStatRef" />
+  
+  <!-- 计划统计 -->
+  <UserPlanStat ref="userPlanStatRef" />
+    
 </template>
 
 <script setup name="BeanDetail">
+  import UserStatStat from '../../report/stat/userStat/stat.vue'
+  import UserPlanStat from '../../report/plan/userPlan/stat.vue'
 
   const { proxy } = getCurrentInstance();
+  const userStatStatRef = ref();
+  const userPlanStatRef = ref();
+  
   const data = reactive({
     beanData: {}
   });
@@ -77,6 +94,17 @@
   function handleClick() {
 
   }
+  
+  /** 统计 **/
+  function showStatInfo(bd) {
+    userStatStatRef.value.showData(bd.sourceId,bd.title);
+  }
+  
+  /** 计划 **/
+  function showPlanInfo(bd) {
+    userPlanStatRef.value.showData(bd.sourceId,bd.title);
+  }
+  
   /** 初始化 **/
   onMounted(() => {
 
