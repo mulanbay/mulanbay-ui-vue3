@@ -721,6 +721,108 @@ export function createDoublePieChartOption(data) {
 }
 
 /**
+ * 三饼图
+ * @param {Object} data
+ */
+export function createTripPieChartOption(data) {
+  const unit = data.unit == null ? '' : data.unit;
+  let option = {
+    title: {
+      text: data.title,
+      subtext: data.subTitle,
+      x: 'center'
+    },
+    toolbox: {
+      show: false,
+      feature: {
+        dataZoom: {
+          yAxisIndex: 'none'
+        },
+        dataView: {
+          show: true,
+          readOnly: false
+        },
+        magicType: {
+          type: ['line', 'bar']
+        },
+        restore: {},
+        saveAsImage: {}
+      }
+    },
+    tooltip: {
+      trigger: 'item',
+      formatter: '{a} <br/>{b} : {c} ' + unit + ' ({d}%)'
+    },
+    legend: {
+      orient: 'horizontal',
+      x: 'center',
+      y: 'bottom',
+      data: data.xdata
+    },
+    series: [
+      {
+        name: data.detailData[0].name,
+        type: 'pie',
+        selectedMode: 'single',
+        radius: [0, '15%'],
+        label: {
+          normal: {
+            position: 'inner'
+          }
+        },
+        labelLine: {
+          normal: {
+            show: false
+          }
+        },
+        data: data.detailData[0].data
+      },
+      {
+        name: data.detailData[1].name,
+        type: 'pie',
+        selectedMode: 'single',
+        radius: ['25%', '35%'],
+        label: {
+          normal: {
+            position: 'inner'
+          }
+        },
+        labelLine: {
+          normal: {
+            show: false
+          }
+        },
+        data: data.detailData[1].data
+      },
+      {
+        name: data.detailData[2].name,
+        type: 'pie',
+        radius: ['50%', '60%'],
+        data: data.detailData[2].data,
+        itemStyle: {
+          borderColor: '#fff',
+          borderWidth: 1
+        },
+        label: {
+          alignTo: 'labelLine', //labelLine
+          formatter: '{name|{b}}\n{time|{c} ' + unit + ' ({d}%)}',
+          minMargin: 5,
+          edgeDistance: 10,
+          lineHeight: 15,
+          rich: {
+            time: {
+              fontSize: 12,
+              color: '#460000'
+            }
+          }
+        }
+      }
+    ]
+  };
+  return option;
+}
+
+/**
  * 日历图
  * @param {Object} data
  */

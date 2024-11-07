@@ -116,6 +116,14 @@ export function getConsumeUseTimeStat(query) {
   })
 }
 
+export function getConsumeSoldStat(query) {
+  return request({
+    url: '/consume/soldStat',
+    method: 'get',
+    params: query
+  })
+}
+
 export function getConsumeUseTimeList(query) {
   return request({
     url: '/consume/useTimeList',

@@ -85,7 +85,8 @@
       <el-form-item>
         <el-button type="primary" icon="search" @click="handleQuery" v-hasPermi="['consume:consume:useTimeList']">搜索</el-button>
         <el-button icon="refresh" @click="resetQuery">重置</el-button>
-        <el-button type="success" icon="TrendCharts" @click="handleStat" v-hasPermi="['consume:consume:useTimeStat']">统计</el-button>
+        <el-button type="success" icon="TrendCharts" @click="handleUseTimeStat" v-hasPermi="['consume:consume:useTimeStat']">时间统计</el-button>
+        <el-button type="success" icon="TrendCharts" @click="handleSoldStat" v-hasPermi="['consume:consume:soldStat']">售出统计</el-button>
         <el-button type="warning" icon="more" @click="handleMoreCdn">{{cdnTitle}}</el-button>
       </el-form-item>
     </el-form>
@@ -289,9 +290,14 @@
     return '￥' + pp.toFixed(2);
   }
 
-  /** 统计 */
-  function handleStat() {
+  /** 时间统计 */
+  function handleUseTimeStat() {
     proxy.$router.push({ name: 'ConsumeUseTimeStat', query: {} })
+  }
+  
+  /** 售出统计 */
+  function handleSoldStat() {
+    proxy.$router.push({ name: 'ConsumeSoldStat', query: {} })
   }
 
   /** 详情 */
