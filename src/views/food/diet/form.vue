@@ -491,9 +491,13 @@
         }
         if (tagsTags.value.length > 0) {
           form.value.tags = tagsTags.value.join(',');
+        } else {
+          form.value.tags = null;
         }
         if (shopTags.value.length > 0) {
           form.value.shop = shopTags.value.join(',');
+        } else {
+          form.value.shop = null;
         }
         if (form.value.dietId != undefined) {
           editDiet(form.value).then(response => {
