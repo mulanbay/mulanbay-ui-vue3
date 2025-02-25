@@ -133,33 +133,72 @@
           </span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" fixed="right" width="280" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" fixed="right" width="100" class-name="small-padding fixed-width">
         <template #default="scope">
-          <el-button
-            link
-            type="success"
-            icon="InfoFilled"
-            @click="showCacheInfo(scope.row)"
-            v-hasPermi="['auth:sysFunc:cacheInfo']">详情
-          </el-button>
-          <el-button
-            type="primary"
-            link
-            icon="plus"
-            @click="handleCreate(scope.row)"
-            v-hasPermi="['auth:sysFunc:create']">新增</el-button>
-          <el-button
-            type="success"
-            link
-            icon="plus"
-            @click="handleCopy(scope.row)"
-            v-hasPermi="['auth:sysFunc:create']">复制</el-button>
-          <el-button
-            type="danger"
-            link
-            icon="delete"
-            @click="handleDelete(scope.row)"
-            v-hasPermi="['auth:sysFunc:delete']">删除</el-button>
+          <el-dropdown>
+            <span class="el-dropdown-link">
+              选择操作
+              <el-icon class="el-icon--right">
+                <arrow-down />
+              </el-icon>
+            </span>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item><el-icon color="green"><Right /></el-icon>{{ scope.row.funcName }}</el-dropdown-item>
+                <el-dropdown-item divided>
+                  <el-button
+                    link
+                    type="info"
+                    icon="InfoFilled"
+                    @click="showCacheInfo(scope.row)"
+                    v-hasPermi="['auth:sysFunc:cacheInfo']">详情
+                  </el-button>
+                </el-dropdown-item>
+                <el-dropdown-item>
+                  <el-button
+                    type="primary"
+                    link
+                    icon="plus"
+                    @click="handleCreate(scope.row)"
+                    v-hasPermi="['auth:sysFunc:create']">新增</el-button>
+                </el-dropdown-item>
+                <el-dropdown-item>
+                  <el-button
+                    type="success"
+                    link
+                    icon="CopyDocument"
+                    @click="handleCopy(scope.row)"
+                    v-hasPermi="['auth:sysFunc:create']">复制</el-button>
+                </el-dropdown-item>
+                <el-dropdown-item>
+                  <el-button
+                    type="danger"
+                    link
+                    icon="delete"
+                    @click="handleDelete(scope.row)"
+                    v-hasPermi="['auth:sysFunc:delete']">删除</el-button>
+                </el-dropdown-item>
+                <el-dropdown-item>
+                  <span v-if="scope.row.status=='ENABLE'">
+                    <el-button
+                      type="danger"
+                      link
+                      icon="CircleClose"
+                      @click="handleDisable(scope.row)"
+                      v-hasPermi="['auth:sysFunc:edit']">禁用</el-button>
+                  </span>
+                  <span v-else>
+                    <el-button
+                      type="success"
+                      link
+                      icon="CircleCheck"
+                      @click="handleEnable(scope.row)"
+                      v-hasPermi="['auth:sysFunc:edit']">启用</el-button>
+                  </span>
+                </el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
         </template>
       </el-table-column>
     </el-table>
@@ -552,6 +591,7 @@
   import { treeList, getMenuTree, getSysFunc, editSysFunc, createSysFunc, deleteSysFunc, refreshCache } from "@/api/auth/sysFunc";
   import { getDomainClassList } from "@/api/common";
   import CacheInfo from './cacheInfo.vue'
+  import { ArrowDown } from '@element-plus/icons-vue'
 
   import SvgIcon from "@/components/SvgIcon";
   import IconSelect from "@/components/IconSelect";
@@ -831,6 +871,28 @@
       form.value.parent = null;
     });
   }
+  
+  /** 启用按钮 */
+  function handleEnable(row){
+    let sf = row;
+    sf.status = 'ENABLE';
+    sf.parent = null;
+    editSysFunc(sf).then(response => {
+      proxy.$modal.msgSuccess("修改成功");
+      refreshRow(sf.parentId);
+    });
+  }
+  
+  /** 禁用按钮 */
+  function handleDisable(row){
+    let sf = row;
+    sf.status = 'DISABLE';
+    sf.parent = null;
+    editSysFunc(sf).then(response => {
+      proxy.$modal.msgSuccess("修改成功");
+      refreshRow(sf.parentId);
+    });
+  }
 
   /** 提交按钮 */
   function submitForm() {
@@ -958,3 +1020,11 @@
     getDomainClassSelect();
   })
 </script>
+<style scoped>
+.example-showcase .el-dropdown-link {
+  cursor: pointer;
+  color: var(--el-color-primary);
+  display: flex;
+  align-items: center;
+}
+</style>
