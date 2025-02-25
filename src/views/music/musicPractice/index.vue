@@ -115,7 +115,7 @@
           <el-button
             link
             type="success"
-            icon="plus"
+            icon="CopyDocument"
             @click="handleCopy(scope.row)"
             v-hasPermi="['music:musicPractice:copy']">复制
           </el-button>

@@ -119,7 +119,7 @@
           <span>{{ scope.row.exerciseId }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="运动类型" align="center" min-width="80px">
+      <el-table-column label="运动类型" fixed="left" align="center" min-width="80px">
         <template #default="scope">
           <span class="link-type" @click="handleEdit(scope.row)">
             {{ scope.row.sport.sportName }}
@@ -226,15 +226,8 @@
           </template>
         </el-table-column>
       </el-table-column>
-      <el-table-column label="操作" align="center" width="150" fixed="right" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" width="80" fixed="right" class-name="small-padding fixed-width">
         <template #default="scope">
-          <el-button
-            link
-            type="success"
-            icon="edit"
-            @click="handleEdit(scope.row)"
-            v-hasPermi="['sport:exercise:edit']">修改
-          </el-button>
           <el-button
             link
             type="danger"

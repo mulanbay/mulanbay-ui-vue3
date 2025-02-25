@@ -215,7 +215,7 @@
           <el-button
             link
             type="success"
-            icon="plus"
+            icon="CopyDocument"
             @click="handleCopy(scope.row)"
             v-hasPermi="['consume:consume:create']">复制
           </el-button>

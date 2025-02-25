@@ -114,7 +114,7 @@
     <!--列表数据-->
     <el-table v-loading="loading" :data="taskTriggerList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="ID" fixed="left" prop="log" sortable="custom" align="center" width="80">
+      <el-table-column label="ID" fixed="left" prop="log" sortable="custom" align="center" width="70">
         <template #default="scope">
           <span>{{ scope.row.triggerId }}</span>
         </template>
@@ -137,7 +137,6 @@
       <el-table-column label="调度周期" align="center" width="120">
         <template #default="scope">
           <el-tag type="success">{{ scope.row.triggerInterval+scope.row.triggerTypeName }}</el-tag>
-          /次
         </template>
       </el-table-column>
       <el-table-column label="距离下一次执行" align="center" min-width="120px" :show-overflow-tooltip="true">
@@ -244,13 +243,6 @@
           <span>
             {{ scope.row.totalCount }}
           </span>
-          <el-tooltip class="box-item" effect="dark" content="重置" placement="top">
-            <span @click="handleResetTrigger(scope.row)">
-              <el-icon>
-                <RefreshRight />
-              </el-icon>
-            </span>
-          </el-tooltip>
         </template>
       </el-table-column>
       <el-table-column label="总失败次数" align="center" width="100">
@@ -258,13 +250,6 @@
           <span>
             {{ scope.row.failCount }}
           </span>
-          <el-tooltip class="box-item" effect="dark" content="重置" placement="top">
-            <span @click="handleResetTrigger(scope.row)">
-              <el-icon>
-                <RefreshRight />
-              </el-icon>
-            </span>
-          </el-tooltip>
         </template>
       </el-table-column>
       <el-table-column label="组名" align="center" width="100">
@@ -302,9 +287,20 @@
           <span>{{ scope.row.allowedRedoTimes }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="超时时间(毫秒)" align="center" width="120">
+      <el-table-column label="超时时间" align="center" width="120">
         <template #default="scope">
-          <span>{{ scope.row.timeout }}</span>
+          <span v-if="scope.row.timeout<1000" style="color:green;">
+            <span>{{ scope.row.timeout }}毫秒</span>
+          </span>
+          <span v-else-if="scope.row.timeout<60000" style="color:darkgreen;">
+            <span>{{ scope.row.timeout/1000 }}秒</span>
+          </span>
+          <span v-else-if="scope.row.timeout<180000" style="color:seagreen;">
+            <span>{{ scope.row.timeout/60000 }}分钟</span>
+          </span>
+          <span v-else style="color:red;">
+            <span>{{ scope.row.timeout/60000 }}分钟</span>
+          </span>
         </template>
       </el-table-column>
       <el-table-column label="唯一检验" align="center" width="100">
@@ -352,36 +348,64 @@
           <span>{{ scope.row.version }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" fixed="right" width="210" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" fixed="right" width="70" class-name="small-padding fixed-width">
         <template #default="scope">
-          <el-button
-            link
-            type="success"
-            icon="InfoFilled"
-            @click="showScheduleDetail(scope.row)"
-            v-hasPermi="['schedule:taskTrigger:get']">详情
-          </el-button>
-          <el-button v-if="scope.row.triggerStatus=='DISABLE'"
-            link
-            type="success"
-            icon="Open"
-            @click="handleEditStatus(scope.row.triggerId,'ENABLE')"
-            v-hasPermi="['schedule:taskTrigger:editStatus']">开启
-          </el-button>
-          <el-button v-if="scope.row.triggerStatus=='ENABLE'"
-            link
-            type="warning"
-            icon="Stopwatch"
-            @click="handleEditStatus(scope.row.triggerId,'DISABLE')"
-            v-hasPermi="['schedule:taskTrigger:editStatus']">关闭
-          </el-button>
-          <el-button
-            link
-            type="danger"
-            icon="delete"
-            @click="handleDelete(scope.row)"
-            v-hasPermi="['schedule:taskTrigger:delete']">删除
-          </el-button>
+          <el-dropdown>
+            <span class="el-dropdown-link">
+              选项
+              <el-icon class="el-icon--right">
+                <arrow-down />
+              </el-icon>
+            </span>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item><el-icon color="green"><Right /></el-icon>{{ scope.row.triggerName }}</el-dropdown-item>
+                <el-dropdown-item divided>
+                  <el-button
+                    link
+                    type="info"
+                    icon="InfoFilled"
+                    @click="showScheduleDetail(scope.row)"
+                    v-hasPermi="['schedule:taskTrigger:get']">详情
+                  </el-button>
+                </el-dropdown-item>
+                <el-dropdown-item>
+                  <el-button v-if="scope.row.triggerStatus=='DISABLE'"
+                    link
+                    type="success"
+                    icon="Open"
+                    @click="handleEditStatus(scope.row.triggerId,'ENABLE')"
+                    v-hasPermi="['schedule:taskTrigger:editStatus']">开启
+                  </el-button>
+                  <el-button v-if="scope.row.triggerStatus=='ENABLE'"
+                    link
+                    type="warning"
+                    icon="Stopwatch"
+                    @click="handleEditStatus(scope.row.triggerId,'DISABLE')"
+                    v-hasPermi="['schedule:taskTrigger:editStatus']">关闭
+                  </el-button>
+                </el-dropdown-item>
+                <el-dropdown-item>
+                  <el-button
+                    link
+                    type="primary"
+                    icon="RefreshRight"
+                    @click="handleResetTrigger(scope.row)"
+                    v-hasPermi="['schedule:taskTrigger:delete']">重置计数
+                  </el-button>
+                </el-dropdown-item>
+                <el-dropdown-item>
+                  <el-button
+                    link
+                    type="danger"
+                    icon="delete"
+                    @click="handleDelete(scope.row)"
+                    v-hasPermi="['schedule:taskTrigger:delete']">删除
+                  </el-button>
+                </el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
         </template>
       </el-table-column>
     </el-table>

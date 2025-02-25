@@ -102,7 +102,7 @@
           <el-button
             link
             type="success"
-            icon="plus"
+            icon="CopyDocument"
             @click="handleCopy(scope.row)"
             v-hasPermi="['config:scoreGroup:copy']">复制
           </el-button>

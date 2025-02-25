@@ -133,11 +133,11 @@
           </span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" fixed="right" width="100" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" fixed="right" width="70" class-name="small-padding fixed-width">
         <template #default="scope">
           <el-dropdown>
             <span class="el-dropdown-link">
-              选择操作
+              选项
               <el-icon class="el-icon--right">
                 <arrow-down />
               </el-icon>

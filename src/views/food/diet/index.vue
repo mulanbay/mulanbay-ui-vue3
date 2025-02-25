@@ -168,7 +168,7 @@
           <el-button
             link
             type="success"
-            icon="plus"
+            icon="CopyDocument"
             @click="handleCopy(scope.row)"
             v-hasPermi="['food:diet:create']">复制
           </el-button>
