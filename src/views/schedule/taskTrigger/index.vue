@@ -39,6 +39,14 @@
         <el-button type="primary" icon="search" @click="handleQuery" v-hasPermi="['schedule:taskTrigger:list']">搜索</el-button>
         <el-button icon="refresh" @click="resetQuery">重置</el-button>
       </el-form-item>
+      <el-form-item>
+        <span v-if="scheduleEnabled==true" style="color:green ;">
+          <el-icon><StarFilled /></el-icon>调度服务正在运行
+        </span>
+        <span v-else style="color:red ;">
+          <el-icon><WarnTriangleFilled /></el-icon>调度服务未启用
+        </span>
+      </el-form-item>
     </el-form>
 
     <el-row :gutter="10" class="mb8">
@@ -445,7 +453,7 @@
 </template>
 
 <script setup name="TaskTrigger">
-  import { fetchList, deleteTaskTrigger, editTaskTriggerStatus } from "@/api/schedule/taskTrigger";
+  import { fetchList, deleteTaskTrigger, editTaskTriggerStatus,getScheduleInfo } from "@/api/schedule/taskTrigger";
   import { tillNowString } from "@/utils/datetime";
   import TaskTriggerForm from './form.vue'
   import ManualStartForm from './manualStart.vue'
@@ -486,6 +494,8 @@
   const total = ref(0);
   // 查询列表数据
   const taskTriggerList = ref([]);
+  //调度服务状态
+  const scheduleEnabled = ref(false);
 
   const triggerTypeOptions = ref([]);
   const commonStatusOptions = ref(proxy.commonStatusOptions);
@@ -507,6 +517,13 @@
       id = ids.value[0];
     }
     return id;
+  }
+  
+  /** 获取调度信息 */
+  function loadScheduleInfo() {
+    getScheduleInfo().then(response => {
+      scheduleEnabled.value = response.scheduleInfo.enabled;
+    });
   }
 
   /** 调度执行时间分析 */
@@ -637,6 +654,7 @@
   /** 初始化 **/
   onMounted(() => {
     getList();
+    loadScheduleInfo();
     proxy.getEnumDict('cn.mulanbay.schedule.enums.TriggerType', 'FIELD', false).then(response => {
       triggerTypeOptions.value = response;
     });

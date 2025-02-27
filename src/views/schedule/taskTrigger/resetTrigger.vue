@@ -75,6 +75,7 @@
   /** 加载*/
   function loadTaskTrigger(triggerId) {
     getTaskTrigger(triggerId).then(response => {
+      resetTriggerTitle.value = '重置触发器('+response.triggerName+')';
       resetTriggerForm.value = {
         triggerId: response.triggerId,
         totalCount: response.totalCount,

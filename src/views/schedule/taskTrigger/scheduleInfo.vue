@@ -24,7 +24,7 @@
             调度是否启用
           </div>
         </template>
-        <span v-if="scheduleData.schedule==true">
+        <span v-if="scheduleData.enabled==true">
           <el-icon color="green">
             <SuccessFilled />
           </el-icon>

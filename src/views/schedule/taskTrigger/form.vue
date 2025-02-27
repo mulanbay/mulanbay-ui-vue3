@@ -240,7 +240,7 @@
       <el-row>
         <el-col :span="24">
           <el-form-item label="备注信息">
-            <el-input v-model="form.remark" type="textarea" placeholder="请输入内容"></el-input>
+            <el-input v-model="form.comment" type="textarea" placeholder="请输入内容"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -267,10 +267,11 @@
 <script setup name="TaskTriggerForm">
   import { getTaskTrigger, createTaskTrigger, editTaskTrigger, getTaskTriggerCategoryTree } from "@/api/schedule/taskTrigger";
   import { getTaskServerTree } from "@/api/schedule/taskServer";
-  import { encodeJsonString } from "@/utils/mulanbay";
+  import { encodeJsonString,deepEqual,deepClone } from "@/utils/mulanbay";
   import TimePeriodsForm from './timePeriods.vue'
   import TriggerParasForm from './triggerParas.vue'
   import TimeoutForm from './timeout.vue'
+  import { ElNotification } from 'element-plus'
 
   const { proxy } = getCurrentInstance();
   const formRef = ref();
@@ -287,7 +288,9 @@
   // 是否显示弹出层
   const open = ref(false);
   const formLoading = ref(false);
-
+  //对象编辑检查
+  const oldFormData = ref({});
+  
   const triggerTypeOptions = ref([]);
   const triggerStatusOptions = ref([]);
   const groupNameOptions = ref([]);
@@ -361,6 +364,9 @@
             form.value.triggerId = null;
             form.value.triggerName = form.value.triggerName + '_COPY';
             title.value = "复制";
+          }else{
+            //方便检查表单是否编辑过
+            oldFormData.value = deepClone(response);
           }
         });
       } finally {
@@ -400,6 +406,15 @@
   function submitForm() {
     proxy.$refs["formRef"].validate(valid => {
       if (valid) {
+        if (form.value.triggerId != undefined){
+          //检测是否编辑过,不能在执行参数编码之后比对，否则数据对不上
+          let eqs = deepEqual(form.value,oldFormData.value);
+          if(eqs){
+            ElNotification({title: '提示',message: '表单数据未变化!',type: 'warning',});
+            open.value = false;
+            return;
+          }
+        }
         //需要编码
         form.value.triggerParas = encodeJsonString(form.value.triggerParas);
         form.value.execTimePeriods = encodeJsonString(form.value.execTimePeriods);
