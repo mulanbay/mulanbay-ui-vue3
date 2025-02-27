@@ -10,7 +10,7 @@
           <el-card class="box-card">
             <div>
               <el-descriptions class="margin-top" :column="1" border>
-                <el-descriptions-item width="20px" align="center">
+                <el-descriptions-item width="80px" align="center">
                   <template #label>
                     <div class="cell-item">
                       <el-icon>
@@ -21,7 +21,7 @@
                   </template>
                   {{ item.content }}
                 </el-descriptions-item>
-                <el-descriptions-item width="20px" align="center">
+                <el-descriptions-item width="80px" align="center">
                   <template #label>
                     <div class="cell-item">
                       <el-icon>

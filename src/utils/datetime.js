@@ -61,6 +61,12 @@ export function tillNowString(second) {
     time = '已过去';
     second = Math.abs(second);
   }
+  return time = time+formatSeconds(second);
+}
+
+//距离现在的时分秒
+export function formatSeconds(second) {
+  var time = '';
   if (second > 3600 * 24) {
     var days = parseInt(second / (3600 * 24));
     if (days <= 30) {
@@ -85,28 +91,6 @@ export function tillNowString(second) {
     }
     return time;
   }
-
-}
-
-//距离现在的时分秒
-export function formatSeconds(second) {
-  var time = '';
-  if (second >= 3600 * 24) {
-    time += parseInt(second / (3600 * 24)) + '天';
-    second %= 3600 * 24;
-  }
-  if (second >= 3600) {
-    time += parseInt(second / 3600) + '小时';
-    second %= 3600;
-  }
-  if (second >= 60) {
-    time += parseInt(second / 60) + '分钟';
-    second %= 60;
-  }
-  if (second > 0) {
-    time += parseInt(second) + '秒';
-  }
-  return time;
 }
 
 //格式化分钟

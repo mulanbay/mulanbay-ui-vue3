@@ -60,7 +60,7 @@
       <el-table-column prop="icon" label="图标" width="80">
         <template #default="scope">
           <span v-if="null !=scope.row.imageName">
-            <svg-icon :icon-class="scope.row.imageName" />
+            <svg-icon :icon-class="scope.row.imageName"/>
           </span>
         </template>
       </el-table-column>
@@ -68,29 +68,36 @@
         <template #default="scope">
           <span v-if="true ==scope.row.loginAuth">
             <el-tooltip content="登录验证" effect="dark" placement="top">
-              <svg-icon icon-class="lock" />
+              <svg-icon icon-class="lock" color="#4682B4"/>
             </el-tooltip>
           </span>
           <span v-if="true ==scope.row.permissionAuth">
             <el-tooltip content="权限验证" effect="dark" placement="top">
-              <svg-icon icon-class="password" />
+              <svg-icon icon-class="password" color="red"/>
             </el-tooltip>
           </span>
           <span v-if="true ==scope.row.secAuth">
             <el-tooltip content="二次认证" effect="dark" placement="top">
-              <svg-icon icon-class="2" />
+              <svg-icon icon-class="2" color="#778899"/>
             </el-tooltip>
           </span>
           <span v-if="true ==scope.row.alwaysShow">
             <el-tooltip content="始终显示" effect="dark" placement="top">
-              <svg-icon icon-class="show" />
+              <svg-icon icon-class="show" color="#008B8B"/>
             </el-tooltip>
           </span>
         </template>
       </el-table-column>
-      <el-table-column label="排序号" align="center">
+      <el-table-column label="顺序" align="center">
         <template #default="scope">
           <span>{{ scope.row.orderIndex }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="排序" align="center">
+        <template #default="scope">
+          <span class="link-type" @click="changeOrder(scope.row,-1)"><el-icon><Top /></el-icon></span>
+          <el-divider direction="vertical"></el-divider>
+          <span class="link-type" @click="changeOrder(scope.row,1)"><el-icon><Bottom /></el-icon></span>
         </template>
       </el-table-column>
       <el-table-column label="路由地址" min-width="140px" :show-overflow-tooltip="true">
@@ -118,7 +125,7 @@
           </span>
         </template>
       </el-table-column>
-      <el-table-column label="请求地址" min-width="180px" :show-overflow-tooltip="true">
+      <el-table-column label="请求地址" min-width="150px" :show-overflow-tooltip="true">
         <template #default="scope">
           <span>{{ scope.row.urlAddress }}</span>
         </template>
@@ -890,6 +897,16 @@
     sf.parent = null;
     editSysFunc(sf).then(response => {
       proxy.$modal.msgSuccess("修改成功");
+      refreshRow(sf.parentId);
+    });
+  }
+  
+  /** 修改排序号按钮操作 */
+  function changeOrder(row,idx) {
+    let sf = row;
+    sf.orderIndex = sf.orderIndex+idx;
+    editSysFunc(sf).then(response => {
+      //proxy.$modal.msgSuccess("修改成功");
       refreshRow(sf.parentId);
     });
   }

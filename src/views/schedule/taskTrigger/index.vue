@@ -163,6 +163,11 @@
           </span>
         </template>
       </el-table-column>
+      <el-table-column label="下一次执行时间" align="center" width="180">
+        <template #default="scope">
+          <span>{{ scope.row.nextExecuteTime==null ? scope.row.firstExecuteTime : scope.row.nextExecuteTime }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="最新结果" align="center" width="80">
         <template #default="scope">
           <span v-if="scope.row.lastExecuteResult==null || scope.row.lastExecuteResult==''">
@@ -187,31 +192,6 @@
               {{ scope.row.lastExecuteResultName }}
             </span>
           </span>
-        </template>
-      </el-table-column>
-      <el-table-column label="下一次执行时间" align="center" width="180">
-        <template #default="scope">
-          <span>{{ scope.row.nextExecuteTime==null ? scope.row.firstExecuteTime : scope.row.nextExecuteTime }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="首次执行时间" align="center" width="180">
-        <template #default="scope">
-          <span>{{ scope.row.firstExecuteTime }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="最后一次执行时间" align="center" min-width="200px">
-        <template #default="scope">
-          <span v-if="scope.row.lastExecuteTime==null">
-            --
-          </span>
-          <span v-else>
-            {{ scope.row.lastExecuteTime }}
-          </span>
-        </template>
-      </el-table-column>
-      <el-table-column label="部署点" align="center" min-width="120px" :show-overflow-tooltip="true">
-        <template #default="scope">
-          <span>{{ scope.row.deployId }}</span>
         </template>
       </el-table-column>
       <el-table-column label="运行统计" width="80" align="center">
@@ -258,6 +238,11 @@
           <span>
             {{ scope.row.failCount }}
           </span>
+        </template>
+      </el-table-column>
+      <el-table-column label="部署点" align="center" min-width="120px" :show-overflow-tooltip="true">
+        <template #default="scope">
+          <span>{{ scope.row.deployId }}</span>
         </template>
       </el-table-column>
       <el-table-column label="组名" align="center" width="100">
@@ -411,6 +396,15 @@
                     v-hasPermi="['schedule:taskTrigger:delete']">删除
                   </el-button>
                 </el-dropdown-item>
+                <el-dropdown-item>
+                  <el-button
+                    link
+                    type="success"
+                    icon="Clock"
+                    @click="handleTimeInfo(scope.row)"
+                    v-hasPermi="['schedule:taskTrigger:get']">时间信息
+                  </el-button>
+                </el-dropdown-item>
               </el-dropdown-menu>
             </template>
           </el-dropdown>
@@ -449,6 +443,9 @@
     <!-- 重置 -->
     <ResetTriggerForm ref="resetTriggerFormRef" @success="getList" />
 
+    <!-- 时间信息 -->
+    <TimeInfoForm ref="timeInfoFormRef" />
+
   </div>
 </template>
 
@@ -463,6 +460,7 @@
   import RecentScheduleForm from './recentSchedule.vue'
   import LastTaskLogForm from '../taskLog/lastInfo.vue'
   import ResetTriggerForm from './resetTrigger.vue'
+  import TimeInfoForm from './timeInfo.vue'
 
   const { proxy } = getCurrentInstance();
   /** 添加/修改操作 */
@@ -481,6 +479,8 @@
   const lastTaskLogFormRef = ref();
   //重置
   const resetTriggerFormRef = ref();
+  //时间信息
+  const timeInfoFormRef = ref();
 
   // 遮罩层
   const loading = ref(true);
@@ -571,6 +571,11 @@
   /** 重置 */
   function handleResetTrigger(row) {
     resetTriggerFormRef.value.openResetTrigger(row.triggerId);
+  }
+  
+  /** 时间信息 */
+  function handleTimeInfo(row) {
+    timeInfoFormRef.value.showData(row.triggerId);
   }
 
   /** 修改状态 */
