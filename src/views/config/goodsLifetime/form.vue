@@ -7,48 +7,39 @@
         <el-input v-model="form.lifetimeName" placeholder="请输入名称" />
       </el-form-item>
       <el-form-item label="类型标签" prop="tags">
-        <el-tag
-          :key="tag"
-          v-for="tag in keywordsTags"
-          closable
-          size="large"
-          :disable-transitions="false"
-          @close="handleTagClose(tag)">
-          {{tag}}
-        </el-tag>
-        <el-input
-          class="input-new-tag"
-          style="width: 120px"
-          v-if="inputVisible"
-          v-model="inputValue"
-          ref="saveTagInput"
-          @keyup.enter.native="handleTagInputConfirm"
-          @blur="handleTagInputConfirm">
-        </el-input>
-        <el-button v-else type="primary" class="button-new-tag" @click="showTagInput">+ 新建</el-button>
-        <el-popover :visible="tagsPopOpen" placement="top" :width="400">
-          <el-tag
-            effect="plain"
-            :key="tag"
-            v-for="tag in hisKeywordsTags"
-            :disable-transitions="false"
-            @click="handleTagAppend(tag.text)">
-            {{tag.text}}
-          </el-tag>
-          <div style="text-align: right; margin: 0">
-            <el-button size="small" type="danger" icon="CircleClose" @click="tagsPopOpen = false">关闭</el-button>
-          </div>
-          <template #reference>
-            <el-button @click="tagsPopOpen = true" type="success" icon="Share">选择</el-button>
+        <el-input-tag v-model="keywordsTags" @input="handleTagInput" tag-type="primary" tag-effect="light" placeholder="输入标签" style="width: 350px">
+          <template #suffix>
+            <el-popover :visible="tagsPopOpen" placement="top" :width="400">
+              <el-tag
+                effect="plain"
+                type="primary"
+                round
+                :key="tag"
+                v-for="tag in hisKeywordsTags"
+                :disable-transitions="false"
+                @click="handleTagAppend(tag.text)">
+                {{tag.text}}
+              </el-tag>
+              <div style="text-align: right; margin: 0">
+                <el-button size="small" type="success" icon="CircleCheckFilled" @click="tagsPopOpen = false">确定</el-button>
+              </div>
+              <template #reference>
+                <el-button @click="tagsPopOpen = true" type="success" icon="Share" size="small">选择</el-button>
+              </template>
+            </el-popover>
           </template>
-        </el-popover>
+        </el-input-tag>      
       </el-form-item>
       <el-form-item label="有效天数" prop="days">
-        <el-input-number v-model="form.days" :style="{width: '60%'}" controls-position="right" :min="0" :controls="true" :precision="0" />
+        <el-input-number v-model="form.days" :style="{width: '60%'}" controls-position="right" :min="0" :controls="true" :precision="0" >
+          <template #suffix>
+             <span>天</span>
+           </template>
+        </el-input-number> 
         <el-select
           v-model="fc"
           placeholder="快速选择"
-          style="width: 105px"
+          style="width: 130px"
           @change="selectDays">
           <el-option
             v-for="dict in daysOptions"
@@ -74,7 +65,7 @@
 
 <script setup name="GoodsTypeForm">
   import { getGoodsLifetime, createGoodsLifetime, editGoodsLifetime } from "@/api/config/goodsLifetime";
-  import { appendTagToOptions } from "@/utils/tagUtils";
+  import { appendTagToOptions,checkTag } from "@/utils/tagUtils";
 
   const { proxy } = getCurrentInstance();
 
@@ -100,9 +91,7 @@
   const tagsPopOpen = ref(false);
   const keywordsTags = ref([]);
   const hisKeywordsTags = ref([]);
-  const inputVisible = ref(false);
-  const inputValue = ref('');
-
+  
   const data = reactive({
     form: {},
     // 表单校验
@@ -152,27 +141,13 @@
   }
 
   /** 标签处理 start */
-  function handleTagClose(tag) {
-    keywordsTags.value.splice(keywordsTags.value.indexOf(tag), 1);
-  }
-
+  // 选择标签
   function handleTagAppend(tag) {
     appendTagToOptions(tag, keywordsTags.value);
   }
-
-  function showTagInput() {
-    inputVisible.value = true;
-    proxy.$nextTick(_ => {
-      proxy.$refs.saveTagInput.$refs.input.focus();
-    });
-  }
-
-  function handleTagInputConfirm() {
-    if (inputValue.value) {
-      appendTagToOptions(inputValue.value, keywordsTags.value);
-    }
-    inputVisible.value = false;
-    inputValue.value = '';
+  //输入标签
+  function handleTagInput(tag) {
+    checkTag(tag, keywordsTags.value);
   }
   /** 标签处理 end */
 

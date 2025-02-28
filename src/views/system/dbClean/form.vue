@@ -43,7 +43,11 @@
         </el-col>
         <el-col :span="12" v-if="form.cleanType=='DATE_COMPARE'">
           <el-form-item label="保留天数" prop="days">
-            <el-input-number v-model="form.days" style="width: 225px" :min="0" :precision="0" />
+            <el-input-number v-model="form.days" style="width: 225px" :min="0" :precision="0" >
+              <template #suffix>
+                 <span>天</span>
+               </template>
+            </el-input-number> 
           </el-form-item>
         </el-col>
       </el-row>

@@ -25,12 +25,12 @@
     <!--列表数据-->
     <el-table v-loading="loading" :data="taskServerList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="ID" prop="log" sortable="custom" align="center" width="80">
+      <el-table-column label="ID" fixed="left" prop="log" sortable="custom" align="center" width="80">
         <template #default="scope">
           <span>{{ scope.row.serverId }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="节点" align="center" min-width="120px" :show-overflow-tooltip="true">
+      <el-table-column label="节点" fixed="left" align="center" min-width="120px" :show-overflow-tooltip="true">
         <template #default="scope">
           <span>{{ scope.row.deployId }}</span>
         </template>

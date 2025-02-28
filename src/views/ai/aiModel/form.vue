@@ -11,8 +11,7 @@
                  v-model="form.code"
                  placeholder="选择模型"
                  clearable
-                 collapse-tags
-                 style="width: 100%"
+                 style="width: 538px"
                >
                  <el-option
                    v-for="dict in codeOptions"

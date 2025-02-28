@@ -68,12 +68,12 @@
     <!--列表数据-->
     <el-table v-loading="loading" :data="commandList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="ID" prop="id" sortable="custom" align="center" width="120">
+      <el-table-column label="ID" fixed="left" prop="id" sortable="custom" align="center" width="90">
         <template #default="scope">
           <span>{{ scope.row.id }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="名称" min-width="200px" :show-overflow-tooltip="true">
+      <el-table-column label="名称" fixed="left" min-width="200px" :show-overflow-tooltip="true">
         <template #default="scope">
           <span class="link-type" @click="handleEdit(scope.row)">{{ scope.row.name }}</span>
         </template>

@@ -18,12 +18,12 @@
     <!--列表数据-->
     <el-table v-loading="loading" :data="threadList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="线程ID" fixed="left" prop="id" sortable="custom" align="center" width="120">
+      <el-table-column label="线程ID" fixed="left" prop="id" sortable="custom" align="center" width="90">
         <template #default="scope">
           <span>{{ scope.row.id }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="名称" min-width="120px">
+      <el-table-column label="名称" fixed="left" min-width="120px">
         <template #default="scope">
           <span class="link-type" @click="handleInfo(scope.row)">{{ scope.row.threadName }}</span>
         </template>
@@ -43,7 +43,7 @@
           <span>{{ scope.row.interval+'秒' }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="运行时间" align="center" min-width="160px" :show-overflow-tooltip="true">
+      <el-table-column label="运行时长" align="center" min-width="160px" :show-overflow-tooltip="true">
         <template #default="scope">
           <span>{{ formatSeconds(scope.row.duration/1000)}}</span>
         </template>
@@ -58,12 +58,12 @@
           <span>{{ scope.row.totalCount }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="创建时间" width="180">
+      <el-table-column label="创建时间" align="center" width="180">
         <template #default="scope">
           <span>{{ scope.row.createdTime }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="最近一次执行时间" width="180">
+      <el-table-column label="最近一次执行时间" align="center" width="180">
         <template #default="scope">
           <span>{{ scope.row.lastExecuteTime }}</span>
         </template>

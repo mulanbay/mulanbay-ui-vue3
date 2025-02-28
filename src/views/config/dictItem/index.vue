@@ -180,6 +180,7 @@
   /** 打开弹窗 */
   const showData = async (groupId) => {
     // 需要设置，否则第一次点击设置值
+    dictItemList.value = [];
     queryParams.value.groupId = groupId;
     handleQuery();
   }

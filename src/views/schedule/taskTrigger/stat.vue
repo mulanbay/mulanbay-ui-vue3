@@ -36,7 +36,26 @@
           <div>
             <el-steps :active="recentScheduleSize" align-center finish-status="process">
               <template v-for="item in recentScheduleList">
-                <el-step :title="item.key" :description="item.value"></el-step>
+                <el-step>
+                  <template #title>
+                    <el-tooltip :content="item.triggerName" effect="dark" placement="top">
+                      {{ item.key }}
+                    </el-tooltip>
+                  </template>  
+                  <template #description>
+                    <el-countdown format="HH:mm:ss" :value="item.value">
+                      <template #title>
+                        <div style="display: inline-flex; align-items: center">
+                          <el-icon style="margin-right: 4px" :size="12">
+                            <Calendar />
+                          </el-icon>
+                          倒计时
+                        </div>
+                      </template>
+                    </el-countdown>
+                    <div class="countdown-footer">{{ item.nextExecuteTime }}</div>
+                  </template>
+                </el-step>
               </template>
             </el-steps>
           </div>
@@ -88,7 +107,7 @@
                   调度是否启用
                 </div>
               </template>
-              <span v-if="scheduleData.schedule==true">
+              <span v-if="scheduleData.enabled==true">
                 <el-icon color="green">
                   <SuccessFilled />
                 </el-icon>
@@ -290,10 +309,15 @@
       recentScheduleSize.value = n;
       for (let i = 0; i < n; i++) {
         let net = (datas[i].nextExecuteTime == null ? datas[i].firstExecuteTime : datas[i].nextExecuteTime);
+        let name = datas[i].triggerName;
+        if(name.length>8){
+          name = name.substr(0,8)+'...';
+        }
         let row ={
-          key : datas[i].triggerName,
-          value: net.substr(11,8),
-          nextExecuteTime: net
+          key : name,
+          value: (new Date(net.replace(/-/, "/"))),
+          triggerName:datas[i].triggerName,
+          nextExecuteTime: net.substr(11,8)
         };
         recentScheduleList.value.push(row);
       }
