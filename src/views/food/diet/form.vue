@@ -40,42 +40,27 @@
       <el-row>
         <el-col :span="24">
           <el-form-item label="食物明细" prop="foods">
-            <el-tag
-              :key="tag"
-              v-for="tag in foodsTags"
-              closable
-              size="large"
-              :disable-transitions="false"
-              @close="handleFoodsTagClose(tag)">
-              {{tag}}
-            </el-tag>
-            <el-input
-              class="input-new-tag"
-              v-if="inputFoodsVisible"
-              v-model="inputFoodsValue"
-              ref="saveFoodsTagInput"
-              style="width: 120px"
-              @keyup.enter.native="handleFoodsTagInputConfirm"
-              @blur="handleFoodsTagInputConfirm">
-            </el-input>
-            <el-button v-else type="primary" class="button-new-tag" @click="showFoodsTagInput">+ 新建</el-button>
-            <el-popover :visible="foodsTagsPopOpen" placement="bottom" :width="500">
-              <el-tag
-                effect="plain"
-                round
-                :key="tag"
-                v-for="tag in hisFoodsTags"
-                :disable-transitions="false"
-                @click="handleFoodsTagAppend(tag.text)">
-                {{tag.text}}
-              </el-tag>
-              <div style="text-align: right; margin: 0">
-                <el-button size="small" type="danger" icon="CircleClose" @click="foodsTagsPopOpen = false">关闭</el-button>
-              </div>
-              <template #reference>
-                <el-button @click="foodsTagsPopOpen = true" type="success" icon="Share">选择</el-button>
+            <el-input-tag v-model="foodsTags" @input="handleFoodsTagInput" tag-type="primary" tag-effect="light" placeholder="输入食物明细" style="width: 600px">
+              <template #suffix>
+                <el-popover :visible="foodsTagsPopOpen" placement="bottom" :width="500">
+                  <el-tag
+                    effect="plain"
+                    round
+                    :key="tag"
+                    v-for="tag in hisFoodsTags"
+                    :disable-transitions="false"
+                    @click="handleFoodsTagAppend(tag.text)">
+                    {{tag.text}}
+                  </el-tag>
+                  <div style="text-align: right; margin: 0">
+                    <el-button size="small" type="danger" icon="CircleClose" @click="foodsTagsPopOpen = false">关闭</el-button>
+                  </div>
+                  <template #reference>
+                    <el-button @click="foodsTagsPopOpen = true" type="success" icon="Share">选择</el-button>
+                  </template>
+                </el-popover>
               </template>
-            </el-popover>
+            </el-input-tag> 
             <el-tooltip content="食物的原料，比如：猪肉、胡萝卜." effect="dark" placement="top">
               <el-icon>
                 <QuestionFilled />
@@ -112,43 +97,27 @@
       <el-row>
         <el-col :span="24">
           <el-form-item label="食物标签" prop="tags">
-            <el-tag
-              :key="tag"
-              v-for="tag in tagsTags"
-              closable
-              size="large"
-              :disable-transitions="false"
-              @close="handleTagsTagClose(tag)">
-              {{tag}}
-            </el-tag>
-            <el-input
-              class="input-new-tag"
-              v-if="inputTagsVisible"
-              v-model="inputTagsValue"
-              ref="saveTagsTagInput"
-              style="width: 120px"
-              @keyup.enter.native="handleTagsTagInputConfirm"
-              @blur="handleTagsTagInputConfirm">
-            </el-input>
-            <el-button v-else type="primary" class="button-new-tag" @click="showTagsTagInput">+ 新建</el-button>
-            <el-popover :visible="tagsTagsPopOpen" placement="bottom" :width="400">
-              <span v-for="tag in hisTagsTags">
-                <el-tag
-                  effect="plain"
-                  round
-                  :key="tag"
-                  :disable-transitions="false"
-                  @click="handleTagsTagAppend(tag.text)">
-                  {{tag.text}}
-                </el-tag>
-              </span>
-              <div style="text-align: right; margin: 0">
-                <el-button size="small" type="danger" icon="CircleClose" @click="tagsTagsPopOpen = false">关闭</el-button>
-              </div>
-              <template #reference>
-                <el-button @click="tagsTagsPopOpen = true" type="success" icon="Share">选择</el-button>
+            <el-input-tag v-model="tagsTags" @input="handleTagsTagInput" tag-type="primary" tag-effect="light" placeholder="输入菜名/节日名称" style="width: 600px">
+              <template #suffix>
+                <el-popover :visible="tagsTagsPopOpen" placement="bottom" :width="500">
+                  <el-tag
+                    effect="plain"
+                    round
+                    :key="tag"
+                    v-for="tag in hisTagsTags"
+                    :disable-transitions="false"
+                    @click="handleTagsTagAppend(tag.text)">
+                    {{tag.text}}
+                  </el-tag>
+                  <div style="text-align: right; margin: 0">
+                    <el-button size="small" type="danger" icon="CircleClose" @click="tagsTagsPopOpen = false">关闭</el-button>
+                  </div>
+                  <template #reference>
+                    <el-button @click="tagsTagsPopOpen = true" type="success" icon="Share">选择</el-button>
+                  </template>
+                </el-popover>
               </template>
-            </el-popover>
+            </el-input-tag> 
             <el-tooltip content="菜名/节日名称." effect="dark" placement="top">
               <el-icon>
                 <QuestionFilled />
@@ -160,42 +129,27 @@
       <el-row>
         <el-col :span="24">
           <el-form-item label="店铺/品牌" prop="shop">
-            <el-tag
-              :key="tag"
-              v-for="tag in shopTags"
-              closable
-              size="large"
-              :disable-transitions="false"
-              @close="handleShopTagClose(tag)">
-              {{tag}}
-            </el-tag>
-            <el-input
-              class="input-new-tag"
-              v-if="inputShopVisible"
-              v-model="inputShopValue"
-              ref="saveShopTagInput"
-              style="width: 120px"
-              @keyup.enter.native="handleShopTagInputConfirm"
-              @blur="handleShopTagInputConfirm">
-            </el-input>
-            <el-button v-else type="primary" class="button-new-tag" @click="showShopTagInput">+ 新建</el-button>
-            <el-popover :visible="shopTagsPopOpen" placement="top" :width="400">
-              <el-tag
-                effect="plain"
-                round
-                :key="tag"
-                v-for="tag in hisShopTags"
-                :disable-transitions="false"
-                @click="handleShopTagAppend(tag.text)">
-                {{tag.text}}
-              </el-tag>
-              <div style="text-align: right; margin: 0">
-                <el-button size="small" type="danger" icon="CircleClose" @click="shopTagsPopOpen = false">关闭</el-button>
-              </div>
-              <template #reference>
-                <el-button @click="shopTagsPopOpen = true" type="success" icon="Share">选择</el-button>
+            <el-input-tag v-model="shopTags" @input="handleShopTagInput" tag-type="primary" tag-effect="light" placeholder="输入店铺或者品牌名" style="width: 600px">
+              <template #suffix>
+                <el-popover :visible="shopTagsPopOpen" placement="bottom" :width="500">
+                  <el-tag
+                    effect="plain"
+                    round
+                    :key="tag"
+                    v-for="tag in hisShopTags"
+                    :disable-transitions="false"
+                    @click="handleShopTagAppend(tag.text)">
+                    {{tag.text}}
+                  </el-tag>
+                  <div style="text-align: right; margin: 0">
+                    <el-button size="small" type="danger" icon="CircleClose" @click="shopTagsPopOpen = false">关闭</el-button>
+                  </div>
+                  <template #reference>
+                    <el-button @click="shopTagsPopOpen = true" type="success" icon="Share">选择</el-button>
+                  </template>
+                </el-popover>
               </template>
-            </el-popover>
+            </el-input-tag>
             <el-tooltip content="店铺/品牌." effect="dark" placement="top">
               <el-icon>
                 <QuestionFilled />
@@ -207,8 +161,11 @@
       <el-row>
         <el-col :span="12">
           <el-form-item label="价格/成本" prop="price">
-            <el-input-number v-model="form.price" style="width: 240px" placeholder="单位:元" controls-position="right" :min="0" :controls="false" :precision="2" />
-            元
+            <el-input-number v-model="form.price" style="width: 240px" placeholder="单位:元" controls-position="right" :min="0" :controls="false" :precision="2" >
+              <template #suffix>
+                 <span>元</span>
+               </template>
+            </el-input-number> 
           </el-form-item>
         </el-col>
         <el-col :span="8">
@@ -249,7 +206,7 @@
 
 <script setup name="DietForm">
   import { createDiet, editDiet, getDiet, getDietCateTree,getLatestDiet } from "@/api/food/diet";
-  import { appendTagToOptions } from "@/utils/tagUtils";
+  import { appendTagToOptions,checkTag } from "@/utils/tagUtils";
 
   const { proxy } = getCurrentInstance();
 
@@ -267,22 +224,16 @@
   const foodsTagsPopOpen = ref(false);
   const foodsTags = ref([]);
   const hisFoodsTags = ref([]);
-  const inputFoodsVisible = ref(false);
-  const inputFoodsValue = ref('');
 
   //店铺标签编辑
   const shopTagsPopOpen = ref(false);
   const shopTags = ref([]);
   const hisShopTags = ref([]);
-  const inputShopVisible = ref(false);
-  const inputShopValue = ref('');
 
   //标签的标签编辑
   const tagsTagsPopOpen = ref(false);
   const tagsTags = ref([]);
   const hisTagsTags = ref([]);
-  const inputTagsVisible = ref(false);
-  const inputTagsValue = ref('');
 
   const data = reactive({
     form: {},
@@ -363,77 +314,34 @@
   defineExpose({ openForm });
 
   /** 食物标签处理 start */
-  function handleFoodsTagClose(tag) {
-    foodsTags.value.splice(foodsTags.value.indexOf(tag), 1);
-  }
-
+  //食物标签选择
   function handleFoodsTagAppend(tag) {
     appendTagToOptions(tag, foodsTags.value);
   }
-
-  function showFoodsTagInput() {
-    inputFoodsVisible.value = true;
-    proxy.$nextTick(_ => {
-      proxy.$refs.saveFoodsTagInput.$refs.input.focus();
-    });
-  }
-
-  function handleFoodsTagInputConfirm() {
-    if (inputFoodsValue.value) {
-      appendTagToOptions(inputFoodsValue.value, foodsTags.value);
-    }
-    inputFoodsVisible.value = false;
-    inputFoodsValue.value = '';
+  //输入标签
+  function handleFoodsTagInput(tag) {
+    checkTag(tag, foodsTags.value);
   }
   /** 食物标签处理 end */
 
   /** 标签的标签处理 start */
-  function handleTagsTagClose(tag) {
-    tagsTags.value.splice(tagsTags.value.indexOf(tag), 1);
-  }
-
+  //标签选择
   function handleTagsTagAppend(tag) {
     appendTagToOptions(tag, tagsTags.value);
   }
-
-  function showTagsTagInput() {
-    inputTagsVisible.value = true;
-    proxy.$nextTick(_ => {
-      proxy.$refs.saveTagsTagInput.$refs.input.focus();
-    });
-  }
-
-  function handleTagsTagInputConfirm() {
-    if (inputTagsValue.value) {
-      appendTagToOptions(inputTagsValue.value, tagsTags.value);
-    }
-    inputTagsVisible.value = false;
-    inputTagsValue.value = '';
+  //输入标签
+  function handleTagsTagInput(tag) {
+    checkTag(tag, tagsTags.value);
   }
   /** 标签的标签处理 end */
 
   /** 店铺标签处理 start */
-  function handleShopTagClose(tag) {
-    shopTags.value.splice(shopTags.value.indexOf(tag), 1);
-  }
-
   function handleShopTagAppend(tag) {
     appendTagToOptions(tag, shopTags.value);
   }
-
-  function showShopTagInput() {
-    inputShopVisible.value = true;
-    proxy.$nextTick(_ => {
-      proxy.$refs.saveShopTagInput.$refs.input.focus();
-    });
-  }
-
-  function handleShopTagInputConfirm() {
-    if (inputShopValue.value) {
-      appendTagToOptions(inputShopValue.value, shopTags.value);
-    }
-    inputShopVisible.value = false;
-    inputShopValue.value = '';
+  //输入标签
+  function handleShopTagInput(tag) {
+    checkTag(tag, shopTags.value);
   }
   /** 店铺标签处理 end */
 

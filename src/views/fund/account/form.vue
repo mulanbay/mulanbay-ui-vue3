@@ -10,7 +10,11 @@
         <el-input v-model="form.cardNo" placeholder="请输入名称" />
       </el-form-item>
       <el-form-item label="账户余额" prop="amount">
-        <el-input-number v-model="form.amount" :style="{width: '100%'}" placeholder="单位:元" controls-position="right" :min="0" :controls="false" :precision="2" />
+        <el-input-number v-model="form.amount" :style="{width: '100%'}" placeholder="单位:元" controls-position="right" :min="0" :controls="false" :precision="2" >
+          <template #suffix>
+            <span>元</span>
+          </template>
+        </el-input-number>
       </el-form-item>
       <el-form-item label="账户类型">
         <el-select v-model="form.type" placeholder="请选择">

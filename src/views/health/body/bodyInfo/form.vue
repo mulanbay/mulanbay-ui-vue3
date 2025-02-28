@@ -3,11 +3,19 @@
   <!-- 表单编辑对话框 -->
   <el-dialog :title="title" v-model="open" width="350px" append-to-body>
     <el-form ref="formRef" :model="form" :rules="rules" v-loading="formLoading" label-width="90px">
-      <el-form-item label="身高(厘米)" prop="height">
-        <el-input-number v-model="form.height" :style="{width: '200px'}" controls-position="right" :min="0" :controls="true" :precision="0"/>
+      <el-form-item label="身高" prop="height">
+        <el-input-number v-model="form.height" :style="{width: '200px'}" controls-position="right" :min="0" :controls="true" :precision="0">
+          <template #suffix>
+            <span>厘米</span>
+          </template>
+        </el-input-number> 
       </el-form-item>
-      <el-form-item label="体重(公斤)" prop="weight">
-        <el-input-number v-model="form.weight" :style="{width: '200px'}" controls-position="right" :min="0" :controls="true" :precision="1"/>
+      <el-form-item label="体重" prop="weight">
+        <el-input-number v-model="form.weight" :style="{width: '200px'}" controls-position="right" :min="0" :controls="true" :precision="1">
+          <template #suffix>
+            <span>公斤</span>
+          </template>
+        </el-input-number> 
       </el-form-item>
       <el-form-item label="采集时间" prop="recordTime">
         <el-date-picker type="datetime" v-model="form.recordTime" format="YYYY-MM-DD HH:mm:ss" value-format="YYYY-MM-DD HH:mm:ss"

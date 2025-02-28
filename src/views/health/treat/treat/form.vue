@@ -107,34 +107,28 @@
       <el-row>
         <el-col :span="24">
           <el-form-item label="疾病标签" prop="tags">
-            <el-tag
-              :key="tag"
-              v-for="tag in tagsOptions"
-              closable
-              :disable-transitions="false"
-              @close="handleTagClose(tag)">
-              {{tag}}
-            </el-tag>
-            <el-input
-              class="input-new-tag"
-              v-if="inputVisible"
-              v-model="inputValue"
-              ref="saveTagInput"
-              @keyup.enter.native="handleTagInputConfirm"
-              @blur="handleTagInputConfirm">
-            </el-input>
-            <el-button v-else class="button-new-tag" @click="showTagInput">+ 新建</el-button>
-            <el-select
-              v-model="chooseTag"
-              clearable
-              placeholder="请选择"
-              @change="selectTag">
-              <el-option
-                v-for="dict in hisTagOptions"
-                :key="dict.id"
-                :label="dict.text"
-                :value="dict.id" />
-            </el-select>
+            <el-input-tag v-model="tagsOptions" @input="handleTagInput" tag-type="primary" tag-effect="light" placeholder="输入标签" >
+              <template #suffix>
+                <el-popover :visible="tagsPopOpen" placement="top" :width="400">
+                  <el-tag
+                    effect="plain"
+                    type="primary"
+                    round
+                    :key="tag"
+                    v-for="tag in hisTagOptions"
+                    :disable-transitions="false"
+                    @click="handleTagAppend(tag.text)">
+                    {{tag.text}}
+                  </el-tag>
+                  <div style="text-align: right; margin: 0">
+                    <el-button size="small" type="success" icon="CircleCheckFilled" @click="tagsPopOpen = false">确定</el-button>
+                  </div>
+                  <template #reference>
+                    <el-button @click="tagsPopOpen=true" type="success" icon="Share" size="small">选择</el-button>
+                  </template>
+                </el-popover>
+              </template>
+            </el-input-tag>    
           </el-form-item>
         </el-col>
       </el-row>
@@ -259,6 +253,7 @@
 
 <script setup name="TreatForm">
   import { createTreat, editTreat, getTreat, getTreatCateTree } from "@/api/health/treat/treat";
+  import { appendTagToOptions,checkTag } from "@/utils/tagUtils";
   import FeeForm from './feeForm.vue'
 
   const { proxy } = getCurrentInstance();
@@ -276,14 +271,12 @@
   const organOptions = ref([]);
   const confirmDiseaseOptions = ref([]);
   const treatTypeOptions = ref([]);
-  const tagsOptions = ref([]);
-  const hisTagOptions = ref([]);
   const osOptions = ref([]);
   const stageOptions = ref([]);
-  //
-  const inputVisible = ref(false);
-  const inputValue = ref();
-  const chooseTag = ref();
+  //标签
+  const tagsOptions = ref([]);
+  const hisTagOptions = ref([]);
+  const tagsPopOpen = ref(false);
 
   const data = reactive({
     form: {},
@@ -350,45 +343,13 @@
   defineExpose({ openForm });
 
   /** 标签处理 start */
-  function handleTagClose(tag) {
-    tagsOptions.value.splice(tagsOptions.value.indexOf(tag), 1);
-  }
-
+  // 选择标签
   function handleTagAppend(tag) {
     appendTagToOptions(tag, tagsOptions.value);
   }
-
-  function showTagInput() {
-    inputVisible.value = true;
-    proxy.$nextTick(_ => {
-      proxy.$refs.saveTagInput.$refs.input.focus();
-    });
-  }
-
-  function handleTagInputConfirm() {
-    if (inputValue.value) {
-      appendTagToOptions(inputValue.value, tagsOptions.value);
-    }
-    inputVisible.value = false;
-    inputValue.value = '';
-  }
-
-  /** 添加标签，避免重复 */
-  function appendTagToOptions(tag, options) {
-    if (proxy.isEmpty(tag)) {
-      return;
-    }
-    const a = options.indexOf(tag);
-    if (a >= 0) {
-      proxy.$modal.msgError('该标签已经存在')
-    } else {
-      options.push(tag);
-    }
-  }
-
-  //下拉框选择历史标签
-  function selectTag(val) {
-    appendTagToOptions(val, tagsOptions.value);
+  //输入标签
+  function handleTagInput(tag) {
+    checkTag(tag, tagsOptions.value);
   }
   /** 标签处理 end */
 

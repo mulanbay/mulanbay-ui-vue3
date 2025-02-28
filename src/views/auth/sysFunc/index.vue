@@ -277,10 +277,10 @@
           <el-col :span="24">
             <el-form-item label="菜单类型" prop="funcDataType">
               <el-radio-group v-model="form.funcDataType">
-                <el-radio label="M">目录</el-radio>
-                <el-radio label="C">菜单</el-radio>
-                <el-radio label="F">按钮</el-radio>
-                <el-radio label="D">条件</el-radio>
+                <el-radio value="M">目录</el-radio>
+                <el-radio value="C">菜单</el-radio>
+                <el-radio value="F">按钮</el-radio>
+                <el-radio value="D">条件</el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
@@ -472,7 +472,7 @@
                 <el-radio
                   v-for="dict in commonStatusOptions"
                   :key="dict.id"
-                  :label="dict.id">{{dict.text}}</el-radio>
+                  :value="dict.id">{{dict.text}}</el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>

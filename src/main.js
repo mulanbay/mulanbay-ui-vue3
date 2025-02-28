@@ -45,6 +45,8 @@ import TreeSelect from '@/components/TreeSelect'
 // 字典标签组件
 import DictTag from '@/components/DictTag'
 
+globalThis.__VUE_PROD_HYDRATION_MISMATCH_DETAILS__ = false;
+
 const app = createApp(App)
 
 app.config.globalProperties.parseTime = parseTime

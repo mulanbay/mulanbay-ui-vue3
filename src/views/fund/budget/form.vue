@@ -18,7 +18,11 @@
               placeholder="单位:元"
               style="width: 100%"
               controls-position="right"
-              :min="0" :controls="false" :precision="2" />
+              :min="0" :controls="false" :precision="2" >
+              <template #suffix>
+                <span>元</span>
+              </template>
+            </el-input-number>
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -140,7 +144,7 @@
               <el-radio
                 v-for="dict in statusOptions"
                 :key="dict.id"
-                :label="dict.id">{{dict.text}}
+                :value="dict.id">{{dict.text}}
               </el-radio>
             </el-radio-group>
             <el-tooltip content="<1>如果该预算已经被执行过，那么请直接设置预算金额为0，否则设置为无效后在年度详情中会无法查询。<br><2>或者在第二年时再设置为无效。" raw-content effect="dark" placement="top">

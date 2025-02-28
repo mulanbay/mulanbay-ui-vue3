@@ -120,7 +120,7 @@
               <el-radio
                 v-for="dict in commonStatusOptions"
                 :key="dict.id"
-                :label="dict.id">{{dict.text}}</el-radio>
+                :value="dict.id">{{dict.text}}</el-radio>
             </el-radio-group>
           </el-form-item>
         </el-col>

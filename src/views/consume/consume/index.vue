@@ -115,24 +115,6 @@
           v-hasPermi="['consume:consume:delete']">删除
         </el-button>
       </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          icon="switch"
-          :disabled="single"
-          @click="showCasecade"
-          v-hasPermi="['consume:consume:edit']">关联消费
-        </el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="primary"
-          icon="plus"
-          :disabled="single"
-          @click="handleArchive"
-          v-hasPermi="['life:archive:sync']">同步档案
-        </el-button>
-      </el-col>
     </el-row>
 
     <!--列表数据-->
@@ -210,22 +192,57 @@
           <span>{{ scope.row.consumeTime }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" width="150" fixed="right" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" width="70" fixed="right" class-name="small-padding fixed-width">
         <template #default="scope">
-          <el-button
-            link
-            type="success"
-            icon="CopyDocument"
-            @click="handleCopy(scope.row)"
-            v-hasPermi="['consume:consume:create']">复制
-          </el-button>
-          <el-button
-            link
-            type="danger"
-            icon="delete"
-            @click="handleDelete(scope.row)"
-            v-hasPermi="['consume:consume:delete']">删除
-          </el-button>
+          <el-dropdown>
+            <span class="el-dropdown-link">
+              选项
+              <el-icon class="el-icon--right">
+                <arrow-down />
+              </el-icon>
+            </span>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item><el-icon color="green"><Right /></el-icon>{{ formatShortName(scope.row.goodsName) }}</el-dropdown-item>
+                <el-dropdown-item divided>
+                  <el-button
+                    link
+                    type="success"
+                    icon="CopyDocument"
+                    @click="handleCopy(scope.row)"
+                    v-hasPermi="['consume:consume:create']">复制
+                  </el-button>
+                </el-dropdown-item>
+                <el-dropdown-item>
+                  <el-button
+                    link
+                    type="danger"
+                    icon="delete"
+                    @click="handleDelete(scope.row)"
+                    v-hasPermi="['consume:consume:delete']">删除
+                  </el-button>
+                </el-dropdown-item>
+                <el-dropdown-item>
+                  <el-button
+                    link
+                    type="primary"
+                    icon="Document"
+                    @click="handleArchive(scope.row)"
+                    v-hasPermi="['life:archive:sync']">同步档案
+                  </el-button>
+                </el-dropdown-item>
+                <el-dropdown-item>
+                  <el-button
+                    link
+                    type="success"
+                    icon="switch"
+                    @click="showCasecade(scope.row)"
+                    v-hasPermi="['consume:consume:edit']">关联消费
+                  </el-button>
+                </el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
         </template>
       </el-table-column>
     </el-table>
@@ -309,10 +326,19 @@
       cdnTitle.value = '取消';
     }
   }
+  
+  /** 缩写商品名 */
+  function formatShortName(name) {
+    if(name.length<=8){
+      return name;
+    }else{
+      return name.slice(0,7)+'...';
+    }
+  }
 
   /** 级联 */
-  function showCasecade() {
-    const consumeId = ids.value.join(",");
+  function showCasecade(row) {
+    const consumeId = row.consumeId;
     cascadeFormRef.value.openCascade(consumeId);
   }
 
@@ -372,8 +398,8 @@
   }
 
   /** 同步档案按钮操作 */
-  function handleArchive() {
-    const id = ids.value.join(",");
+  function handleArchive(row) {
+    const id = row.consumeId;
     getConsume(id).then(response => {
       let data = {
         archiveId: undefined,

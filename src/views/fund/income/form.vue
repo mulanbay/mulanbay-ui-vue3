@@ -7,7 +7,11 @@
         <el-input v-model="form.incomeName" placeholder="请输入名称" />
       </el-form-item>
       <el-form-item label="收入金额" prop="amount">
-        <el-input-number v-model="form.amount" :style="{width: '100%'}" placeholder="单位:元" controls-position="right" :min="0" :controls="false" :precision="2" />
+        <el-input-number v-model="form.amount" :style="{width: '100%'}" placeholder="单位:元" controls-position="right" :min="0" :controls="false" :precision="2" >
+          <template #suffix>
+            <span>元</span>
+          </template>
+        </el-input-number>
       </el-form-item>
       <el-form-item label="关联账户" prop="accountId">
         <el-tree-select
@@ -42,7 +46,7 @@
           <el-radio
             v-for="dict in commonStatusOptions"
             :key="dict.id"
-            :label="dict.id">{{dict.text}}</el-radio>
+            :value="dict.id">{{dict.text}}</el-radio>
         </el-radio-group>
       </el-form-item>
       <el-form-item label="备注信息" prop="remark">

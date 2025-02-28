@@ -147,7 +147,7 @@
       <el-table-column label="频率" align="center" width="100">
         <template #default="scope">
           <span>{{ scope.row.perDay+'天' }}</span>
-          <el-tag type="">{{ scope.row.perTimes }}</el-tag>
+          <el-tag type="primary">{{ scope.row.perTimes }}</el-tag>
           次
         </template>
       </el-table-column>
@@ -155,7 +155,7 @@
         <template #default="scope">
           <span v-if="null !=scope.row.eu">
             每次
-            <el-tag type="">{{ scope.row.ec }}</el-tag>
+            <el-tag type="primary">{{ scope.row.ec }}</el-tag>
             {{ scope.row.eu }}
           </span>
         </template>

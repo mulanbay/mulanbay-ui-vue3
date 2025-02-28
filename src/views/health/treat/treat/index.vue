@@ -103,15 +103,6 @@
           @click="handleDelete"
           v-hasPermi="['health:treat:treat:delete']">删除</el-button>
       </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="primary"
-          icon="plus"
-          :disabled="single"
-          @click="handleArchive"
-          v-hasPermi="['life:archive:sync']">同步档案
-        </el-button>
-      </el-col>
     </el-row>
 
     <!--列表数据-->
@@ -122,14 +113,14 @@
           <span>{{ scope.row.treatId }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="类型" align="center" width="80">
+      <el-table-column label="疾病症状" fixed="left" width="120" :show-overflow-tooltip="true">
         <template #default="scope">
-          <span class="link-type" @click="handleEdit(scope.row)">{{ scope.row.treatTypeName }}</span>
+          <span class="link-type" style="color:darkgreen" @click="handleEdit(scope.row)">{{ scope.row.disease }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="疾病症状" width="120" :show-overflow-tooltip="true">
+      <el-table-column label="类型" align="center" width="80">
         <template #default="scope">
-          <span class="link-type" style="color:darkgreen" @click="showBodyAnalyse(scope.row.disease,'DISEASE')">{{ scope.row.disease }}</span>
+          <span>{{ scope.row.treatTypeName }}</span>
         </template>
       </el-table-column>
       <el-table-column label="医院" min-width="160" :show-overflow-tooltip="true">
@@ -209,22 +200,48 @@
           <span>{{ scope.row.doctor }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" width="150" fixed="right" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" width="70" fixed="right" class-name="small-padding fixed-width">
         <template #default="scope">
-          <el-button
-            link
-            type="success"
-            icon="CopyDocument"
-            @click="handleCopy(scope.row)"
-            v-hasPermi="['health:treat:treat:copy']">复制
-          </el-button>
-          <el-button
-            link
-            type="danger"
-            icon="delete"
-            @click="handleDelete(scope.row)"
-            v-hasPermi="['health:treat:treat:delete']">删除
-          </el-button>
+          <el-dropdown>
+            <span class="el-dropdown-link">
+              选项
+              <el-icon class="el-icon--right">
+                <arrow-down />
+              </el-icon>
+            </span>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item><el-icon color="green"><Right /></el-icon>{{ scope.row.disease }}</el-dropdown-item>
+                <el-dropdown-item divided>
+                  <el-button
+                    link
+                    type="success"
+                    icon="CopyDocument"
+                    @click="handleCopy(scope.row)"
+                    v-hasPermi="['health:treat:treat:copy']">复制
+                  </el-button>
+                </el-dropdown-item>
+                <el-dropdown-item>
+                  <el-button
+                    link
+                    type="danger"
+                    icon="delete"
+                    @click="handleDelete(scope.row)"
+                    v-hasPermi="['health:treat:treat:delete']">删除
+                  </el-button>
+                </el-dropdown-item>
+                <el-dropdown-item>
+                  <el-button
+                    link
+                    type="primary"
+                    icon="Document"
+                    @click="handleArchive(scope.row)"
+                    v-hasPermi="['life:archive:sync']">同步档案
+                  </el-button>
+                </el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
         </template>
       </el-table-column>
     </el-table>
@@ -379,8 +396,8 @@
   }
 
   /** 同步档案按钮操作 */
-  function handleArchive() {
-    const id = ids.value.join(",");
+  function handleArchive(row) {
+    const id = row.treatId;
     getTreat(id).then(response => {
       let data = {
         archiveId: undefined,

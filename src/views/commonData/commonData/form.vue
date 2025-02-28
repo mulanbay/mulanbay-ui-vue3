@@ -47,9 +47,12 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="值" prop="value">
-           <el-input-number v-model="form.value" :style="{width: '80%'}" placeholder="" controls-position="right" :min="0" :controls="false" :precision="0" />
-           <span>{{ valueUnit }}</span>
+          <el-form-item label="数值" prop="value">
+           <el-input-number v-model="form.value" :style="{width: '100%'}" placeholder="" controls-position="right" :min="0" :controls="false" :precision="0" >
+              <template #suffix>
+                <span>{{ valueUnit }}</span>
+              </template>
+            </el-input-number> 
           </el-form-item>
         </el-col>
       </el-row>
@@ -135,7 +138,7 @@
           form.value = response;
           form.value.typeId = response.type.typeId;
           form.value.type = null;
-          loadTypeinfo(form.value.typeId);
+          loadTypeInfo(form.value.typeId);
         });
       } finally {
         formLoading.value = false;

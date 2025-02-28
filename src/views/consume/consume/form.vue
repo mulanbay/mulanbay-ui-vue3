@@ -66,50 +66,35 @@
       <el-row>
         <el-col :span="24">
           <el-form-item label="商品标签" prop="tags">
-            <el-tag
-              :key="tag"
-              v-for="tag in keywordsTags"
-              closable
-              size="large"
-              :disable-transitions="false"
-              @close="handleTagClose(tag)">
-              {{tag}}
-            </el-tag>
-            <el-input
-              class="input-new-tag"
-              v-if="inputVisible"
-              v-model="inputValue"
-              ref="saveTagInput"
-              style="width: 120px"
-              @keyup.enter.native="handleTagInputConfirm"
-              @blur="handleTagInputConfirm">
-            </el-input>
-            <el-button v-else class="button-new-tag" type="primary" @click="showTagInput">+ 新建</el-button>
-            <el-popover :visible="tagsPopOpen" placement="top" :width="450">
-              <el-divider content-position="center">
-                <span class="table-title">
-                  <svg-icon icon-class="budget" />
-                  关键字
-                </span>
-              </el-divider>
-              <el-tag
-                effect="plain"
-                round
-                :key="tag"
-                v-for="tag in hisKeywordsTags"
-                :disable-transitions="false"
-                @click="handleTagAppend(tag.text)">
-                {{tag.text}}
-              </el-tag>
-              <br><br>
-              <div style="text-align: right; margin: 0">
-                <el-button size="small" type="primary" icon="refresh" @click="getNextTagsOption()">换一批</el-button>
-                <el-button size="small" type="danger" icon="CircleClose" @click="tagsPopOpen = false">关闭</el-button>
-              </div>
-              <template #reference>
-                <el-button @click="openTagsSelect()" type="success" icon="Share">选择</el-button>
+            <el-input-tag v-model="keywordsTags" @input="handleTagInput" tag-type="primary" tag-effect="light" placeholder="输入标签" >
+              <template #suffix>
+                <el-popover :visible="tagsPopOpen" placement="top" :width="450">
+                  <el-divider content-position="center">
+                    <span class="table-title">
+                      <svg-icon icon-class="budget" />
+                      关键字
+                    </span>
+                  </el-divider>
+                  <el-tag
+                    effect="plain"
+                    round
+                    :key="tag"
+                    v-for="tag in hisKeywordsTags"
+                    :disable-transitions="false"
+                    @click="handleTagAppend(tag.text)">
+                    {{tag.text}}
+                  </el-tag>
+                  <br><br>
+                  <div style="text-align: right; margin: 0">
+                    <el-button size="small" type="primary" icon="refresh" @click="getNextTagsOption()">换一批</el-button>
+                    <el-button size="small" type="danger" icon="CircleClose" @click="tagsPopOpen = false">关闭</el-button>
+                  </div>
+                  <template #reference>
+                    <el-button @click="openTagsSelect" type="success" icon="Share" size="small">选择</el-button>
+                  </template>
+                </el-popover>
               </template>
-            </el-popover>
+            </el-input-tag>    
           </el-form-item>
         </el-col>
       </el-row>
@@ -149,12 +134,19 @@
         <el-col :span="12">
           <el-form-item label="商品单价" prop="price">
             <el-input-number v-model="form.price" placeholder="单位:元" :style="{width: '100%'}" controls-position="right" :min="0" :controls="false" :precision="2" >
+              <template #suffix>
+                <span>元</span>
+              </template>
             </el-input-number>
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="运费费用" prop="shipment">
-            <el-input-number v-model="form.shipment" placeholder="单位:元" :style="{width: '100%'}" controls-position="right" :min="0" :controls="false" :precision="2" />
+            <el-input-number v-model="form.shipment" placeholder="单位:元" :style="{width: '100%'}" controls-position="right" :min="0" :controls="false" :precision="2" >
+              <template #suffix>
+                <span>元</span>
+              </template>
+            </el-input-number>
           </el-form-item>
         </el-col>
       </el-row>
@@ -211,9 +203,9 @@
         <el-col :span="24">
           <el-form-item label="期望作废时间" label-width="100px" prop="expectInvalidTime" v-if="true==showSold">
             <el-date-picker type="datetime" v-model="form.expectInvalidTime" format="YYYY-MM-DD HH:mm:ss" value-format="YYYY-MM-DD HH:mm:ss"
-              :style="{width: '210px'}" placeholder="请选择时间" clearable>
+              :style="{width: '190px'}" placeholder="请选择时间" clearable>
             </el-date-picker>
-            <el-tag class="mx-1" size="large">快速选择</el-tag>
+            <el-button type="success" icon="DArrowRight">快速选择</el-button>
             <el-select v-model="invalidPeriod"
               clearable
               placeholder="请选择"
@@ -235,7 +227,11 @@
       <el-row>
         <el-col :span="12">
           <el-form-item label="售出价格" prop="soldPrice" v-if="true==showSold">
-            <el-input-number v-model="form.soldPrice" placeholder="单位:元" :style="{width: '100%'}" controls-position="right" :min="0" :controls="false" :precision="2" />
+            <el-input-number v-model="form.soldPrice" placeholder="" :style="{width: '100%'}" controls-position="right" :min="0" :controls="false" :precision="2" >
+              <template #suffix>
+                 <span>元</span>
+               </template>
+            </el-input-number> 
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -268,7 +264,7 @@
   import { createConsume, editConsume, getConsume, getConsumeTagsTree, aiMatch } from "@/api/consume/consume";
   import { getConsumeSourceTree } from "@/api/consume/consumeSource";
   import { getGoodsTypeTree } from "@/api/consume/goodsType";
-  import { appendTagToOptions } from "@/utils/tagUtils";
+  import { appendTagToOptions,checkTag } from "@/utils/tagUtils";
   import { getNowDateTimeString, getDayByDate } from "@/utils/datetime";
 
   const { proxy } = getCurrentInstance();
@@ -294,8 +290,6 @@
   const tagsPopOpen = ref(false);
   const keywordsTags = ref([]);
   const hisKeywordsTags = ref([]);
-  const inputVisible = ref(false);
-  const inputValue = ref('');
   const tagsPage = ref(1);
   
   const goodsNameTags = ref([]);
@@ -368,28 +362,15 @@
   defineExpose({ openForm });
 
   /** 标签处理 start */
-  function handleTagClose(tag) {
-    keywordsTags.value.splice(keywordsTags.value.indexOf(tag), 1);
-  }
-
+  // 选择标签
   function handleTagAppend(tag) {
     appendTagToOptions(tag, keywordsTags.value);
   }
-
-  function showTagInput() {
-    inputVisible.value = true;
-    proxy.$nextTick(_ => {
-      proxy.$refs.saveTagInput.$refs.input.focus();
-    });
+  //输入标签
+  function handleTagInput(tag) {
+    checkTag(tag, keywordsTags.value);
   }
-
-  function handleTagInputConfirm() {
-    if (inputValue.value) {
-      appendTagToOptions(inputValue.value, keywordsTags.value);
-    }
-    inputVisible.value = false;
-    inputValue.value = '';
-  }
+  
   /** 标签处理 end */
   
   /** 标签选择开启 */

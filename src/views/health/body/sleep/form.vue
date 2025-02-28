@@ -38,7 +38,11 @@
       <el-row>
         <el-col :span="12">
           <el-form-item label="醒来次数" prop="wakeUpCount">
-           <el-input-number v-model="form.wakeUpCount" placeholder="次" controls-position="right" :min="0" :controls="false" :precision="0"  :style="{width: '220px'}"/>
+           <el-input-number v-model="form.wakeUpCount" placeholder="" controls-position="right" :min="0" :controls="false" :precision="0"  :style="{width: '220px'}">
+            <template #suffix>
+                <span>次</span>
+              </template>
+           </el-input-number> 
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -58,14 +62,20 @@
       <el-row>
         <el-col :span="12">
           <el-form-item label="浅睡时长" prop="lightSleep">
-            <el-input-number v-model="form.lightSleep" :style="{width: '80%'}" controls-position="right" :min="0" :controls="true" :precision="0"/>
-            分钟
+            <el-input-number v-model="form.lightSleep" :style="{width: '100%'}" controls-position="right" :min="0" :controls="true" :precision="0">
+              <template #suffix>
+                <span>分钟</span>
+              </template>
+            </el-input-number> 
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="深睡时长" prop="deepSleep">
-            <el-input-number v-model="form.deepSleep" :style="{width: '80%'}" controls-position="right" :min="0" :controls="true" :precision="0"/>
-            分钟
+            <el-input-number v-model="form.deepSleep" :style="{width: '100%'}" controls-position="right" :min="0" :controls="true" :precision="0">
+              <template #suffix>
+                <span>分钟</span>
+              </template>
+            </el-input-number>
           </el-form-item>
         </el-col>
       </el-row>

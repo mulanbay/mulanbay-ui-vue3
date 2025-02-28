@@ -17,7 +17,7 @@ export function generateFcRules(dataRules) {
     if(r.tree==true){
       //树形结构(treeSelect无效)
       selectData = {
-        type:"tree",
+        type:"treeSelect",
         title:r.name,
         field:field,
         value:r.defaultValue,
@@ -62,6 +62,8 @@ export function generateFcRules(dataRules) {
     selectData.validate = [
       { required: r.nullable==false, message: r.msg, trigger: 'blur' },
     ]
+    //设置控件长度
+    selectData.style='width: 200px';
     selectOptions.push(selectData);
   }
   return selectOptions;
@@ -212,9 +214,9 @@ export function getChildren(pid,dataList) {
         expand: true,
         selected: false,
         id: item.id,
-        "value": item.id, 
-        "label": item.text, 
-        "disabled": false
+        value: item.id, 
+        label: item.text, 
+        disabled: false
       };
       //寻找下一个子列表
       let c2 = getChildren(child.id, dataList);

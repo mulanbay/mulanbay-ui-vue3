@@ -80,8 +80,12 @@
       </el-row>
       <el-row>
         <el-col :span="12">
-          <el-form-item label="持续天数" prop="days">
-           <el-input-number v-model="form.days" :style="{width: '100%'}" placeholder="单位:天" controls-position="right" :min="1" :controls="false" :precision="0" />
+          <el-form-item label="持续时间" prop="days">
+           <el-input-number v-model="form.days" :style="{width: '100%'}" placeholder="" controls-position="right" :min="1" :controls="false" :precision="0" >
+            <template #suffix>
+                <span>天</span>
+              </template>
+           </el-input-number> 
           </el-form-item>
         </el-col>
       </el-row>

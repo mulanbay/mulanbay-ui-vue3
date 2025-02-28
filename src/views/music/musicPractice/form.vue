@@ -22,9 +22,11 @@
       <el-row>
         <el-col :span="12">
           <el-form-item label="练习时长" prop="minutes">
-            <el-input v-model="form.minutes" style="{width: '100%'}" placeholder="练习时长">
-              <template #append>分钟</template>
-            </el-input>
+            <el-input-number v-model="form.minutes" :style="{width: '100%'}" placeholder="单位:分钟" controls-position="right" :min="0" :controls="false" :precision="0" >
+              <template #suffix>
+                <span>分钟</span>
+              </template>
+            </el-input-number>
           </el-form-item>
         </el-col>
         <el-col :span="12">

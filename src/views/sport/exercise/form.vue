@@ -1,7 +1,7 @@
 <template>
 
   <!-- 表单编辑对话框 -->
-  <el-dialog :title="title" v-model="open" width="750px" append-to-body>
+  <el-dialog :title="title" v-model="open" width="650px" append-to-body>
     <el-form ref="formRef" :model="form" :rules="rules" v-loading="formLoading" label-width="80px">
       <el-row>
         <el-col :span="12">
@@ -11,7 +11,7 @@
                placeholder="运动类型"
                clearable
                collapse-tags
-               style="width: 200px"
+               style="width: 100%"
                @change="handleSportChange"
              >
                <el-option
@@ -26,7 +26,7 @@
         <el-col :span="12">
           <el-form-item label="锻炼时间" prop="exerciseTime">
             <el-date-picker type="datetime" v-model="form.exerciseTime" format="YYYY-MM-DD HH:mm:ss" value-format="YYYY-MM-DD HH:mm:ss"
-                      :style="{width: '200px'}" placeholder="请选择时间" >
+                      :style="{width: '100%'}" placeholder="请选择时间" >
             </el-date-picker>
           </el-form-item>
         </el-col>
@@ -34,62 +34,86 @@
       <el-row>
         <el-col :span="12">
           <el-form-item label="锻炼值" prop="value">
-           <el-input-number v-model="form.value" :style="{width: '200px'}" placeholder="" controls-position="right" :min="0" :controls="false" :precision="2" />
-           <span>{{ sportUnit }}</span>
+           <el-input-number v-model="form.value" :style="{width: '100%'}" placeholder="" controls-position="right" :min="0" :controls="false" :precision="2" >
+            <template #suffix>
+              <span>{{ sportUnit }}</span>
+            </template>
+           </el-input-number>
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="锻炼时长" prop="duration">
-           <el-input-number v-model="form.duration" :style="{width: '200px'}" placeholder="单位:分钟" controls-position="right" :min="0" :controls="false" :precision="0" />
-           分钟
+           <el-input-number v-model="form.duration" :style="{width: '100%'}" placeholder="单位:分钟" controls-position="right" :min="0" :controls="false" :precision="0" >
+            <template #suffix>
+               <span>分钟</span>
+             </template>
+            </el-input-number> 
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="12">
           <el-form-item label="平均配速" prop="pace">
-           <el-input-number v-model="form.pace" :style="{width: '200px'}" placeholder="" controls-position="right" :min="0" :controls="false" :precision="2" />
-           分钟/公里
+           <el-input-number v-model="form.pace" :style="{width: '100%'}" placeholder="" controls-position="right" :min="0" :controls="false" :precision="2" >
+             <template #suffix>
+              <span>分钟/公里</span>
+             </template>
+           </el-input-number> 
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="最佳配速" prop="maxPace">
-           <el-input-number v-model="form.maxPace" :style="{width: '200px'}" placeholder="" controls-position="right" :min="0" :controls="false" :precision="2" />
-           分钟/公里
+           <el-input-number v-model="form.maxPace" :style="{width: '100%'}" placeholder="" controls-position="right" :min="0" :controls="false" :precision="2" >
+             <template #suffix>
+              <span>分钟/公里</span>
+             </template>
+           </el-input-number> 
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="12">
           <el-form-item label="平均速度" prop="speed">
-           <el-input-number v-model="form.speed" :style="{width: '200px'}" placeholder="" controls-position="right" :min="0" :controls="false" :precision="2" />
-           公里/小时
+           <el-input-number v-model="form.speed" :style="{width: '100%'}" placeholder="" controls-position="right" :min="0" :controls="false" :precision="2" >
+             <template #suffix>
+              <span>公里/小时</span>
+             </template>
+           </el-input-number> 
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="最佳速度" prop="maxSpeed">
-           <el-input-number v-model="form.maxSpeed" :style="{width: '200px'}" placeholder="" controls-position="right" :min="0" :controls="false" :precision="2" />
-           公里/小时
+           <el-input-number v-model="form.maxSpeed" :style="{width: '100%'}" placeholder="" controls-position="right" :min="0" :controls="false" :precision="2" >
+             <template #suffix>
+              <span>公里/小时</span>
+             </template>
+           </el-input-number> 
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="12">
           <el-form-item label="平均心率" prop="avgHeartRate">
-           <el-input-number v-model="form.avgHeartRate" :style="{width: '200px'}" placeholder="" controls-position="right" :min="0" :controls="false" :precision="0" />
-           次/分钟
+           <el-input-number v-model="form.avgHeartRate" :style="{width: '100%'}" placeholder="" controls-position="right" :min="0" :controls="false" :precision="0" >
+             <template #suffix>
+              <span>次/分钟</span>
+             </template>
+           </el-input-number> 
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="最大心率" prop="maxHeartRate">
-           <el-input-number v-model="form.maxHeartRate" :style="{width: '200px'}" placeholder="" controls-position="right" :min="0" :controls="false" :precision="0" />
-           次/分钟
+           <el-input-number v-model="form.maxHeartRate" :style="{width: '100%'}" placeholder="" controls-position="right" :min="0" :controls="false" :precision="0" >
+           <template #suffix>
+              <span>次/分钟</span>
+             </template>
+           </el-input-number> 
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="24">
-          <el-form-item label="备注" prop="remark">
+          <el-form-item label="备注信息" prop="remark">
             <el-input v-model="form.remark" type="textarea" placeholder="请输入内容"></el-input>
           </el-form-item>
         </el-col>
