@@ -410,7 +410,7 @@
           //检测是否编辑过,不能在执行参数编码之后比对，否则数据对不上
           let eqs = deepEqual(form.value,oldFormData.value);
           if(eqs){
-            ElNotification({title: '提示',message: '表单数据未变化!',type: 'warning',});
+            ElNotification({title: '提示',message: '数据未变化，不进行更新!',type: 'warning',});
             open.value = false;
             return;
           }

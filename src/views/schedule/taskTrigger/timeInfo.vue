@@ -26,7 +26,11 @@
       <el-timeline-item :timestamp="'下一次执行时间:'+triggerData.nextExecuteTime" type="primary" placement="top" icon="Promotion">
         <el-card class="box-card">
           <div>
-            <el-countdown title="距离现在" :value="triggerData.net" />
+            <el-countdown 
+            title="距离现在" 
+            format="MM个月DD天 HH:mm:ss"
+            value-style="color:#9acd32 ;"
+            :value="triggerData.net" />
           </div>
         </el-card>
       </el-timeline-item>

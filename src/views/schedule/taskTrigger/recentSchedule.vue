@@ -30,7 +30,11 @@
                       剩余时间
                     </div>
                   </template>
-                  <el-countdown title="距离现在" :value="item.nextExecuteTime" />
+                  <el-countdown 
+                    title="" 
+                    format="HH:mm:ss"
+                    value-style="color:#10054b ;"
+                    :value="item.nextExecuteTime" />
                 </el-descriptions-item>
               </el-descriptions>
             </div>

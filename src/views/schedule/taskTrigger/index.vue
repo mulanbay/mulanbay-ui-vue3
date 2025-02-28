@@ -60,15 +60,6 @@
       </el-col>
       <el-col :span="1.5">
         <el-button
-          type="primary"
-          icon="plus"
-          :disabled="single"
-          @click="handleCopy"
-          v-hasPermi="['schedule:taskTrigger:create']">复制
-        </el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
           type="success"
           icon="edit"
           :disabled="single"
@@ -149,23 +140,36 @@
       </el-table-column>
       <el-table-column label="距离下一次执行" align="center" min-width="120px" :show-overflow-tooltip="true">
         <template #default="scope">
-          <span v-if="scope.row.tillNextExecuteTime<=60" style="color:red ;">
-            {{ tillNowString(scope.row.tillNextExecuteTime) }}
+          <span v-if="scope.row.tillNextExecuteTime<0" style="color:darkred;">
+            {{ scope.row.tnetDesc }}
           </span>
-          <span v-else-if="scope.row.tillNextExecuteTime<=3600" style="color:#9acd32 ;">
-            {{ tillNowString(scope.row.tillNextExecuteTime) }}
+          <span v-else-if="scope.row.tillNextExecuteTime<=60">
+            <el-countdown
+              title=""
+              format="mm:ss"
+              value-style="color:red ;"
+              :value="scope.row.netTime"
+            />
+          </span>
+          <span v-else-if="scope.row.tillNextExecuteTime<=3600">
+            <el-countdown
+              title=""
+              format="mm:ss"
+              value-style="color:#9acd32 ;"
+              :value="scope.row.netTime"
+            />
           </span>
           <span v-else-if="scope.row.tillNextExecuteTime<=3600*24" style="color:purple ;">
-            {{ tillNowString(scope.row.tillNextExecuteTime) }}
+            {{ scope.row.tnetDesc }}
           </span>
           <span v-else>
-            {{ tillNowString(scope.row.tillNextExecuteTime) }}
+            {{ scope.row.tnetDesc }}
           </span>
         </template>
       </el-table-column>
       <el-table-column label="下一次执行时间" align="center" width="180">
         <template #default="scope">
-          <span>{{ scope.row.nextExecuteTime==null ? scope.row.firstExecuteTime : scope.row.nextExecuteTime }}</span>
+          <span class="link-type" @click="handleTimeInfo(scope.row)">{{ scope.row.net }}</span>
         </template>
       </el-table-column>
       <el-table-column label="最新结果" align="center" width="80">
@@ -360,6 +364,15 @@
                     icon="InfoFilled"
                     @click="showScheduleDetail(scope.row)"
                     v-hasPermi="['schedule:taskTrigger:get']">详情
+                  </el-button>
+                </el-dropdown-item>
+                <el-dropdown-item>
+                  <el-button
+                    link
+                    type="success"
+                    icon="CopyDocument"
+                    @click="handleCopy(scope.row)"
+                    v-hasPermi="['schedule:taskTrigger:create']">复制
                   </el-button>
                 </el-dropdown-item>
                 <el-dropdown-item>
@@ -596,11 +609,51 @@
     taskTriggerList.value = [];
     fetchList(queryParams.value).then(
       response => {
-        taskTriggerList.value = response.rows;
+        let n = response.rows.length;
+        for (let i = 0; i < n; i++) { 
+          let tt = response.rows[i];
+          tt.net = tt.nextExecuteTime==null ? tt.firstExecuteTime : tt.nextExecuteTime;
+          tt.tnetDesc = formatTime(tt.tillNextExecuteTime);
+          tt.netTime = (new Date(tt.net.replace(/-/, "/")));
+          taskTriggerList.value.push(tt);
+        }
         total.value = response.total;
         loading.value = false;
       }
     );
+  }
+  
+  /**
+   * 时间格式化
+   * @param {Object} second
+   */
+  function formatTime(second) {
+    var time = '';
+    if (second < 0) {
+      time = '已过去';
+      second = Math.abs(second);
+    }
+    if (second > 3600 * 24) {
+      var days = parseInt(second / (3600 * 24));
+      if (days <= 30) {
+        return time + days + '天+';
+      } else if (days <= 365) {
+        var months = parseInt(days / 30);
+        return time + months + '月+';
+      } else {
+        return time+parseInt(days/365) + '年';
+      }
+    } else {
+      if (second >= 3600) {
+        return time+parseInt(second / 3600) + '小时+';
+      }
+      if (second >= 60) {
+        return time+parseInt(second / 60) + '分钟+';
+      }
+      if (second > 0) {
+        return parseInt(second) + '秒';
+      }
+    }
   }
 
   /** 搜索按钮操作 */
