@@ -124,3 +124,11 @@ export function getDietTimeStat(query) {
     params: query
   })
 }
+
+export function getEnergyList(query) {
+  return request({
+    url: '/diet/energyList',
+    method: 'get',
+    params: query
+  })
+}

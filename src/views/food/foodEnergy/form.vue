@@ -4,49 +4,42 @@
   <el-dialog :title="title" v-model="open" width="620px" append-to-body>
     <el-form ref="formRef" :model="form" :rules="rules" v-loading="formLoading" label-width="80px">
       <el-row>
-        <el-col :span="24">
-          <el-form-item label="关键字" prop="tags">
-           <el-input-tag v-model="keywordsTags" @input="handleTagInput" tag-type="primary" tag-effect="light" placeholder="输入标签" style="width: 650px">
-             <template #suffix>
-               <el-popover :visible="tagsPopOpen" placement="top" :width="400">
-                 <el-tag
-                   effect="plain"
-                   type="primary"
-                   round
-                   :key="tag"
-                   v-for="tag in hisKeywordsTags"
-                   :disable-transitions="false"
-                   @click="handleTagAppend(tag.text)">
-                   {{tag.text}}
-                 </el-tag>
-                 <div style="text-align: right; margin: 0">
-                   <el-button size="small" type="success" icon="CircleCheckFilled" @click="tagsPopOpen = false">确定</el-button>
-                 </div>
-                 <template #reference>
-                   <el-button @click="tagsPopOpen = true" type="success" icon="Share" size="small">选择</el-button>
-                 </template>
-               </el-popover>
-             </template>
-           </el-input-tag>  
+        <el-col :span="12">
+          <el-form-item label="食物名称" prop="foodName">
+            <el-input v-model="form.foodName" placeholder="请输入食物名称" />
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="食物类别" prop="className">
+            <el-select
+              v-model="form.className"
+              placeholder="食物类别"
+              clearable
+              collapse-tags>
+              <el-option
+                v-for="dict in classNameOptions"
+                :key="dict.id"
+                :label="dict.text"
+                :value="dict.id" />
+            </el-select>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="12">
-          <el-form-item label="类别名称" prop="className">
-            <el-input v-model="form.className" placeholder="请输入类别名称" />
+          <el-form-item label="卡路里数" prop="cal">
+            <el-input-number v-model="form.cal" placeholder="" :style="{width: '100%'}" controls-position="right" :min="0" :controls="false" :precision="0" >
+              <template #suffix>
+                <span>卡</span>
+              </template>
+            </el-input-number>
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="大类" prop="type">
-            <el-select v-model="form.type" :style="{width: '100%'}" placeholder="请选择">
-              <el-option
-                v-for="dict in typeOptions"
-                :key="dict.id"
-                :label="dict.text"
-                :value="dict.id"
-              />
-            </el-select>
+          <el-form-item label="计量单位" prop="amount">
+            <el-input-number v-model="form.amount" placeholder="" :style="{width: '130px'}" controls-position="right" :min="0" :controls="false" :precision="0" >
+            </el-input-number>
+            <el-input v-model="form.unit" placeholder="" :style="{width: '80px'}" />
           </el-form-item>
         </el-col>
       </el-row>
@@ -86,9 +79,10 @@
 
 </template>
 
-<script setup name="FoodCategoryForm">
-  import { createFoodCategory, editFoodCategory, getFoodCategory } from "@/api/food/foodCategory";
-  import {appendTagToOptions,checkTag} from "@/utils/tagUtils";
+<script setup name="FoodEnergyForm">
+  import { createFoodEnergy, editFoodEnergy, getFoodEnergy } from "@/api/food/foodEnergy";
+  import { getCateClassTree } from "@/api/food/foodCategory";
+  import {appendTagToOptions} from "@/utils/tagUtils";
 
   const { proxy } = getCurrentInstance();
 
@@ -98,22 +92,26 @@
   const formLoading = ref(false);
   const formRef = ref();
   const commonStatusOptions = ref(proxy.commonStatusOptions);
-  const typeOptions = ref([]);
-  
-  //标签编辑
-  const tagsPopOpen = ref(false);
-  const keywordsTags = ref([]);
-  const hisKeywordsTags = ref([]);
+  const classNameOptions = ref([]);
   
   const data = reactive({
     form: {},
     // 表单校验
     rules: {
-      className: [
-        { required: true, message: "类别名称不能为空", trigger: "blur" }
+      foodName: [
+        { required: true, message: "食物名称不能为空", trigger: "blur" }
       ],
-      type: [
-        { required: true, message: "大类不能为空", trigger: "blur" }
+      className: [
+        { required: true, message: "食物类别不能为空", trigger: "blur" }
+      ],
+      cal: [
+        { required: true, message: "卡路里数不能为空", trigger: "blur" }
+      ],
+      amount: [
+        { required: true, message: "计量数值不能为空", trigger: "blur" }
+      ],
+      unit: [
+        { required: true, message: "单位不能为空", trigger: "blur" }
       ],
       status: [
         { required: true, message: "状态不能为空", trigger: "blur" }
@@ -130,51 +128,40 @@
   const emit = defineEmits(['success']);
   
   /** 打开弹窗 */
-  const openForm = async (id) => {
+  const openForm = async (id,type,foodName) => {
     open.value = true;
     resetForm();
     if (id != null) {
       title.value = "修改";
       try {
         formLoading.value = true;
-        getFoodCategory(id).then(response => {
+        getFoodEnergy(id).then(response => {
           form.value = response;
-          if(!proxy.isEmpty(response.tags)){
-            keywordsTags.value = response.tags.split(',');
-          }else{
-            keywordsTags.value = [];
-          }
         });
       } finally {
         formLoading.value = false;
       }
     } else {
       title.value = "新增";
+      form.value.foodName = foodName;
     }
   }
 
   // 提供 open 方法，用于打开弹窗
   defineExpose({ openForm });
   
-  /** 标签处理 start */
-  // 选择标签
-  function handleTagAppend(tag) {
-    appendTagToOptions(tag, keywordsTags.value);
-  }
-  //输入标签
-  function handleTagInput(tag) {
-    checkTag(tag, keywordsTags.value);
-  }
-  /** 标签处理 end */
-  
   // 表单重置
   function resetForm() {
     form.value = {
-      cateId: undefined,
+      foodId: undefined,
+      foodName: undefined,
+      cal: undefined,
+      amount: 100,
+      unit: '克',
+      className: undefined,
       orderIndex: 0,
       status: "ENABLE"
     };
-    keywordsTags.value = [];
     proxy.resetForm("formRef");
   }
 
@@ -182,20 +169,15 @@
   function submitForm() {
     proxy.$refs["formRef"].validate(valid => {
       if (valid) {
-        if(keywordsTags.value.length>0){
-          form.value.tags = keywordsTags.value.join(',');
-        }else{
-          form.value.tags = undefined;
-        }
-        if (form.value.cateId != undefined) {
-          editFoodCategory(form.value).then(response => {
+        if (form.value.foodId != undefined) {
+          editFoodEnergy(form.value).then(response => {
             proxy.$modal.msgSuccess("修改成功");
             open.value = false;
             // 发送操作成功的事件
             emit('success');
           });
         } else {
-          createFoodCategory(form.value).then(response => {
+          createFoodEnergy(form.value).then(response => {
             proxy.$modal.msgSuccess("新增成功");
             open.value = false;
             // 发送操作成功的事件
@@ -208,8 +190,8 @@
 
   /** 初始化 **/
   onMounted(() => {
-    proxy.getDictItemTree('DIET_CATEGORY_TYPE', false).then(response => {
-      typeOptions.value = response;
+    getCateClassTree().then(response => {
+      classNameOptions.value = response;
     });
   })
 </script>

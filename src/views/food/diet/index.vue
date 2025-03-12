@@ -123,19 +123,19 @@
           <span>{{ scope.row.occurTime }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="标签" min-width="120px" :show-overflow-tooltip="true">
-        <template #default="scope">
-          <span>{{ scope.row.tags }}</span>
-        </template>
-      </el-table-column>
       <el-table-column label="食物类型" align="center" >
         <template #default="scope">
-          <span>{{ scope.row.foodTypeName }}</span>
+          <span class="link-type" @click="handleEnergy(scope.row.dietId)">{{ scope.row.foodTypeName }}</span>
         </template>
       </el-table-column>
       <el-table-column label="餐次" align="center">
         <template #default="scope">
           <span>{{ scope.row.dietTypeName }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="价格" align="center">
+        <template #default="scope">
+          <span>{{ formatMoney(scope.row.price) }}</span>
         </template>
       </el-table-column>
       <el-table-column label="来源" align="center">
@@ -148,14 +148,14 @@
           <span>{{ scope.row.shop }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="标签" min-width="120px" :show-overflow-tooltip="true">
+        <template #default="scope">
+          <span>{{ scope.row.tags }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="评分" align="center" width="120">
         <template #default="scope">
           <el-rate v-model="scope.row.score" disabled size="small"></el-rate>
-        </template>
-      </el-table-column>
-      <el-table-column label="价格" align="center">
-        <template #default="scope">
-          <span>{{ formatMoney(scope.row.price) }}</span>
         </template>
       </el-table-column>
       <el-table-column label="地点" align="center">
@@ -192,6 +192,9 @@
 
     <!-- 表单 -->
     <DietForm ref="formRef" @success="getList" />
+    
+    <!-- 热量 -->
+    <DietEnergy ref="energyRef" />
 
   </div>
 </template>
@@ -199,9 +202,11 @@
 <script setup name="Diet">
   import { fetchList, deleteDiet } from "@/api/food/diet";
   import DietForm from './form.vue'
+  import DietEnergy from './dietEnergy.vue'
 
   const { proxy } = getCurrentInstance();
   const formRef = ref();
+  const energyRef = ref();
 
   // 遮罩层
   const loading = ref(true);
@@ -285,6 +290,11 @@
     proxy.resetForm("queryRef");
     queryParams.value.page = 1;
     handleQuery();
+  }
+  
+  /** 热量按钮操作 */
+  function handleEnergy(dietId) {
+    energyRef.value.showData(dietId);
   }
 
   /** 新增按钮操作 */

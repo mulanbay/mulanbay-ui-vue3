@@ -1,5 +1,14 @@
 import request from '@/utils/request'
 
+export function getCateClassTree() {
+  return request({
+    url: '/foodCategory/classTree',
+    method: 'get',
+    params: {
+      
+    }
+  })
+}
 export function fetchList(query) {
   return request({
     url: '/foodCategory/list',

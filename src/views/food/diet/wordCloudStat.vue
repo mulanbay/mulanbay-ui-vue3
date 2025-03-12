@@ -167,6 +167,7 @@
       response => {
         proxy.$modal.closeLoading();
         //组装chart数据
+        response.rotation = 90;
         let option = createWorldCloudChartOption(response);
         createChart(option, wordCloudStatChartIns);
       }
