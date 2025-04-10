@@ -84,7 +84,7 @@
                     </template>
                     <div class="cell">
                       <el-tooltip class="item" effect="dark" :content="item.title" placement="top">
-                        <el-button round plain type="success" @click="handleStat(item)">
+                        <el-button round plain type="success" @click="handleEdit(item)">
                           {{ formatTitle(item.title) }}
                         </el-button>
                       </el-tooltip>
@@ -169,6 +169,7 @@
                       <el-button link icon="tools" type="primary" @click="showRemindSet(item.planId)" size="small">配置提醒</el-button>
                       <el-button link icon="Promotion" type="primary" @click="handleDispatch(item.template.url)" v-hasPermi="['report:plan:userPlan:list']" size="small">详情</el-button>
                       <el-button link icon="refresh" type="danger" @click="handleReStatPlanReport(item.planReport.reportId)" v-if="queryParams.realtime==false" v-hasPermi="['report:plan:planReport:reStat']" size="small">重新统计</el-button>
+                      <el-button link icon="TrendCharts" type="primary" @click="handleStat(item)" v-hasPermi="['report:plan:userPlan:stat']" v-if="queryParams.realtime==true" size="small">统计</el-button>
                     </div>
                   </el-descriptions-item>
                 </el-descriptions>
@@ -279,6 +280,9 @@
       v-model:limit="queryParams.pageSize"
       @pagination="getList" />
 
+    <!-- 表单 -->
+    <UserPlanForm ref="formRef" @success="getList" />
+    
     <!-- 提醒表单 -->
     <UserPlanRemindForm ref="userPlanRemindFormRef" />
     
@@ -298,11 +302,13 @@
   import UserPlanRemindForm from '../userPlanRemind/form.vue'
   import ManualStatForm from '../planReport/manualStat.vue'
   import UserPlanStat from './stat.vue'
+  import UserPlanForm from './form.vue'
 
   const { proxy } = getCurrentInstance();
   const userPlanRemindFormRef = ref();
   const manualStatFormRef = ref();
   const userPlanStatRef = ref();
+  const formRef = ref();
 
   //日期范围快速选择
   const datePickerOptions = ref(proxy.datePickerOptions);
@@ -353,6 +359,12 @@
     proxy.getEnumDict('PlanType', 'FIELD', false).then(response => {
       planTypeOptions.value = response;
     });
+  }
+  
+  /** 修改按钮操作 */
+  function handleEdit(row) {
+    const id = row.planId;
+    formRef.value.openForm(id, 'edit');
   }
   
   /** 统计 */
