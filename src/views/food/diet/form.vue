@@ -60,6 +60,14 @@
                   </template>
                 </el-popover>
               </template>
+              <template #tag="{ value }">
+                <div class="flex items-center">
+                  <el-icon class="mr-1">
+                    <ElementPlus />
+                  </el-icon>
+                  <span>{{ value }}</span>
+                </div>
+              </template>
             </el-input-tag> 
             <el-tooltip content="食物的原料，比如：猪肉、胡萝卜." effect="dark" placement="top">
               <el-icon>
@@ -117,6 +125,14 @@
                   </template>
                 </el-popover>
               </template>
+              <template #tag="{ value }">
+                <div class="flex items-center">
+                  <el-icon class="mr-1">
+                    <ElementPlus />
+                  </el-icon>
+                  <span>{{ value }}</span>
+                </div>
+              </template>
             </el-input-tag> 
             <el-tooltip content="菜名/节日名称." effect="dark" placement="top">
               <el-icon>
@@ -148,6 +164,14 @@
                     <el-button @click="shopTagsPopOpen = true" type="success" icon="Share">选择</el-button>
                   </template>
                 </el-popover>
+              </template>
+              <template #tag="{ value }">
+                <div class="flex items-center">
+                  <el-icon class="mr-1">
+                    <ElementPlus />
+                  </el-icon>
+                  <span>{{ value }}</span>
+                </div>
               </template>
             </el-input-tag>
             <el-tooltip content="店铺/品牌." effect="dark" placement="top">

@@ -41,6 +41,14 @@
               </template>
             </el-popover>
           </template>
+          <template #tag="{ value }">
+            <div class="flex items-center">
+              <el-icon class="mr-1">
+                <ElementPlus />
+              </el-icon>
+              <span>{{ value }}</span>
+            </div>
+          </template>
         </el-input-tag>      
       </el-form-item>
       <el-form-item label="加入统计" prop="stat">
