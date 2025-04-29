@@ -136,9 +136,12 @@
           <span v-if="scope.row.consumeType == 'TREAT'">
             <el-icon color="yellowgreen"><StarFilled /></el-icon>
           </span>
-          <span v-if="scope.row.secondhand==true" style="color: green;">
+          <span v-if="scope.row.secondhand==true">
             <el-tag type="warning">二手</el-tag>
           </span>
+		  <span v-if="scope.row.invalidTime!=null">
+		    <el-tag type="success">售</el-tag>
+		  </span>
           <span class="link-type" @click="handleEdit(scope.row)">{{ scope.row.goodsName }}</span>
         </template>
       </el-table-column>
