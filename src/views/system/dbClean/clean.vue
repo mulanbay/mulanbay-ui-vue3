@@ -46,8 +46,8 @@
         <el-col :span="24">
           <el-form-item label="清理数据类型" prop="cleanType">
             <el-radio-group v-model="cleanForm.cleanType">
-              <el-radio label="DATE_COMPARE">按时间条件</el-radio>
-              <el-radio label="TRUNCATE">全表删除</el-radio>
+              <el-radio value="DATE_COMPARE">按时间条件</el-radio>
+              <el-radio value="TRUNCATE">全表删除</el-radio>
             </el-radio-group>
           </el-form-item>
         </el-col>

@@ -976,10 +976,10 @@
 
   }
 
-  /** 删除按钮操作 */
+/** 删除按钮操作 */
   function handleDelete(row) {
-    const deleteIds = row.funcId || ids.value.join(",");
-    proxy.$confirm('是否确认删除编号为"' + deleteIds + '"的数据项?', "警告", {
+    const deleteIds = row.funcId;
+    proxy.$confirm('是否确认删除功能点["' + row.funcName + '"]?', "警告", {
       confirmButtonText: "确定",
       cancelButtonText: "取消",
       type: "warning"
@@ -992,6 +992,7 @@
       refreshRow(row.parentId);
     }).catch(function() {});
   }
+
 
   /** 查询管理类名下拉树结构 */
   function getDomainClassSelect() {
