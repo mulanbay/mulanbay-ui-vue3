@@ -23,8 +23,7 @@
 
 (对于数据预测，mulanbay-sklearn负责算法，生成pmml模型文件，java端mulanbay-server通过jpmml库加载模型文件对业务数据进行预测)
 
-*******************************旧版*******************************
-基于Spring boot2 和 Vue2版本（停止更新）
+旧版：基于Spring boot2 和 Vue2版本（停止更新）
 后端项目：
 * 服务器端:[mulanbay-server](https://gitee.com/mulanbay/mulanbay-server),发行版:[releases](https://gitee.com/mulanbay/mulanbay-server/releases)
 
@@ -36,7 +35,6 @@ VUE版本
 * 基于Vue的前端(PC端):[mulanbay-ui-vue](https://gitee.com/mulanbay/mulanbay-ui-vue),发行版:[releases](https://gitee.com/mulanbay/mulanbay-ui-vue/releases)
 
 * 基于Vue的前端(移动端):[mulanbay-mobile-vue](https://gitee.com/mulanbay/mulanbay-mobile-vue),发行版:[releases](https://gitee.com/mulanbay/mulanbay-mobile-vue/releases)
-*******************************旧版*******************************
 
 
 ### 木兰湾项目概况
