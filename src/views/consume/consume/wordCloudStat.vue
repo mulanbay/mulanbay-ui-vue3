@@ -188,6 +188,7 @@
     getConsumeWordCloudStat(proxy.addDateRange(queryParams.value, dateRange.value)).then(
       response => {
         proxy.$modal.closeLoading();
+				response.rotation = 45;
         //组装chart数据
         let option = createWorldCloudChartOption(response);
         createChart(option, wordCloudStatChartIns);

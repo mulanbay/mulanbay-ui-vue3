@@ -1,7 +1,7 @@
 <template>
-  <el-row :gutter="16" class="panel-group">
+  <el-row :gutter="16" class="panel-group" v-loading="loading">
     <el-col :span="6">
-      <el-card body-style="height:200px">
+      <el-card body-style="height:200px" >
         <div class="statistic-card">
           <el-statistic :value="(monthStat.totalConsume)" prefix="￥">
             <template #title>
@@ -9,11 +9,11 @@
                 本月花费
                 <el-tooltip
                   effect="dark"
-                  content="当前月的消费总额"
+                  content="刷新"
                   placement="top">
-                  <el-icon style="margin-left: 4px" :size="12">
-                    <Warning />
-                  </el-icon>
+									<span class="link-type" @click="handleGeneralStat()">
+										<el-icon><Refresh /></el-icon>
+									</span>
                 </el-tooltip>
               </div>
             </template>
@@ -61,11 +61,11 @@
                 本月消费分析
                 <el-tooltip
                   effect="dark"
-                  content="本月消费分析"
+                  content="统计本月消费分析"
                   placement="top">
-                  <el-icon style="margin-left: 4px" :size="12">
-                    <Warning />
-                  </el-icon>
+                	<span class="link-type" @click="handleDetailStat('MONTH')">
+                		<el-icon><TrendCharts /></el-icon>
+                	</span>
                 </el-tooltip>
               </div>
             </template>
@@ -108,11 +108,11 @@
                 今年花费
                 <el-tooltip
                   effect="dark"
-                  content="今年的消费总额"
+                  content="刷新"
                   placement="top">
-                  <el-icon style="margin-left: 4px" :size="12">
-                    <Warning />
-                  </el-icon>
+                	<span class="link-type" @click="handleGeneralStat()">
+                		<el-icon><Refresh /></el-icon>
+                	</span>
                 </el-tooltip>
               </div>
             </template>
@@ -160,11 +160,11 @@
                 今年消费分析
                 <el-tooltip
                   effect="dark"
-                  content="今年消费分析"
+                  content="统计今年消费分析"
                   placement="top">
-                  <el-icon style="margin-left: 4px" :size="12">
-                    <Warning />
-                  </el-icon>
+                	<span class="link-type" @click="handleDetailStat('YEAR')">
+                		<el-icon><TrendCharts /></el-icon>
+                	</span>
                 </el-tooltip>
               </div>
             </template>
@@ -208,6 +208,11 @@
 
   const { proxy } = getCurrentInstance();
 
+  // 定义 success 事件，用于操作成功后的回调
+  const emit = defineEmits(['detailStat']);
+  // 遮罩层
+  const loading = ref(true);
+	
   const data = reactive({
     monthStat: {},
     yearStat: {}
@@ -215,19 +220,36 @@
 
   const { monthStat, yearStat } = toRefs(data);
 
+	/** 统计 **/
   function handleGeneralStat() {
+		loading.value = true;
     generalStat().then(
       response => {
+				loading.value = false;
         monthStat.value = response.monthStat;
         yearStat.value = response.yearStat;
       }
     );
   }
+	
+	/** 明细统计 **/
+	function handleDetailStat(type) {
+		let dateRange = null;
+		if(type=='MONTH'){
+			dateRange = proxy.getMonthDateRange(new Date());
+		}else{
+			dateRange = proxy.getYearDateRange(0);
+		}
+	  // 发送操作成功的事件
+	  emit('detailStat',dateRange);
+	}
 
   /** 初始化 **/
   onMounted(() => {
     handleGeneralStat();
   })
+	
+	
 </script>
 <style scoped>
   :global(h2#card-usage ~ .example .example-showcase) {

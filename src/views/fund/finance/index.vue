@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <PanelGroup ref="panelGroupRef" />
+    <PanelGroup ref="panelGroupRef" @detailStat="handleDetailStat"/>
 
     <el-divider content-position="center">
     </el-divider>
@@ -183,6 +183,12 @@
 
   const { queryParams } = toRefs(data);
 
+	/** 统计 */  
+	function handleDetailStat(dr){
+		dateRange.value = dr;
+		consumeChartStat();
+	}
+	
   //路由跳转
   function handleDispatch(pathName) {
     //路由定向

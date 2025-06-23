@@ -27,7 +27,7 @@
         <el-col :span="12">
           <el-form-item label="业务日期" prop="bussDay">
             <el-date-picker type="date" v-model="form.bussDay" format="YYYY-MM-DD" value-format="YYYY-MM-DD"
-              :style="{width: '200px'}" placeholder="请选择时间" clearable>
+              :style="{width: '220px'}" placeholder="请选择时间" clearable>
             </el-date-picker>
           </el-form-item>
         </el-col>
