@@ -11,7 +11,8 @@
 * 我是怎么样的人？（用户画像）
 * 我将会怎么样？ （机器学习）-->（模块：数据预测）
 
-新版本的木兰湾项目采用了SpringBoot3，Vue3重构设计。
+新版本的木兰湾项目采用了SpringBoot3，Vue3重构设计。（旧版信息参见：[木兰湾项目说明](https://gitee.com/mulanbay)
+）
 
 该系统是前后端分离的项目，当前项目mulanbay-ui-vue3为前端项目，整个系统必须要同时运行前端才能完整访问。
 
@@ -22,19 +23,6 @@
 * 基于sklearn的机器学习(python)[mulanbay-sklearn](https://gitee.com/mulanbay/mulanbay-sklearn)
 
 (对于数据预测，mulanbay-sklearn负责算法，生成pmml模型文件，java端mulanbay-server通过jpmml库加载模型文件对业务数据进行预测)
-
-旧版：基于Spring boot2 和 Vue2版本（停止更新）
-后端项目：
-* 服务器端:[mulanbay-server](https://gitee.com/mulanbay/mulanbay-server),发行版:[releases](https://gitee.com/mulanbay/mulanbay-server/releases)
-
-算法端项目：
-* 基于sklearn的机器学习(python):[mulanbay-sklearn](https://gitee.com/mulanbay/mulanbay-sklearn)
-
-前端项目：
-VUE版本
-* 基于Vue的前端(PC端):[mulanbay-ui-vue](https://gitee.com/mulanbay/mulanbay-ui-vue),发行版:[releases](https://gitee.com/mulanbay/mulanbay-ui-vue/releases)
-
-* 基于Vue的前端(移动端):[mulanbay-mobile-vue](https://gitee.com/mulanbay/mulanbay-mobile-vue),发行版:[releases](https://gitee.com/mulanbay/mulanbay-mobile-vue/releases)
 
 
 ### 木兰湾项目概况
