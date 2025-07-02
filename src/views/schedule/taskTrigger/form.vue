@@ -35,15 +35,18 @@
         </el-col>
         <el-col :span="12">
           <el-form-item label="调度周期" prop="redoType">
-            每
-            <el-input-number v-model="form.triggerInterval" style="width: 80px;" placeholder="" controls-position="right" :min="1" :controls="false" :precision="0" />
+						<el-input-number v-model="form.triggerInterval" style="width: 130px;">
+							<template #prefix>
+								<span>每</span>
+							</template>
+						</el-input-number>
             <el-select
               v-model="form.triggerType"
               placeholder="周期"
               clearable
               allow-create
               collapse-tags
-              style="width: 100px">
+              style="width: 80px">
               <el-option
                 v-for="dict in triggerTypeOptions"
                 :key="dict.id"
@@ -97,8 +100,15 @@
         </el-col>
         <el-col :span="12">
           <el-form-item label="最大重做次数" prop="allowedRedoTimes">
-            <el-input-number v-model="form.allowedRedoTimes" placeholder="" controls-position="right" :min="0" :controls="false" :precision="0" />
-            次
+						<el-input-number v-model="form.allowedRedoTimes" style="width: 200px;">
+							<template #suffix>
+								<el-tooltip content="最大重做次数." effect="dark" placement="top">
+								  <el-icon>
+										次
+								  </el-icon>
+								</el-tooltip>
+							</template>
+						</el-input-number>
           </el-form-item>
         </el-col>
       </el-row>
@@ -169,8 +179,15 @@
         </el-col>
         <el-col :span="12">
           <el-form-item label="时间偏移量" prop="offsetDays">
-            <el-input-number v-model="form.offsetDays" placeholder="" controls-position="right" :controls="false" :precision="0" />
-            天
+						<el-input-number v-model="form.offsetDays" style="width: 200px;">
+							<template #suffix>
+								<el-tooltip content="业务日期和当前日期的差值." effect="dark" placement="top">
+								  <el-icon>
+										天
+								  </el-icon>
+								</el-tooltip>
+							</template>
+						</el-input-number>
           </el-form-item>
         </el-col>
       </el-row>
@@ -178,14 +195,14 @@
         <el-col :span="12">
           <el-form-item label="首次执行时间" prop="firstExecuteTime">
             <el-date-picker type="datetime" v-model="form.firstExecuteTime" format="YYYY-MM-DD HH:mm:ss" value-format="YYYY-MM-DD HH:mm:ss"
-              :style="{width: '200px'}" placeholder="请选择时间" clearable>
+              :style="{width: '200px'}" placeholder="请选择时间" clearable :disabled="form.triggerId!=null">
             </el-date-picker>
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="下一次执行时间" prop="nextExecuteTime">
             <el-date-picker type="datetime" v-model="form.nextExecuteTime" format="YYYY-MM-DD HH:mm:ss" value-format="YYYY-MM-DD HH:mm:ss"
-              :style="{width: '200px'}" placeholder="请选择时间" clearable>
+              :style="{width: '200px'}" placeholder="请选择时间" clearable :disabled="form.triggerId==null">
             </el-date-picker>
             <span class="link-type" @click="msgAlert('提示','默认等于首次执行时间')"><i class="el-icon-question" /></span>
           </el-form-item>

@@ -2,13 +2,12 @@
 
   <!-- 表单编辑对话框 -->
   <el-dialog :title="title" v-model="open" width="450px" append-to-body>
-    <el-form ref="formRef" :model="form" :rules="rules" v-loading="formLoading" label-width="80px">
+    <el-form ref="formRef" :model="form" :rules="rules" v-loading="formLoading" label-width="100px">
       <el-form-item label="运动类型" prop="sportId">
         <el-select
           v-model="form.sportId"
           placeholder="运动类型"
           clearable
-          style="width: 330px"
           @change="handleSportChange"
         >
           <el-option
@@ -19,37 +18,37 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="名称" prop="milestoneName">
+      <el-form-item label="里程碑名称" prop="milestoneName">
         <el-input v-model="form.milestoneName" placeholder="请输入名称" />
       </el-form-item>
-      <el-form-item label="别名" prop="alais">
+      <el-form-item label="里程碑别名" prop="alais">
         <el-input v-model="form.alais" placeholder="请输入别名" />
       </el-form-item>
       <el-form-item label="锻炼值" prop="value">
-        <el-input-number v-model="form.value" controls-position="right" :min="0" :controls="true" :precision="2"/>
-        {{ sportUnit }}
-        <el-tooltip content="达到该里程碑需要锻炼值大于等于该值" effect="dark" placement="top">
-          <el-icon>
-            <QuestionFilled />
-          </el-icon>
-        </el-tooltip>
+				<el-input-number v-model="form.value" style="width: 100%;" controls-position="right" :min="0" :controls="true" :precision="2">
+					<template #suffix>
+						<el-tooltip content="达到该里程碑需要锻炼值大于等于该值." effect="dark" placement="top">
+						  <el-icon>
+								{{ sportUnit }}
+						  </el-icon>
+						</el-tooltip>
+					</template>
+				</el-input-number>
       </el-form-item>
       <el-form-item label="锻炼时长" prop="duration">
-        <el-input-number v-model="form.duration" controls-position="right" :min="0" :controls="true" :precision="0"/>
-        分钟
-        <el-tooltip content="时长如果大于等于0，那么达到该里程碑需要锻炼时长小于等于该值" effect="dark" placement="top">
-          <el-icon>
-            <QuestionFilled />
-          </el-icon>
-        </el-tooltip>
+				<el-input-number v-model="form.duration" style="width: 100%;" controls-position="right" :min="0" :controls="true" :precision="0">
+					<template #suffix>
+						<el-tooltip content="时长如果大于等于0，那么达到该里程碑需要锻炼时长小于等于该值." effect="dark" placement="top">
+						  <el-icon>
+								分钟
+						  </el-icon>
+						</el-tooltip>
+					</template>
+				</el-input-number>
       </el-form-item>
       <el-form-item label="排序号" prop="orderIndex">
-        <el-input-number v-model="form.orderIndex" controls-position="right" :min="0" :controls="true" :precision="0" :disabled="true"/>
-        <el-tooltip content="对于某一个里程碑，排序号需要连续，从1开始" effect="dark" placement="top">
-          <el-icon>
-            <QuestionFilled />
-          </el-icon>
-        </el-tooltip>
+				<el-input-number v-model="form.orderIndex" style="width: 100%;" controls-position="right" :min="0" :controls="true" :precision="0" :disabled="true">
+				</el-input-number>
       </el-form-item>
       <el-form-item label="备注信息">
         <el-input v-model="form.remark" type="textarea" placeholder="请输入内容"></el-input>

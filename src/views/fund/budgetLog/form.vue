@@ -35,48 +35,80 @@
       <el-row>
         <el-col :span="12">
           <el-form-item label="预算金额" prop="budgetAmount">
-            <el-input-number v-model="form.budgetAmount" :style="{width: '100%'}" placeholder="单位:元" controls-position="right" :min="0" :controls="false" :precision="2" />
+						<el-input-number v-model="form.budgetAmount" placeholder="单位:元" :style="{width: '100%'}" controls-position="right" :min="0" :controls="false" :precision="2" >
+						  <template #suffix>
+						    <span>元</span>
+						  </template>
+						</el-input-number>
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="普通消费" prop="ncAmount">
-            <el-input-number v-model="form.ncAmount" :style="{width: '100%'}" placeholder="单位:元" controls-position="right" :min="0" :controls="false" :precision="2" />
+						<el-input-number v-model="form.ncAmount" placeholder="单位:元" :style="{width: '100%'}" controls-position="right" :min="0" :controls="false" :precision="2" >
+						  <template #suffix>
+						    <span>元</span>
+						  </template>
+						</el-input-number>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="12">
           <el-form-item label="突发消费" prop="bcAmount">
-            <el-input-number v-model="form.bcAmount" :style="{width: '100%'}" placeholder="单位:元" controls-position="right" :min="0" :controls="false" :precision="2" />
+						<el-input-number v-model="form.bcAmount" placeholder="单位:元" :style="{width: '100%'}" controls-position="right" :min="0" :controls="false" :precision="2" >
+						  <template #suffix>
+						    <span>元</span>
+						  </template>
+						</el-input-number>
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="看病消费" prop="trAmount">
-            <el-input-number v-model="form.trAmount" :style="{width: '100%'}" placeholder="单位:元" controls-position="right" :min="0" :controls="false" :precision="2" />
+						<el-input-number v-model="form.trAmount" placeholder="单位:元" :style="{width: '100%'}" controls-position="right" :min="0" :controls="false" :precision="2" >
+						  <template #suffix>
+						    <span>元</span>
+						  </template>
+						</el-input-number>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="12">
           <el-form-item label="总计消费" prop="totalAmount">
-            <el-input-number v-model="form.totalAmount" :style="{width: '100%'}" placeholder="单位:元" controls-position="right" :min="0" :controls="false" :precision="2" />
+						<el-input-number v-model="form.totalAmount" placeholder="单位:元" :style="{width: '100%'}" controls-position="right" :min="0" :controls="false" :precision="2" >
+						  <template #suffix>
+						    <span>元</span>
+						  </template>
+						</el-input-number>
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="总计收入" prop="incomeAmount">
-            <el-input-number v-model="form.incomeAmount" :style="{width: '100%'}" placeholder="单位:元" controls-position="right" :min="0" :controls="false" :precision="2" />
+						<el-input-number v-model="form.incomeAmount" placeholder="单位:元" :style="{width: '100%'}" controls-position="right" :min="0" :controls="false" :precision="2" >
+						  <template #suffix>
+						    <span>元</span>
+						  </template>
+						</el-input-number>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="12">
           <el-form-item label="总计消费" prop="totalAmount">
-            <el-input-number v-model="form.totalAmount" :style="{width: '100%'}" placeholder="单位:元" controls-position="right" :min="0" :controls="false" :precision="2" />
+						<el-input-number v-model="form.totalAmount" placeholder="单位:元" :style="{width: '100%'}" controls-position="right" :min="0" :controls="false" :precision="2" >
+						  <template #suffix>
+						    <span>元</span>
+						  </template>
+						</el-input-number>
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="账户变化" prop="accountChangeAmount">
-            <el-input-number v-model="form.accountChangeAmount" :style="{width: '100%'}" placeholder="单位:元" controls-position="right" :min="0" :controls="false" :precision="2" />
+						<el-input-number v-model="form.accountChangeAmount" placeholder="单位:元" :style="{width: '100%'}" controls-position="right" :min="0" :controls="false" :precision="2" >
+						  <template #suffix>
+						    <span>元</span>
+						  </template>
+						</el-input-number>
           </el-form-item>
         </el-col>
       </el-row>

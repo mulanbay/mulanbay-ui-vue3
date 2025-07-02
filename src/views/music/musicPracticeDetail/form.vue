@@ -31,8 +31,11 @@
         </el-select>
       </el-form-item>
       <el-form-item :label="timesLable" prop="times">
-        <el-input-number v-model="form.times" controls-position="right" :min="0" :controls="true" :precision="0" />
-        {{unit}}
+				<el-input-number v-model="form.times" :min="1" :controls="true" :precision="0" :style="{width: '100%'}">
+					<template #suffix>
+						{{unit}}
+					</template>
+				</el-input-number>        
       </el-form-item>
       <el-form-item label="练习水平" prop="level">
         <el-select

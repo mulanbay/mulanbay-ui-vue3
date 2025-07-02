@@ -71,12 +71,20 @@
       <el-row>
         <el-col :span="12">
           <el-form-item label="药品单价" prop="unitPrice">
-            <el-input-number v-model="form.unitPrice" :style="{width: '100%'}" controls-position="right" :min="0" :controls="true" :precision="2" />
+						<el-input-number v-model="form.unitPrice" placeholder="单位:元" :style="{width: '100%'}" controls-position="right" :min="0" :controls="false" :precision="2" >
+						  <template #suffix>
+						    <span>元</span>
+						  </template>
+						</el-input-number>
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="药品总价" prop="totalPrice">
-            <el-input-number v-model="form.totalPrice" :style="{width: '100%'}" controls-position="right" :min="0" :controls="true" :precision="2" />
+						<el-input-number v-model="form.totalPrice" placeholder="单位:元" :style="{width: '100%'}" controls-position="right" :min="0" :controls="false" :precision="2" >
+						  <template #suffix>
+						    <span>元</span>
+						  </template>
+						</el-input-number>
           </el-form-item>
         </el-col>
       </el-row>

@@ -38,11 +38,11 @@
       <el-row>
         <el-col :span="12">
           <el-form-item label="醒来次数" prop="wakeUpCount">
-           <el-input-number v-model="form.wakeUpCount" placeholder="" controls-position="right" :min="0" :controls="false" :precision="0"  :style="{width: '220px'}">
-            <template #suffix>
-                <span>次</span>
-              </template>
-           </el-input-number> 
+						<el-input-number v-model="form.wakeUpCount" :style="{width: '100%'}" controls-position="right" :min="0" :controls="true" :precision="0">
+						  <template #suffix>
+						    <span>次</span>
+						  </template>
+						</el-input-number>
           </el-form-item>
         </el-col>
         <el-col :span="12">
