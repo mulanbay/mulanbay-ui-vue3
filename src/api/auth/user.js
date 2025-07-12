@@ -103,6 +103,7 @@ export function uploadAvatar(data) {
   return request({
     url: '/user/uploadAvatar',
     method: 'post',
+		headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     data: data
   })
 }
