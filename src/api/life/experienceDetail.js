@@ -50,3 +50,10 @@ export function deleteExperienceDetail(ids) {
   })
 }
 
+export function getExperienceDetailTree(query) {
+  return request({
+    url: '/experienceDetail/tree',
+    method: 'get',
+    params: query
+  })
+}

@@ -1,7 +1,7 @@
 <template>
 
   <!-- 对话框 -->
-  <el-dialog :title="title" v-model="open" width="900px" append-to-body>
+  <el-dialog :title="title" v-model="open" width="980px" append-to-body>
     <el-form :model="queryParams" ref="queryRef" :inline="true" >
       <el-form-item label="起止日期" style="width: 308px">
         <el-date-picker
@@ -163,7 +163,8 @@
 
   /** 消费明细列表操作 */
   function handleConsumeList(row){
-    experienceConsumeListRef.value.showData(row.detailId);
+    experienceConsumeListRef.value.showData(queryParams.value.expId,row.detailId);
+		
   }
   
   /** 出发位置信息 */

@@ -3,10 +3,29 @@
   <!-- 表单编辑对话框 -->
   <el-dialog :title="title" v-model="open" width="560px" append-to-body>
     <el-form ref="formRef" :model="form" :rules="rules" v-loading="formLoading" label-width="80px">
+			<el-row>
+			  <el-col :span="24">
+					<el-form-item label="所属行程" prop="detailId">
+					  <el-select
+					    v-model="form.detailId"
+					    placeholder="类型"
+					    collapse-tags
+					    style="width: 500px"
+					  >
+					    <el-option
+					      v-for="dict in detailOptions"
+					      :key="dict.id"
+					      :label="dict.text"
+					      :value="dict.id"
+					    />
+					  </el-select>
+					</el-form-item>
+			  </el-col>
+			</el-row>
       <el-row>
         <el-col :span="24">
           <el-form-item label="消费记录" prop="scId">
-           <el-input v-model="form.scId" placeholder="" style="width: 250px;" disabled/>
+           <el-input v-model="form.scId" placeholder="" style="width: 270px;" disabled/>
            <el-button type="primary" icon="Share" @click="handleSelectGoods()" >绑定</el-button>
            <el-button type="danger" icon="Remove" @click="handleUnSelectGoods()" :disabled="form.scId==null">解绑</el-button>
           </el-form-item>
@@ -45,11 +64,20 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="加入统计" prop="stat">
-           <el-switch v-model="form.stat" ></el-switch>
+          <el-form-item label="消费时间" prop="buyTime">
+            <el-date-picker type="datetime" v-model="form.buyTime" format="YYYY-MM-DD HH:mm:ss" value-format="YYYY-MM-DD HH:mm:ss"
+              :style="{width: '100%'}" placeholder="请选择时间" clearable>
+            </el-date-picker>
           </el-form-item>
         </el-col>
       </el-row>
+			<el-row>
+			  <el-col :span="12">
+			    <el-form-item label="加入统计" prop="stat">
+			     <el-switch v-model="form.stat" ></el-switch>
+			    </el-form-item>
+			  </el-col>
+			</el-row>
       <el-row>
         <el-col :span="24">
           <el-form-item label="备注信息" prop="remark">
@@ -74,6 +102,7 @@
 <script setup name="ExperienceConsumeForm">
   import { createExperienceConsume, editExperienceConsume, getExperienceConsume } from "@/api/life/experienceConsume";
   import { getGoodsTypeTree } from "@/api/consume/goodsType";
+	import { getExperienceDetailTree } from "@/api/life/experienceDetail";
   import GoodsSelect from '../../consume/consume/goodsSelect.vue'
   
   
@@ -86,14 +115,22 @@
   const formLoading = ref(false);
   const formRef = ref();
   const goodsTypeOptions = ref([]);
-
+	//明细
+	const detailOptions = ref([]);
+	
   const data = reactive({
     form: {},
     // 表单校验
     rules: {
+			detailId: [
+			  { required: true, message: "所属行程不能为空", trigger: "blur" }
+			],
       consumeName: [
         { required: true, message: "消费名称不能为空", trigger: "blur" }
       ],
+			buyTime: [
+			  { required: true, message: "消费时间不能为空", trigger: "blur" }
+			],
       goodsTypeId: [
         { required: true, message: "消费类型不能为空", trigger: "blur" }
       ],
@@ -115,7 +152,6 @@
   const openForm = async (id,Type,detailId) => {
     open.value = true;
     resetForm();
-    initOptions();
     if (id != null) {
       title.value = "修改";
       formLoading.value = true;
@@ -126,10 +162,12 @@
         form.value.detail = null;
         form.value.goodsTypeId = response.goodsType.typeId;
         form.value.goodsType = null;
+				initOptions();
       });
     } else {
       title.value = "新增";
       form.value.detailId = detailId;
+			initOptions();
     }
   }
 
@@ -141,6 +179,7 @@
     form.value.scId = consumeGoods.consumeId;
     form.value.goodsTypeId = consumeGoods.goodsType.typeId;
     form.value.consumeName = consumeGoods.goodsName;
+		form.value.buyTime = consumeGoods.buyTime;
     form.value.cost = consumeGoods.totalPrice;
   }
   
@@ -159,6 +198,14 @@
     getGoodsTypeTree().then(response => {
       goodsTypeOptions.value = response;
     });
+		detailOptions.value = [];
+		let para ={
+			detailId: form.value.detailId,
+			needRoot:false
+		}
+		getExperienceDetailTree(para).then(response => {
+		  detailOptions.value = response;
+		});
   }
 
   // 表单重置

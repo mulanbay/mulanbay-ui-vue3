@@ -91,18 +91,15 @@
         <template #default="scope">
           <el-tooltip class="box-item" effect="dark" content="旅行地图" placement="top">
             <span class="link-type" @click="handleTransferMapStat(scope.row)">
-              <el-icon>
-                <Compass />
-              </el-icon>
+              <el-icon><Compass /></el-icon>
             </span>
           </el-tooltip>
           <el-divider direction="vertical"></el-divider>
-          <el-tooltip class="box-item" effect="dark" content="花费统计" placement="top">
-            <span class="link-type" @click="handleCostStat(scope.row)"><el-icon>
-                <Money />
-              </el-icon>
-            </span>
-          </el-tooltip>
+					<el-tooltip class="box-item" effect="dark" content="行程明细" placement="top">
+					  <span class="link-type" @click="handleDetailList(scope.row)">
+					    <el-icon><Grid /></el-icon>
+					  </span>
+					</el-tooltip>
         </template>
       </el-table-column>
       <el-table-column label="类型" align="center" width="60">
@@ -110,21 +107,25 @@
           <span>{{ scope.row.typeName }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="行程" width="60" align="center">
+      <el-table-column label="花费" width="80" align="center">
         <template #default="scope">
-          <span class="link-type" @click="handleDetailList(scope.row)">
-            <el-icon>
-              <Grid />
-            </el-icon>
-          </span>
+					<el-tooltip class="box-item" effect="dark" content="花费统计" placement="top">
+					  <span class="link-type" @click="handleCostStat(scope.row)">
+							<el-icon><Money /></el-icon>
+					  </span>
+					</el-tooltip>
+					<el-divider direction="vertical"></el-divider>
+          <el-tooltip class="box-item" effect="dark" content="花费明细" placement="top">
+            <span class="link-type" @click="handleConsumeList(scope.row)">
+							<el-icon><Grid /></el-icon>
+            </span>
+          </el-tooltip>
         </template>
       </el-table-column>
       <el-table-column label="锻炼" width="60" align="center">
         <template #default="scope">
           <span class="link-type" @click="handleExercise(scope.row)">
-            <el-icon>
-              <Bicycle />
-            </el-icon>
+            <el-icon><Bicycle /></el-icon>
           </span>
         </template>
       </el-table-column>
@@ -189,6 +190,9 @@
     
     <!-- 花费统计 -->
     <CostStat ref="costStatRef"/>
+		
+    <!-- 消费列表 -->
+    <ExperienceConsumeList ref="experienceConsumeListRef"/>
     
   </div>
 </template>
@@ -202,6 +206,7 @@
   import CostStat from './costStat.vue';
   import ExperienceDetailList from '../experienceDetail/index.vue';
   import { getHourDesc } from "@/utils/datetime";
+  import ExperienceConsumeList from '../experienceConsume/index.vue'
 
   const { proxy } = getCurrentInstance();
   const formRef = ref();
@@ -209,6 +214,7 @@
   const transferDetailMapRef = ref();
   const costStatRef = ref();
   const exerciseListRef = ref();
+  const experienceConsumeListRef = ref();
   
   // 遮罩层
   const loading = ref(true);
@@ -256,6 +262,12 @@
   function handleCostStat(row) {
     costStatRef.value.showData(row.expId,row.expName);
   }
+	
+	/** 消费明细列表操作 */
+	function handleConsumeList(row){
+	  experienceConsumeListRef.value.showData(row.expId,null);
+		
+	}
 
   /** 地图统计 */
   function handleTransferMapStat(row) {

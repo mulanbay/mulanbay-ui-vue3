@@ -1,7 +1,7 @@
 <template>
 
   <!-- 对话框 -->
-  <el-dialog :title="title" v-model="open" width="850px" append-to-body>
+  <el-dialog :title="title" v-model="open" width="950px" append-to-body>
     <el-form :model="queryParams" ref="queryRef" :inline="true" >
       <el-form-item label="名称" prop="name">
         <el-input
@@ -12,6 +12,22 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+			<el-form-item label="行程" prop="detailId">
+			  <el-select
+			    v-model="queryParams.detailId"
+			    placeholder="全部行程"
+			    collapse-tags
+					clearable
+			    style="width: 240px"
+			  >
+			    <el-option
+			      v-for="dict in detailOptions"
+			      :key="dict.id"
+			      :label="dict.text"
+			      :value="dict.id"
+			    />
+			  </el-select>
+			</el-form-item>
       <el-form-item>
         <el-button type="primary" icon="search" @click="handleQuery" v-hasPermi="['life:experienceConsume:list']">搜索</el-button>
         <el-button icon="refresh" @click="resetQuery">重置</el-button>
@@ -31,6 +47,11 @@
           <span class="link-type" @click="handleEdit(scope.row)">{{ scope.row.consumeName }}</span>
         </template>
       </el-table-column>
+			<el-table-column label="时间" align="center" width="180">
+			  <template #default="scope">
+			    <span>{{ scope.row.buyTime }}</span>
+			  </template>
+			</el-table-column>
       <el-table-column label="商品类型" align="center" width="140">
         <template #default="scope">
           <span>{{ scope.row.goodsType.typeName }}</span>
@@ -41,34 +62,27 @@
           <span>{{ formatMoney(scope.row.cost) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="关联消费" align="center" width="95">
-        <template #default="scope">
-          <span v-if="scope.row.scId!=null">
-            <el-icon color="green">
-              <SuccessFilled />
-            </el-icon>
-          </span>
-          <span v-else>
-            <el-icon color="red">
-              <CircleCloseFilled />
-            </el-icon>
-          </span>
-        </template>
-      </el-table-column>
-      <el-table-column label="加入统计" align="center" width="95">
-        <template #default="scope">
-          <span v-if="scope.row.stat==true">
-            <el-icon color="green">
-              <SuccessFilled />
-            </el-icon>
-          </span>
-          <span v-else>
-            <el-icon color="red">
-              <CircleCloseFilled />
-            </el-icon>
-          </span>
-        </template>
-      </el-table-column>
+			<el-table-column label="配置" width="80" align="center">
+			  <template #default="scope">
+					<el-tooltip class="box-item" effect="dark" content="关联消费" placement="top">
+					  <span v-if="scope.row.scId!=null">
+					    <el-icon color="green"><SuccessFilled /></el-icon>
+					  </span>
+					  <span v-else>
+					    <el-icon color="red"><CircleCloseFilled /></el-icon>
+					  </span>
+					</el-tooltip>
+					<el-divider direction="vertical"></el-divider>
+			    <el-tooltip class="box-item" effect="dark" content="加入统计" placement="top">
+			      <span v-if="scope.row.stat==true">
+			        <el-icon color="green"><SuccessFilled /></el-icon>
+			      </span>
+			      <span v-else>
+			        <el-icon color="red"><CircleCloseFilled /></el-icon>
+			      </span>
+			    </el-tooltip>
+			  </template>
+			</el-table-column>
       <el-table-column label="操作" align="center" width="80" fixed="right" class-name="small-padding fixed-width">
         <template #default="scope">
           <el-button
@@ -98,6 +112,7 @@
 
 <script setup name="ExperienceConsume">
   import { fetchList,deleteExperienceConsume } from "@/api/life/experienceConsume";
+	import { getExperienceDetailTree } from "@/api/life/experienceDetail";
   import { formatDays,getHourDesc } from "@/utils/datetime";
   import ExperienceConsumeForm from './form.vue'
 
@@ -109,6 +124,8 @@
   const formRef = ref();
   
   const consumeList = ref([]);
+	//明细
+	const detailOptions = ref([]);
   // 遮罩层
   const loading = ref(true);
   // 选中数组
@@ -135,10 +152,15 @@
   const emit = defineEmits(['success']);
 
   /** 打开弹窗 */
-  const showData = async (detailId) => {
+  const showData = async (expId,detailId) => {
     open.value = true;
     resetForm();
+		if(detailId!=null){
+			title.value = '消费明细列表(行程ID:'+detailId+')';
+		}
     queryParams.value.detailId=detailId;
+		queryParams.value.expId=expId;
+		initOptions();
     getList();
   }
 
@@ -159,6 +181,7 @@
   // 表单重置
   function resetForm() {
     proxy.resetForm("queryRef");
+		detailOptions.value = [];
   }
   
   /** 新增按钮操作 */
@@ -209,8 +232,20 @@
     single.value = selection.length != 1
     multiple.value = !selection.length
   }
-  
-
+	
+	/** 初始化下拉树结构 */
+	function initOptions() {
+		detailOptions.value = [];
+		let para ={
+			expId: queryParams.value.expId,
+			detailId: queryParams.value.detailId,
+			needRoot:false
+		}
+	  getExperienceDetailTree(para).then(response => {
+	    detailOptions.value = response;
+	  });
+	}
+	
   /** 初始化 **/
   onMounted(() => {
 
