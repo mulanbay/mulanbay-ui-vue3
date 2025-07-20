@@ -106,12 +106,12 @@
             <el-button type="primary" icon="search" @click="handleQuery" v-hasPermi="['consume:consume:list']">搜索</el-button>
             <el-button icon="refresh" @click="resetQuery">重置</el-button>
             <el-button type="warning" icon="more" @click="handleMoreCdn">{{cdnTitle}}</el-button>
+						<el-button type="primary" icon="plus" @click="handleCreate" v-hasPermi="['consume:consume:create']">新增</el-button>
           </el-form-item>
         </el-form>
 
         <!--列表数据-->
         <el-table v-loading="loading" :data="consumeList">
-          <el-table-column type="selection" width="55" align="center" />
           <el-table-column label="商品名称" fixed="left" min-width="280px" :show-overflow-tooltip="true">
             <template #default="scope">
               <span v-if="scope.row.consumeId == consumeInfo.consumeId" style="color: rebeccapurple;">
@@ -129,7 +129,7 @@
               <span v-if="scope.row.secondhand==true" style="color: green;">
                 <el-tag type="warning">二手</el-tag>
               </span>
-              <span>{{ scope.row.goodsName }}</span>
+							<span class="link-type" @click="handleEdit(scope.row)">{{ scope.row.goodsName }}</span>
             </template>
           </el-table-column>
           <el-table-column label="购买日期" align="center" width="190">
@@ -137,6 +137,11 @@
               <span>{{ scope.row.buyTime }}</span>
             </template>
           </el-table-column>
+					<el-table-column label="总价" align="center" width="95">
+					  <template #default="scope">
+					    <span>{{ formatMoney(scope.row.totalPrice) }}</span>
+					  </template>
+					</el-table-column>
           <el-table-column label="购买来源" align="center" width="95">
             <template #default="scope">
               <span>{{ scope.row.source.sourceName }}</span>
@@ -145,11 +150,6 @@
           <el-table-column label="商品类型" align="center" width="120">
             <template #default="scope">
               <span>{{ scope.row.goodsType.typeName }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column label="总价" align="center" width="95">
-            <template #default="scope">
-              <span>{{ formatMoney(scope.row.totalPrice) }}</span>
             </template>
           </el-table-column>
           <el-table-column label="操作" align="center" width="80" fixed="right" class-name="small-padding fixed-width">
@@ -182,6 +182,10 @@
 
       </el-card>
     </el-dialog>
+		
+		<!-- 表单 -->
+		<ConsumeForm ref="formRef" @success="getList" />
+		
   </div>
 
 </template>
@@ -190,6 +194,7 @@
   import { fetchList, getConsume } from "@/api/consume/consume";
   import { getConsumeSourceTree } from "@/api/consume/consumeSource";
   import { getGoodsTypeTree } from "@/api/consume/goodsType";
+  import ConsumeForm from './form.vue'
 
   const { proxy } = getCurrentInstance();
 
@@ -266,6 +271,17 @@
       sortTypeOptions.value = response;
     });
   }
+	
+	/** 新增按钮操作 */
+	function handleCreate() {
+	  formRef.value.openForm(null, 'create');
+	}
+	
+	/** 修改按钮操作 */
+	function handleEdit(row) {
+	  const id = row.consumeId || ids.value.join(",");
+	  formRef.value.openForm(id, 'edit');
+	}
 
   /** 查询列表 */
   function getList() {

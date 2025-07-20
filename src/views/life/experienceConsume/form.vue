@@ -149,7 +149,7 @@
   const emit = defineEmits(['success']);
 
   /** 打开弹窗 */
-  const openForm = async (id,Type,detailId) => {
+  const openForm = async (id,Type,detailId,expId) => {
     open.value = true;
     resetForm();
     if (id != null) {
@@ -167,6 +167,7 @@
     } else {
       title.value = "新增";
       form.value.detailId = detailId;
+			form.value.expId = expId;
 			initOptions();
     }
   }

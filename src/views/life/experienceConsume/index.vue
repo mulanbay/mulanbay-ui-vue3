@@ -190,13 +190,13 @@
       proxy.$modal.msgError("没有明细编号绑定，无法新增");
       return;
     }
-    formRef.value.openForm(null, 'create',queryParams.value.detailId);
+    formRef.value.openForm(null, 'create',queryParams.value.detailId,queryParams.value.expId);
   }
   
   /** 修改按钮操作 */
   function handleEdit(row) {
     const id = row.consumeId || ids.value.join(",");
-    formRef.value.openForm(id, 'edit',null);
+    formRef.value.openForm(id, 'edit',queryParams.value.detailId,queryParams.value.expId);
   }
   
   /** 提交表单 */
