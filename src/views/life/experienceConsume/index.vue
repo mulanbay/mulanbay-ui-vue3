@@ -3,48 +3,57 @@
   <!-- 对话框 -->
   <el-dialog :title="title" v-model="open" width="950px" append-to-body>
     <el-form :model="queryParams" ref="queryRef" :inline="true" >
-      <el-form-item label="名称" prop="name">
+      <el-form-item label="消费标签" prop="name">
         <el-input
           v-model="queryParams.name"
           placeholder="请输入名称"
-          clearable
+          disabled
           style="width: 240px"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-			<el-form-item label="行程" prop="detailId">
-			  <el-select
-			    v-model="queryParams.detailId"
-			    placeholder="全部行程"
-			    collapse-tags
-					clearable
-			    style="width: 240px"
-			  >
-			    <el-option
-			      v-for="dict in detailOptions"
-			      :key="dict.id"
-			      :label="dict.text"
-			      :value="dict.id"
-			    />
-			  </el-select>
+			<el-form-item label="起止日期" style="width: 308px">
+			  <el-date-picker
+			    v-model="dateRange"
+			    unlink-panels
+			    value-format="YYYY-MM-DD"
+			    type="daterange"
+			    range-separator="-"
+			    start-placeholder="开始日期"
+			    end-placeholder="结束日期"
+			    :shortcuts="datePickerOptions"></el-date-picker>
 			</el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="search" @click="handleQuery" v-hasPermi="['life:experienceConsume:list']">搜索</el-button>
-        <el-button icon="refresh" @click="resetQuery">重置</el-button>
+        <el-button type="primary" icon="search" @click="handleQuery" v-hasPermi="['consume:consume:list']">搜索</el-button>
         <el-button type="primary" icon="plus" @click="handleCreate" v-hasPermi="['life:experienceConsume:create']">新增</el-button>
       </el-form-item>
     </el-form>
 
     <!--列表数据-->
     <el-table v-loading="loading" :data="consumeList"  @selection-change="handleSelectionChange">
-      <el-table-column label="ID" fixed="left" prop="consumeId" sortable="custom" align="center" width="80">
+      <el-table-column label="ID" fixed="left" prop="consumeId" sortable="custom" align="center" width="100">
         <template #default="scope">
           <span>{{ scope.row.consumeId }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="名称" align="center" width="180" :show-overflow-tooltip="true">
+      <el-table-column label="商品名称" fixed="left" min-width="260px" :show-overflow-tooltip="true">
         <template #default="scope">
-          <span class="link-type" @click="handleEdit(scope.row)">{{ scope.row.consumeName }}</span>
+          <span v-if="scope.row.tags != null">
+            <el-icon color="green"><Shop /></el-icon>
+          </span>
+          <span v-if="scope.row.pid != null">
+            <el-icon color="red"><StarFilled /></el-icon>
+          </span>
+          <span v-if="scope.row.consumeType == 'TREAT'">
+            <el-icon color="yellowgreen"><StarFilled /></el-icon>
+          </span>
+          <span v-if="scope.row.secondhand==true">
+            <el-tag type="warning">二手</el-tag>
+          </span>
+      		<span v-if="scope.row.invalidTime!=null">
+      			<el-tag type="success">售</el-tag>
+      		</span>
+          <span class="link-type" @click="handleEdit(scope.row)">{{ scope.row.goodsName }}</span>
         </template>
       </el-table-column>
 			<el-table-column label="时间" align="center" width="180">
@@ -59,30 +68,9 @@
       </el-table-column>
       <el-table-column label="花费" align="center" width="140">
         <template #default="scope">
-          <span>{{ formatMoney(scope.row.cost) }}</span>
+          <span>{{ formatMoney(scope.row.totalPrice) }}</span>
         </template>
       </el-table-column>
-			<el-table-column label="配置" width="80" align="center">
-			  <template #default="scope">
-					<el-tooltip class="box-item" effect="dark" content="关联消费" placement="top">
-					  <span v-if="scope.row.scId!=null">
-					    <el-icon color="green"><SuccessFilled /></el-icon>
-					  </span>
-					  <span v-else>
-					    <el-icon color="red"><CircleCloseFilled /></el-icon>
-					  </span>
-					</el-tooltip>
-					<el-divider direction="vertical"></el-divider>
-			    <el-tooltip class="box-item" effect="dark" content="加入统计" placement="top">
-			      <span v-if="scope.row.stat==true">
-			        <el-icon color="green"><SuccessFilled /></el-icon>
-			      </span>
-			      <span v-else>
-			        <el-icon color="red"><CircleCloseFilled /></el-icon>
-			      </span>
-			    </el-tooltip>
-			  </template>
-			</el-table-column>
       <el-table-column label="操作" align="center" width="80" fixed="right" class-name="small-padding fixed-width">
         <template #default="scope">
           <el-button
@@ -90,7 +78,7 @@
             type="danger"
             icon="delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['life:experienceConsume:delete']">删除
+            v-hasPermi="['consume:consume:delete']">删除
           </el-button>
         </template>
       </el-table-column>
@@ -106,15 +94,14 @@
   </el-dialog>
 
   <!-- 表单 -->
-  <ExperienceConsumeForm ref="formRef" @success="getList" />
+  <ConsumeForm ref="formRef" @success="getList" />
 
 </template>
 
 <script setup name="ExperienceConsume">
-  import { fetchList,deleteExperienceConsume } from "@/api/life/experienceConsume";
-	import { getExperienceDetailTree } from "@/api/life/experienceDetail";
+  import { fetchList, deleteConsume, getConsume } from "@/api/consume/consume";
   import { formatDays,getHourDesc } from "@/utils/datetime";
-  import ExperienceConsumeForm from './form.vue'
+  import ConsumeForm from '../../consume/consume/form.vue'
 
   const { proxy } = getCurrentInstance();
 
@@ -124,8 +111,6 @@
   const formRef = ref();
   
   const consumeList = ref([]);
-	//明细
-	const detailOptions = ref([]);
   // 遮罩层
   const loading = ref(true);
   // 选中数组
@@ -137,6 +122,10 @@
   // 总条数
   const total = ref(0);
   
+	//日期范围快速选择
+	const datePickerOptions = ref(proxy.datePickerOptions);
+	const dateRange = ref([]);
+	
   const data = reactive({
     queryParams: {
       page:1,
@@ -152,15 +141,13 @@
   const emit = defineEmits(['success']);
 
   /** 打开弹窗 */
-  const showData = async (expId,detailId) => {
+  const showData = async (expId,expName) => {
     open.value = true;
     resetForm();
-		if(detailId!=null){
-			title.value = '消费明细列表(行程ID:'+detailId+')';
-		}
-    queryParams.value.detailId=detailId;
-		queryParams.value.expId=expId;
-		initOptions();
+		title.value = '消费明细列表('+expName+')';
+    queryParams.value.name=expName;
+		//queryParams.value.expId=expId;
+		//initOptions();
     getList();
   }
 
@@ -181,28 +168,23 @@
   // 表单重置
   function resetForm() {
     proxy.resetForm("queryRef");
-		detailOptions.value = [];
   }
   
   /** 新增按钮操作 */
   function handleCreate() {
-    if(queryParams.value.detailId==null){
-      proxy.$modal.msgError("没有明细编号绑定，无法新增");
-      return;
-    }
-    formRef.value.openForm(null, 'create',queryParams.value.detailId,queryParams.value.expId);
+    formRef.value.openForm(null, 'create',queryParams.value.name);
   }
-  
+
   /** 修改按钮操作 */
   function handleEdit(row) {
     const id = row.consumeId || ids.value.join(",");
-    formRef.value.openForm(id, 'edit',queryParams.value.detailId,queryParams.value.expId);
+    formRef.value.openForm(id, 'edit',null);
   }
   
   /** 提交表单 */
   function getList() {
     loading.value = true;
-    fetchList(queryParams.value).then(
+    fetchList(proxy.addDateRange(queryParams.value, dateRange.value)).then(
       response => {
         consumeList.value = response.rows;
         total.value = response.total;
@@ -214,12 +196,12 @@
   /** 删除按钮操作 */
   function handleDelete(row) {
     const deleteIds = row.consumeId || ids.value.join(",");
-    proxy.$confirm('是否确认删除编号为"' + deleteIds + '"的数据项?', "警告", {
+    proxy.$confirm('是否确认删除编号为"' + deleteIds + '"的数据项?会直接删除原始的消费记录', "警告", {
       confirmButtonText: "确定",
       cancelButtonText: "取消",
       type: "warning"
     }).then(function() {
-      return deleteExperienceConsume(deleteIds);
+      return deleteConsume(deleteIds);
     }).then(() => {
       proxy.$modal.msgSuccess("删除成功");
       getList();
@@ -235,15 +217,7 @@
 	
 	/** 初始化下拉树结构 */
 	function initOptions() {
-		detailOptions.value = [];
-		let para ={
-			expId: queryParams.value.expId,
-			detailId: queryParams.value.detailId,
-			needRoot:false
-		}
-	  getExperienceDetailTree(para).then(response => {
-	    detailOptions.value = response;
-	  });
+		
 	}
 	
   /** 初始化 **/

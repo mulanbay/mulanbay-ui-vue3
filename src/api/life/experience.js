@@ -117,3 +117,11 @@ export function getExperienceWordCloudStat(query) {
     params: query
   })
 }
+
+export function refreshExperienceCost(data) {
+  return request({
+    url: '/experience/refreshCost',
+    method: 'post',
+    data
+  })
+}

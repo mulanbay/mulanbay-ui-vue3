@@ -59,7 +59,7 @@
     </el-form>
     <!--  底部  -->
     <div class="el-login-footer">
-      <span>Copyright © 2017-2024 mulanbay.cn All Rights Reserved.</span>
+      <span>Copyright © 2017-2025 mulanbay.cn All Rights Reserved.</span>
     </div>
   </div>
 </template>

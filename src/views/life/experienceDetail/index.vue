@@ -52,16 +52,6 @@
           <span>{{ formatArriveLocation(scope.row) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="花费" align="center" width="140">
-        <template #default="scope">
-          <span>{{ formatMoney(scope.row.cost) }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="消费明细" width="100" align="center">
-        <template #default="scope">
-          <span class="link-type" @click="handleConsumeList(scope.row)"><el-icon><Grid /></el-icon></span>
-        </template>
-      </el-table-column>
       <el-table-column label="地图绘制" align="center" width="95">
         <template #default="scope">
           <span v-if="scope.row.mapStat==true">
@@ -164,7 +154,6 @@
   /** 消费明细列表操作 */
   function handleConsumeList(row){
     experienceConsumeListRef.value.showData(queryParams.value.expId,row.detailId);
-		
   }
   
   /** 出发位置信息 */

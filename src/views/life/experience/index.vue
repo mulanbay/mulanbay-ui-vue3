@@ -132,6 +132,12 @@
       <el-table-column label="花费" align="center" width="120">
         <template #default="scope">
           <span>{{ formatMoney(scope.row.cost) }}</span>
+					<el-divider direction="vertical"></el-divider>
+					<el-tooltip class="box-item" effect="dark" content="刷新消费统计" placement="top">
+					  <span class="link-type" @click="handleRefreshCost(scope.row)">
+							<el-icon><Refresh /></el-icon>
+					  </span>
+					</el-tooltip>
         </template>
       </el-table-column>
       <el-table-column label="天数" align="center" width="80">
@@ -198,7 +204,7 @@
 </template>
 
 <script setup name="Experience">
-  import { fetchList, deleteExperience } from "@/api/life/experience";
+  import { fetchList, deleteExperience,refreshExperienceCost } from "@/api/life/experience";
   import {deepClone} from "@/utils/index";
   import ExperienceForm from './form.vue';
   import ExerciseList from './exercise.vue';
@@ -265,7 +271,7 @@
 	
 	/** 消费明细列表操作 */
 	function handleConsumeList(row){
-	  experienceConsumeListRef.value.showData(row.expId,null);
+	  experienceConsumeListRef.value.showData(row.expId,row.expName);
 		
 	}
 
@@ -283,6 +289,18 @@
   function handleExercise(row) {
     exerciseListRef.value.showData(row.expId);
   }
+	
+	/** 刷新消费统计 */
+	function handleRefreshCost(row){
+		let para ={
+			expId: row.expId
+		}
+		refreshExperienceCost(para).then(
+		  response => {
+		    row.cost = response;
+		  }
+		);
+	}
   
   /** 位置信息 */
   function formatLocation(row) {

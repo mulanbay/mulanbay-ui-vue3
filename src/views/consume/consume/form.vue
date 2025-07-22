@@ -64,49 +64,6 @@
         </el-col>
       </el-row>
       <el-row>
-        <el-col :span="24">
-          <el-form-item label="商品标签" prop="tags">
-            <el-input-tag v-model="keywordsTags" @input="handleTagInput" tag-type="primary" tag-effect="light" placeholder="输入标签" >
-              <template #suffix>
-                <el-popover :visible="tagsPopOpen" placement="top" :width="450">
-                  <el-divider content-position="center">
-                    <span class="table-title">
-                      <svg-icon icon-class="budget" />
-                      关键字
-                    </span>
-                  </el-divider>
-                  <el-tag
-                    effect="plain"
-                    round
-                    :key="tag"
-                    v-for="tag in hisKeywordsTags"
-                    :disable-transitions="false"
-                    @click="handleTagAppend(tag.text)">
-                    {{tag.text}}
-                  </el-tag>
-                  <br><br>
-                  <div style="text-align: right; margin: 0">
-                    <el-button size="small" type="primary" icon="refresh" @click="getNextTagsOption()">换一批</el-button>
-                    <el-button size="small" type="danger" icon="CircleClose" @click="tagsPopOpen = false">关闭</el-button>
-                  </div>
-                  <template #reference>
-                    <el-button @click="openTagsSelect" type="success" icon="Share" size="small">选择</el-button>
-                  </template>
-                </el-popover>
-              </template>
-              <template #tag="{ value }">
-                <div class="flex items-center">
-                  <el-icon class="mr-1">
-                    <ElementPlus />
-                  </el-icon>
-                  <span>{{ value }}</span>
-                </div>
-              </template>
-            </el-input-tag>    
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
         <el-col :span="12">
           <el-form-item label="店铺名称" prop="shopName">
             <el-input v-model="form.shopName" placeholder="请输入店铺名称" />
@@ -192,6 +149,63 @@
           </el-form-item>
         </el-col>
       </el-row>
+			<el-row>
+			  <el-col :span="24">
+			    <el-form-item label="商品标签" prop="tags">
+			      <el-input-tag v-model="keywordsTags" @input="handleTagInput" tag-type="primary" tag-effect="light" placeholder="输入标签" >
+			        <template #suffix>
+			          <el-popover :visible="tagsPopOpen" placement="top" :width="450">
+									<el-tabs v-model="activeTagName" v-loading="tagsLoading">
+										<el-tab-pane label="商品标签" name="consumeTag">
+										  <el-tag
+										    effect="plain"
+										    round
+										    :key="tag"
+										    v-for="tag in hisKeywordsTags"
+										    :disable-transitions="false"
+										    @click="handleTagAppend(tag.text)">
+										    {{tag.text}}
+										  </el-tag>
+										  <br><br>
+										</el-tab-pane>
+										<el-tab-pane label="人生经历标签" name="experienceTag">
+										  <el-tag
+										    effect="plain"
+										    round
+										    :key="tag"
+										    v-for="tag in expTags"
+										    :disable-transitions="false"
+										    @click="handleTagAppend(tag.text)">
+										    {{tag.text}}
+										  </el-tag>
+										  <template #reference>
+										    <el-button @click="openTagsSelect" type="success" icon="Share" size="small">选择</el-button>
+										  </template>
+										</el-tab-pane>
+									</el-tabs>	
+									<div style="text-align: right; margin: 0">
+										<el-tag type="success">{{tagQueryTime}}</el-tag>
+									  <el-button size="small" type="primary" icon="DArrowLeft" @click="loadTagOptions(-1)">往前</el-button>
+										<el-button size="small" type="primary" icon="DArrowRight" @click="loadTagOptions(1)">往后</el-button>
+										<el-button size="small" type="danger" icon="CircleClose" @click="tagsPopOpen = false">关闭</el-button>
+									</div>
+			            <template #reference>
+			              <el-button @click="openTagsSelect" type="success" icon="Share" size="small">选择</el-button>
+			            </template>
+			          </el-popover>
+			        </template>
+			        <template #tag="{ value }">
+			          <div class="flex items-center">
+			            <el-icon class="mr-1">
+			              <ElementPlus />
+			            </el-icon>
+			            <span>{{ value }}</span>
+			          </div>
+			        </template>
+			      </el-input-tag>    
+			    </el-form-item>
+			  </el-col>
+			</el-row>
       <el-row>
         <el-col :span="12">
           <el-form-item label="是否二手" prop="secondhand">
@@ -275,8 +289,9 @@
   import { createConsume, editConsume, getConsume, getConsumeTagsTree, aiMatch } from "@/api/consume/consume";
   import { getConsumeSourceTree } from "@/api/consume/consumeSource";
   import { getGoodsTypeTree } from "@/api/consume/goodsType";
+	import { getExperienceTree } from "@/api/life/experience";
   import { appendTagToOptions,checkTag } from "@/utils/tagUtils";
-  import { getNowDateTimeString, getDayByDate } from "@/utils/datetime";
+  import { getNowDateTimeString, getDayByDate,getDay } from "@/utils/datetime";
 
   const { proxy } = getCurrentInstance();
   const brandSelectBtnRef = ref();
@@ -289,6 +304,7 @@
   const formType = ref('edit');
 
   const showSold = ref(false);
+  const activeTagName = ref('consumeTag');
 
   const goodsTypeOptions = ref([]);
   const sourceOptions = ref([]);
@@ -302,7 +318,13 @@
   const keywordsTags = ref([]);
   const hisKeywordsTags = ref([]);
   const tagsPage = ref(1);
-  
+	//人生经历
+  const expTags = ref([]);
+	//标签的查询时间
+	const tagsEndDate = ref(null);
+  const tagsLoading = ref(false);
+	const tagQueryTime = ref(null);
+	
   const goodsNameTags = ref([]);
   const brandPopOpen = ref(false);
 
@@ -343,7 +365,7 @@
   const emit = defineEmits(['success']);
 
   /** 打开弹窗 */
-  const openForm = async (id, type) => {
+  const openForm = async (id, type,consumeTag) => {
     open.value = true;
     formType.value = type;
     resetForm();
@@ -366,6 +388,7 @@
       }
     } else {
       title.value = "新增";
+			keywordsTags.value = [consumeTag];
     }
   }
 
@@ -388,26 +411,41 @@
   function openTagsSelect(){
     tagsPopOpen.value = true;
     tagsPage.value = 0;
-    getNextTagsOption();
+		tagsEndDate.value = null;
+    loadTagOptions(-1);
   }
-  
-  /** 标签下一页 */
-  function getNextTagsOption(){
-    tagsPopOpen.value = true;
-    tagsPage.value = tagsPage.value+1;
-    let para = {
-      page: tagsPage.value,
-      pageSize:20
-    }
-    getConsumeTagsTree(para).then(response => {
-      if(response==null||response.length==0){
-        tagsPage.value = 0;
-        proxy.$modal.msgError('没有更多数据');
-        return;
-      }
-      hisKeywordsTags.value = response;
-    });
-  }
+	
+	/** 标签加载 */
+	function loadTagOptions(off){
+		let offDays = off * 90;
+		if(tagsEndDate.value==null){
+			tagsEndDate.value = form.value.buyTime;
+		}
+		if(tagsEndDate.value==null){
+			tagsEndDate.value = getDay(0);
+		}else{
+			tagsEndDate.value = tagsEndDate.value.substring(0,10);
+		}
+		let para = {
+			startDate:getDayByDate(offDays,tagsEndDate.value),
+			endDate: tagsEndDate.value,
+			page: 0,
+			pageSize:20
+		}
+		tagQueryTime.value = para.startDate + '~' + para.endDate;
+		tagsLoading.value = true;
+		//加载消费标签
+		getConsumeTagsTree(para).then(response => {
+		  hisKeywordsTags.value = response;
+			tagsLoading.value = false;
+		});
+		//加载人生经历标签
+		getExperienceTree(para).then(response => {
+			expTags.value = response;
+			tagsLoading.value = false;
+		});
+		tagsEndDate.value = para.startDate;
+	}
   
   
   /** 品牌选择开启 */
