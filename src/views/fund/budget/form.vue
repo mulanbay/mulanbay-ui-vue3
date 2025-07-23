@@ -95,7 +95,7 @@
           <el-form-item label="商品标签" prop="tags">
             <el-input v-model="form.tags" clearable>
               <template #append>
-                <el-popover :visible="tagsPopOpen" placement="top" :width="350">
+                <el-popover :visible="tagsPopOpen" placement="top" :width="450">
                   <el-text class="mx-1" type="danger">商品名称或商品标签中包含的关键字</el-text>
                   <el-divider content-position="center">
                     <span class="table-title">
@@ -113,7 +113,9 @@
                   </el-tag>
                   <br><br>
                   <div style="text-align: right; margin: 0">
-                    <el-button size="small" type="primary" icon="refresh" @click="getNextTagsOption()">换一批</el-button>
+                    <el-tag type="success">{{tagQueryTime}}</el-tag>
+                    <el-button size="small" type="primary" icon="DArrowLeft" @click="loadTagOptions(-1)">往前</el-button>
+                    <el-button size="small" type="primary" icon="DArrowRight" @click="loadTagOptions(1)">往后</el-button>
                     <el-button size="small" type="danger" icon="CircleClose" @click="tagsPopOpen = false">关闭</el-button>
                   </div>
                   <template #reference>
@@ -170,6 +172,7 @@
   import { createBudget, editBudget, getBudget } from "@/api/fund/budget";
   import { getGoodsTypeTree } from "@/api/consume/goodsType";
   import { getConsumeTagsTree } from "@/api/consume/consume";
+  import { getNowDateTimeString, getDayByDate,getDay } from "@/utils/datetime";
 
   const { proxy } = getCurrentInstance();
 
@@ -185,7 +188,12 @@
   const tagsPopOpen = ref(false);
   const goodsNameTags = ref([]);
   const tagsPage = ref(1);
-
+	
+	//标签字段
+	const tagsEndDate = ref(null);
+  const tagsLoading = ref(false);
+	const tagQueryTime = ref(null);
+	
   const data = reactive({
     form: {},
     // 表单校验
@@ -278,27 +286,36 @@
   function openTagsSelect(){
     tagsPopOpen.value = true;
     tagsPage.value = 0;
-    getNextTagsOption();
+    loadTagOptions(-1);
   }
-  
-  /** 标签下一页 */
-  function getNextTagsOption(){
-    tagsPopOpen.value = true;
-    tagsPage.value = tagsPage.value+1;
-    let para = {
-      page: tagsPage.value,
-      pageSize:10
-    }
-    getConsumeTagsTree(para).then(response => {
-      if(response==null||response.length==0){
-        tagsPage.value = 0;
-        proxy.$modal.msgError('没有更多数据');
-        return;
-      }
-      goodsNameTags.value = response;
-    });
-  }
-  
+	
+	/** 标签加载 */
+	function loadTagOptions(off){
+		let offDays = off * 90;
+		if(tagsEndDate.value==null){
+			tagsEndDate.value = getDay(0);
+		}
+		let para = {
+			startDate:getDayByDate(offDays,tagsEndDate.value),
+			endDate: tagsEndDate.value,
+			page: 0,
+			pageSize:20
+		}
+		tagQueryTime.value = para.startDate + '~' + para.endDate;
+		tagsLoading.value = true;
+		//加载消费标签
+		getConsumeTagsTree(para).then(response => {
+			tagsLoading.value = false;
+			if(response==null||response.length==0){
+			  tagsPage.value = 0;
+			  proxy.$modal.msgError('没有更多数据');
+			  return;
+			}
+			goodsNameTags.value = response;
+		});
+		tagsEndDate.value = para.startDate;
+	}
+	
   /** 标签选择回调 */
   function handleConfirmTags(tags){
     form.value.tags = tags;

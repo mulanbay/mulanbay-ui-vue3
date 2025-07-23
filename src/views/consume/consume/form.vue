@@ -320,7 +320,7 @@
   const tagsPage = ref(1);
 	//人生经历
   const expTags = ref([]);
-	//标签的查询时间
+	//标签字段
 	const tagsEndDate = ref(null);
   const tagsLoading = ref(false);
 	const tagQueryTime = ref(null);
@@ -388,7 +388,9 @@
       }
     } else {
       title.value = "新增";
-			keywordsTags.value = [consumeTag];
+			if(consumeTag!=null){
+				keywordsTags.value = [consumeTag];
+			}
     }
   }
 

@@ -44,7 +44,7 @@
             style="width: 240px"
             @keyup.enter.native="handleQuery" />
         </el-form-item>
-        <el-form-item label="起止日期" style="width: 308px">
+        <el-form-item label="起止日期" style="width: 308px" v-show="moreCdn==true">
           <el-date-picker
             v-model="dateRange"
             unlink-panels
@@ -126,7 +126,7 @@
       <!--列表数据-->
       <el-table v-loading="loading" :data="consumeList">
         <el-table-column type="selection" width="55" align="center" />
-        <el-table-column label="商品名称" fixed="left" min-width="280px" :show-overflow-tooltip="true">
+        <el-table-column label="商品名称" fixed="left" min-width="180px" :show-overflow-tooltip="true">
           <template #default="scope">
             <span v-if="scope.row.pid != null">
               <span v-if="scope.row.pid == consumeInfo.consumeId">

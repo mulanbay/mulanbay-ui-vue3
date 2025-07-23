@@ -157,7 +157,7 @@
             </span>
           </template>
         </el-table-column>
-        <el-table-column label="锻炼时长" align="center">
+        <el-table-column label="锻炼时长" align="center" min-width="70px" :show-overflow-tooltip="true">
           <template #default="scope">
             <span v-if="scope.row.duration<60" style="color: red;">
               {{ formatMinutes(scope.row.duration) }}
