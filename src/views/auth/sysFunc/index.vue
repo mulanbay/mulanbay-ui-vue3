@@ -247,7 +247,7 @@
               <el-select
                 v-model="form.supportMethods"
                 placeholder="请求方式"
-                clearable
+								style="width: 185px"
                 collapse-tags>
                 <el-option
                   v-for="dict in supportMethodsOptions"
@@ -262,7 +262,7 @@
               <el-select
                 v-model="form.beanName"
                 placeholder="关联类名"
-                clearable
+                style="width: 185px"
                 collapse-tags>
                 <el-option
                   v-for="dict in beanNameOptions"
@@ -352,7 +352,7 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="主键列名" prop="idField">
-              <el-input v-model="form.idField" style="width: 200px" placeholder="" />
+              <el-input v-model="form.idField" style="width: 185px" placeholder="" />
               <el-tooltip content="操作日志通过该字段获取操作对象的主键值，日志分析使用." effect="dark" placement="top">
                 <el-icon>
                   <QuestionFilled />
@@ -365,7 +365,7 @@
               <el-select
                 v-model="form.idFieldType"
                 placeholder="主键类型"
-                clearable
+                style="width: 185px"
                 collapse-tags>
                 <el-option
                   v-for="dict in idFieldTypeOptions"
@@ -378,7 +378,7 @@
         </el-row>
         <el-row>
           <el-col :span="12">
-            <el-form-item label="排序编号" prop="orderIndex">
+            <el-form-item label="排序编号" style="width: 185px" prop="orderIndex">
               <el-input-number v-model="form.orderIndex" controls-position="right" :min="0" :controls="true" :precision="0" style="width: 200px" />
             </el-form-item>
           </el-col>
@@ -387,7 +387,7 @@
               <el-select
                 v-model="form.funcType"
                 placeholder="功能类型"
-                clearable
+                style="width: 185px"
                 collapse-tags>
                 <el-option
                   v-for="dict in funcTypeOptions"
@@ -406,21 +406,21 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="二次认证" prop="secAuth">
-              <el-switch v-model="form.secAuth"></el-switch>
-              <el-tooltip content="有些敏感的功能点需要在session过期后重新登录." effect="dark" placement="top">
-                <el-icon>
-                  <QuestionFilled />
-                </el-icon>
-              </el-tooltip>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
             <el-form-item label="权限认证" prop="permissionAuth">
               <el-switch v-model="form.permissionAuth"></el-switch>
               <svg-icon icon-class="password" />
             </el-form-item>
           </el-col>
+					<el-col :span="6">
+					  <el-form-item label="级联更新" prop="asc">
+					    <el-switch v-model="form.asc"></el-switch>
+					    <el-tooltip content="同步更新其子功能的登陆认证、权限认证." effect="dark" placement="top">
+					      <el-icon>
+					        <QuestionFilled />
+					      </el-icon>
+					    </el-tooltip>
+					  </el-form-item>
+					</el-col>
           <el-col :span="6">
             <el-form-item label="始终显示" v-if="true == form.permissionAuth" prop="alwaysShow">
               <el-switch v-model="form.alwaysShow"></el-switch>
@@ -439,7 +439,7 @@
                 v-model="form.code"
                 placeholder="系统代码"
                 allow-create
-                style="width: 200px"
+                style="width: 185px"
                 collapse-tags>
                 <el-option
                   v-for="dict in codeOptions"
@@ -456,7 +456,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="积分奖励" prop="rewardPoint">
-              <el-input-number v-model="form.rewardPoint" controls-position="right" :min="0" :controls="true" :precision="0" style="width: 190px" />
+              <el-input-number v-model="form.rewardPoint" controls-position="right" :min="0" :controls="true" :precision="0" style="width: 185px" />
               <el-tooltip content="如果设置非0值，则每操作一次该功能都会有相应的积分积累." effect="dark" placement="top">
                 <el-icon>
                   <QuestionFilled />
@@ -507,9 +507,11 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="用户限流" prop="userPeriod" v-if="true == moreSet">
-              每
-              <el-input-number v-model="form.userPeriod" controls-position="right" :min="0" :controls="true" :precision="0" style="width: 120px;" />
-              毫秒一次
+              <el-input-number v-model="form.userPeriod" controls-position="right" :min="0" :controls="true" :precision="0" style="width: 185px;" >
+								<template #suffix>
+									<span>毫秒/次</span>
+								</template>
+							</el-input-number>
               <el-tooltip content="0为不限流." effect="dark" placement="top">
                 <el-icon>
                   <QuestionFilled />
@@ -519,9 +521,11 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="系统限流" prop="sysLimit" v-if="true == moreSet">
-              每天
-              <el-input-number v-model="form.sysLimit" controls-position="right" :min="0" :controls="true" :precision="0" style="width: 120px;" />
-              次
+              <el-input-number v-model="form.sysLimit" controls-position="right" :min="0" :controls="true" :precision="0" style="width: 185px;" >
+								<template #suffix>
+              		<span>次/每天</span>
+              	</template>
+              </el-input-number>
               <el-tooltip content="0为不限流." effect="dark" placement="top">
                 <el-icon>
                   <QuestionFilled />
@@ -575,7 +579,7 @@
         <el-row>
           <el-col :span="24">
             <el-form-item label="备注信息" prop="remark">
-              <el-input v-model="form.remark" style="width: 515px" placeholder="请输入功能名称" />
+              <el-input v-model="form.remark" style="width: 515px" placeholder="请输入备注信息" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -803,7 +807,8 @@
       router: false,
       frame: false,
       cache: true,
-      imageName: 'icon'
+      imageName: 'icon',
+			asc: false
     };
     proxy.resetForm("formRef");
   }
@@ -920,6 +925,9 @@
             proxy.$modal.msgSuccess("修改成功");
             open.value = false;
             refreshRow(form.value.parentId);
+						if(form.value.asc==true){
+							refreshRow(form.value.funcId);
+						}
           });
         } else {
           createSysFunc(form.value).then(response => {

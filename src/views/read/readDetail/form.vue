@@ -9,8 +9,11 @@
         </el-date-picker>
       </el-form-item>
       <el-form-item label="阅读时长" prop="duration">
-        <el-input-number v-model="form.duration" controls-position="right" :min="0" :controls="true" :precision="0"/>
-        分钟
+        <el-input-number v-model="form.duration" style="width: 200px" controls-position="right" :min="0" :controls="true" :precision="0">
+					<template #suffix>
+        		<span>分钟</span>
+        	</template>
+        </el-input-number>
       </el-form-item>
       <el-form-item label="备注信息" prop="remark">
         <el-input v-model="form.remark" :style="{width: '200px'}" type="textarea" placeholder="请输入内容"></el-input>
