@@ -419,7 +419,7 @@
 	
 	/** 标签加载 */
 	function loadTagOptions(off){
-		let offDays = off * 90;
+		let offDays = off * 365;
 		if(tagsEndDate.value==null){
 			tagsEndDate.value = form.value.buyTime;
 		}
