@@ -2,6 +2,20 @@
 
   <!-- 表单编辑对话框 -->
   <el-dialog :title="title" v-model="open" width="680px" append-to-body>
+		<el-tabs v-model="testType" @tab-change="handleTypeChange">
+			<el-tab-pane name="fluid">
+				<template #label>
+				  <el-icon><Share /></el-icon>
+					<span>体液类检查</span>
+				</template>
+			</el-tab-pane>
+			<el-tab-pane name="other">
+				<template #label>
+				  <el-icon><StarFilled /></el-icon>
+					<span>其他类检查</span>
+				</template>
+			</el-tab-pane>
+		</el-tabs>	
     <el-form ref="formRef" :model="form" :rules="rules" v-loading="formLoading" label-width="80px">
       <el-row>
         <el-col :span="24">
@@ -25,11 +39,16 @@
       <el-row>
         <el-col :span="24">
           <el-form-item label="检测结果" prop="value">
-            <el-input v-model="form.value" placeholder="" :style="{width: '520px'}" />
+						<span v-if="testType=='fluid'">
+						  <el-input v-model="form.value" placeholder="" :style="{width: '520px'}" />
+						</span>
+						<span v-else>
+						  <el-input v-model="form.value" type="textarea" :style="{width: '520px'}" :rows="5"></el-input>
+						</span>
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row>
+      <el-row v-show="testType=='fluid'">
         <el-col :span="24">
           <el-form-item label="参考范围" prop="minValue">
             <el-input-number v-model="form.minValue" controls-position="right" :style="{width: '120px'}" :min="0" :controls="true" :precision="3" />
@@ -40,7 +59,7 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row>
+      <el-row v-show="testType=='fluid'">
         <el-col :span="24">
           <el-form-item label="参考范围" prop="referScope">
             <el-input v-model="form.referScope" placeholder="" :style="{width: '400px'}" />
@@ -74,7 +93,7 @@
       </el-row>
       <el-row>
         <el-col :span="24">
-          <el-form-item label="备注">
+          <el-form-item label="备注信息">
             <el-input v-model="form.remark" type="textarea" :style="{width: '520px'}" placeholder="请输入内容"></el-input>
           </el-form-item>
         </el-col>
@@ -93,7 +112,8 @@
 
 <script setup name="TreatTestForm">
   import { createTreatTest, editTreatTest, getTreatTest, getTreatTestCateTree, getLastTreatTest } from "@/api/health/treat/treatTest";
-  import { getNowDateTimeString } from "@/utils/datetime";
+  import { getTreatOperation } from "@/api/health/treat/treatOperation";
+	import { getNowDateTimeString } from "@/utils/datetime";
   import { copyObject } from "@/utils/mulanbay";
 
   const { proxy } = getCurrentInstance();
@@ -105,6 +125,7 @@
   const formRef = ref();
   const nameOptions = ref([]);
   const resultOptions = ref([]);
+  const testType = ref('fluid');
 
   const data = reactive({
     form: {},
@@ -241,6 +262,20 @@
     form.value.testTime = date;
     form.value.operationId = operationId;
   }
+	
+	/** 类型改变 **/
+	function handleTypeChange(typeName){
+		if(testType.value=='fluid'){
+			form.value.name = null;
+		}else{
+			if(form.value.name==null){
+				//名称等于手术的名称
+				getTreatOperation(form.value.operationId).then(response => {
+				  form.value.name = response.operationName;
+				});
+			}
+		}
+	}
 
   /** 初始化 **/
   onMounted(() => {

@@ -2,7 +2,7 @@
   <div class="app-container">
     <!-- 刷新对话框 -->
     <el-form :model="queryParams" ref="queryRef" :inline="true">
-      <el-form-item label="检验日期" style="width: 308px">
+      <el-form-item label="检验日期" style="width: 308px" v-show="moreCdn==true">
         <el-date-picker
           v-model="dateRange"
           unlink-panels
@@ -25,7 +25,7 @@
           style="width: 240px"
           @keyup.enter.native="handleQuery" />
       </el-form-item>
-      <el-form-item label="分析结果" prop="result">
+      <el-form-item label="分析结果" prop="result" v-show="moreCdn==true">
         <el-select
           v-model="queryParams.result"
           filterable
@@ -42,6 +42,7 @@
       <el-form-item>
         <el-button type="primary" icon="search" @click="handleQuery" v-hasPermi="['health:treat:treatTest:list']">搜索</el-button>
         <el-button icon="refresh" @click="resetQuery">重置</el-button>
+				<el-button type="warning" icon="more" @click="handleMoreCdn">{{cdnTitle}}</el-button>
         <el-button type="primary" icon="plus" v-if="queryParams.operationId!=null" @click="handleCreate" v-hasPermi="['health:treat:treatTest:create']">新增</el-button>
       </el-form-item>
     </el-form>
@@ -193,7 +194,10 @@
   //日期范围快速选择
   const datePickerOptions = ref(proxy.datePickerOptions);
   const dateRange = ref([]);
-
+  //查询条件更多属性 start
+  const cdnTitle = ref("更多");
+  const moreCdn = ref(false);
+	
   const data = reactive({
     queryParams: {
       page: 1,
@@ -217,6 +221,17 @@
 
   // 提供 open 方法，用于打开弹窗
   defineExpose({ showData });
+
+  /** 更多查询条件处理 */
+  function handleMoreCdn() {
+    if (moreCdn.value == true) {
+      moreCdn.value = false;
+      cdnTitle.value = '更多';
+    } else {
+      moreCdn.value = true;
+      cdnTitle.value = '取消';
+    }
+  }
 
   /** 搜索按钮操作 */
   function handleQuery() {

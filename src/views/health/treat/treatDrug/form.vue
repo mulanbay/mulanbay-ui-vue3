@@ -48,7 +48,7 @@
       <el-row>
         <el-col :span="12">
           <el-form-item label="药品数量" prop="amount">
-            <el-input-number v-model="form.amount" :style="{width: '100%'}" controls-position="right" :min="0" :controls="true" :precision="0" />
+            <el-input-number v-model="form.amount" @change="calTotalPrice" :style="{width: '100%'}" controls-position="right" :min="0" :controls="true" :precision="0" />
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -71,7 +71,7 @@
       <el-row>
         <el-col :span="12">
           <el-form-item label="药品单价" prop="unitPrice">
-						<el-input-number v-model="form.unitPrice" placeholder="单位:元" :style="{width: '100%'}" controls-position="right" :min="0" :controls="false" :precision="2" >
+						<el-input-number v-model="form.unitPrice" @change="calTotalPrice" placeholder="单位:元" :style="{width: '100%'}" controls-position="right" :min="0" :controls="false" :precision="2" >
 						  <template #suffix>
 						    <span>元</span>
 						  </template>
@@ -298,6 +298,11 @@
       unitOptions.value = response;
     });
   }
+	
+	/** 计算总价 */
+	function calTotalPrice() {
+	  form.value.totalPrice = form.value.unitPrice * form.value.amount ;
+	}
   
   /** 根据下拉框的输入筛选drug名称 */
   function filterTreatDrugCateTree(name) {
