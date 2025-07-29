@@ -24,18 +24,11 @@
             :key="dict.id"
             :label="dict.text"
             :value="dict.id" />
-        </el-select>
-        <el-select
-          v-model="days"
-          placeholder="更多标签"
-          clearable
-          style="width: 120px"
-          @change="getTagsTreeSelect">
-          <el-option
-            v-for="dict in daysOptions"
-            :key="dict.id"
-            :label="dict.text"
-            :value="dict.id" />
+					<template #footer>
+						<el-tag type="success">{{tagQueryTime}}</el-tag>
+						<el-button size="small" type="primary" icon="DArrowLeft" @click="loadTagOptions(-1)">往前</el-button>
+						<el-button size="small" type="primary" icon="DArrowRight" @click="loadTagOptions(1)">往后</el-button>
+					</template>
         </el-select>
       </el-form-item>
       <el-form-item v-show="moreCdn==true" label="商品类型" prop="goodsTypeId">
@@ -79,7 +72,7 @@
   import { getConsumeTagsStat, getConsumeTagsDetailStat, getConsumeTagsTree } from "@/api/consume/consume";
   import { getConsumeSourceTree } from "@/api/consume/consumeSource";
   import { getGoodsTypeTree } from "@/api/consume/goodsType";
-  import { getDay } from "@/utils/datetime";
+  import { getNowDateTimeString, getDayByDate,getDay } from "@/utils/datetime";
   import * as echarts from 'echarts';
   import { createChart, createMixLineBarChartOption, createPieChartOption } from "@/utils/mulanbay_echarts";
 
@@ -95,6 +88,11 @@
   const tagsOptions = ref([]);
   const daysOptions = ref([]);
   const days = ref();
+	
+	//标签字段
+	const tagsEndDate = ref(null);
+	const tagsLoading = ref(false);
+	const tagQueryTime = ref(null);
 
   //日期范围快速选择
   const datePickerOptions = ref(proxy.datePickerOptions);
@@ -123,18 +121,30 @@
       cdnTitle.value = '取消';
     }
   }
-
-  function getTagsTreeSelect() {
-    let startDate = undefined;
-    let endDate = undefined;
-    if (!proxy.isEmpty(days.value)) {
-      endDate = getDay(0);
-      startDate = getDay(0 - parseInt(days.value));
-    }
-    getConsumeTagsTree(startDate, endDate, false).then(response => {
-      tagsOptions.value = response;
-    });
-  }
+	
+	/** 标签加载 */
+	function loadTagOptions(off){
+		let offDays = off * 365;
+		if(tagsEndDate.value==null){
+			tagsEndDate.value = getDay(0);
+		}else{
+			tagsEndDate.value = tagsEndDate.value.substring(0,10);
+		}
+		let para = {
+			startDate:getDayByDate(offDays,tagsEndDate.value),
+			endDate: tagsEndDate.value,
+			page: 0,
+			pageSize:20
+		}
+		tagQueryTime.value = para.startDate + '~' + para.endDate;
+		tagsLoading.value = true;
+		//加载消费标签
+		getConsumeTagsTree(para).then(response => {
+		  tagsOptions.value = response;
+			tagsLoading.value = false;
+		});
+		tagsEndDate.value = para.startDate;
+	}
 
   /** 下拉框加载 */
   function loadOptions() {
@@ -147,7 +157,7 @@
     proxy.getDictItemTree('TAGS_DAYS_OPTION', false).then(response => {
       daysOptions.value = response;
     });
-    getTagsTreeSelect();
+    loadTagOptions(-1);
   }
 
   /** 搜索按钮操作 */

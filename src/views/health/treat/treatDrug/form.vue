@@ -5,44 +5,47 @@
     <el-form ref="formRef" :model="form" :rules="rules" v-loading="formLoading" label-width="120px">
       <el-row>
         <el-col :span="24">
-          <el-form-item label="药品名称" prop="drugName">
-            <el-select
-              v-model="form.drugName"
-              filterable
-              allow-create
-              remote
-              reserve-keyword
-              placeholder="输入药品名称"
-              remote-show-suffix
-              :remote-method="filterTreatDrugCateTree"
-              default-first-option
-              :style="{width: '100%'}"
-              @change="loadDrugProperties">
-              <el-option
-                v-for="dict in drugNameOptions"
-                :key="dict.id"
-                :label="dict.text"
-                :value="dict.id" />
-            </el-select>
-          </el-form-item>
+					<el-form-item label="药品名称" prop="drugName">
+					  <el-select
+					    v-model="form.drugName"
+					    :style="{width: '100%'}"
+					    filterable
+					    allow-create
+							remote
+							reserve-keyword
+							placeholder="输入药品名称"
+							:remote-method="loadDrugOptions"
+					    default-first-option
+							@change="loadDrugProperties">
+					    <el-option
+					      v-for="dict in drugNameOptions"
+					      :key="dict.id"
+					      :label="dict.text"
+					      :value="dict.id" />
+					  </el-select>
+					</el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="24">
-          <el-form-item label="针对疾病" prop="disease">
-            <el-select
-              v-model="form.disease"
-              :style="{width: '100%'}"
-              filterable
-              allow-create
-              default-first-option>
-              <el-option
-                v-for="dict in diseaseOptions"
-                :key="dict.id"
-                :label="dict.text"
-                :value="dict.id" />
-            </el-select>
-          </el-form-item>
+					<el-form-item label="针对疾病" prop="disease">
+					  <el-select
+					    v-model="form.disease"
+					    :style="{width: '100%'}"
+					    filterable
+					    allow-create
+							remote
+							reserve-keyword
+							placeholder="输入疾病名称"
+							:remote-method="loadDiseaseOptions"
+					    default-first-option>
+					    <el-option
+					      v-for="dict in diseaseOptions"
+					      :key="dict.id"
+					      :label="dict.text"
+					      :value="dict.id" />
+					  </el-select>
+					</el-form-item>
         </el-col>
       </el-row>
       <el-row>
@@ -238,7 +241,6 @@
   const openForm = async (id, type,treatId) => {
     open.value = true;
     resetForm();
-    loadOptions();
     if (id != null) {
       title.value = "修改";
       formLoading.value = true;
@@ -262,6 +264,7 @@
       }
       title.value = "新增";
       form.value.treatId = treatId;
+			loadOptions();
     }
   }
 
@@ -270,33 +273,8 @@
 
   /** 加载下拉选项 */
   function loadOptions() {
-    let drugNamePara = {
-      groupField:'drugName',
-      needRoot:false
-    };
-    getTreatDrugCateTree(drugNamePara).then(
-      response => {
-        drugNameOptions.value = response;
-      }
-    );
-    let diseasePara = {
-      groupField:'disease',
-      needRoot:false
-    }
-    getTreatDrugCateTree(diseasePara).then(
-      response => {
-        diseaseOptions.value = response;
-      }
-    );
-    proxy.getDictItemTree('DRUG_USE_WAY', false).then(response => {
-      useWayOptions.value = response;
-    });
-    proxy.getDictItemTree('DRUG_EU', false).then(response => {
-      euOptions.value = response;
-    });
-    proxy.getDictItemTree('DRUG_UNIT', false).then(response => {
-      unitOptions.value = response;
-    });
+    loadDrugOptions(null);
+		loadDiseaseOptions(null);
   }
 	
 	/** 计算总价 */
@@ -304,19 +282,38 @@
 	  form.value.totalPrice = form.value.unitPrice * form.value.amount ;
 	}
   
-  /** 根据下拉框的输入筛选drug名称 */
-  function filterTreatDrugCateTree(name) {
-    let drugNamePara = {
+  /** 药品名选项加载 */
+  function loadDrugOptions(name) {
+		console.log('drugName:'+name);
+    let para = {
       groupField:'drugName',
       needRoot:false,
-      name: name
+      name: name,
+			page: 0,
+			pageSize:20
     }
-    getTreatDrugCateTree(drugNamePara).then(
+    getTreatDrugCateTree(para).then(
       response => {
         drugNameOptions.value = response;
       }
     );
   }
+	
+	/** 疾病选项加载 */
+	function loadDiseaseOptions(name) {
+	  let para = {
+	    groupField:'disease',
+	    needRoot:false,
+	    name: name,
+			page: 0,
+			pageSize:20
+	  }
+	  getTreatDrugCateTree(para).then(
+	    response => {
+	      diseaseOptions.value = response;
+	    }
+	  );
+	}
 
   // 表单重置
   function resetForm() {
@@ -351,6 +348,9 @@
     }
     //加载复制详情
     getLastTreatDrug(newVal).then(response => {
+			if(response==null){
+				return;
+			}
       form.value.unit = response.unit;
       form.value.unitPrice = response.unitPrice;
       form.value.perDay = response.perDay;
@@ -389,5 +389,14 @@
 
   /** 初始化 **/
   onMounted(() => {
+		proxy.getDictItemTree('DRUG_USE_WAY', false).then(response => {
+		  useWayOptions.value = response;
+		});
+		proxy.getDictItemTree('DRUG_EU', false).then(response => {
+		  euOptions.value = response;
+		});
+		proxy.getDictItemTree('DRUG_UNIT', false).then(response => {
+		  unitOptions.value = response;
+		});
   })
 </script>

@@ -11,6 +11,10 @@
               :style="{width: '100%'}"
               filterable
               allow-create
+							remote
+							reserve-keyword
+							placeholder="请输入医院名称"
+							:remote-method="loadHospitalOptions"
               default-first-option>
               <el-option
                 v-for="dict in hospitalOptions"
@@ -27,6 +31,10 @@
               :style="{width: '100%'}"
               filterable
               allow-create
+							remote
+							reserve-keyword
+							placeholder="请输入科室名称"
+							:remote-method="loadDepartmentOptions"
               default-first-option>
               <el-option
                 v-for="dict in departmentOptions"
@@ -45,6 +53,10 @@
               :style="{width: '100%'}"
               filterable
               allow-create
+							remote
+							reserve-keyword
+							placeholder="请输入疾病症状"
+							:remote-method="loadDiseaseOptions"
               default-first-option>
               <el-option
                 v-for="dict in diseaseOptions"
@@ -61,6 +73,10 @@
               :style="{width: '100%'}"
               filterable
               allow-create
+							remote
+							reserve-keyword
+							placeholder="请输入所属器官"
+							:remote-method="loadOrganOptions"
               default-first-option>
               <el-option
                 v-for="dict in organOptions"
@@ -79,6 +95,10 @@
               :style="{width: '100%'}"
               filterable
               allow-create
+							remote
+							reserve-keyword
+							placeholder="请输入确诊疾病"
+							:remote-method="loadConfirmDiseaseOptions"
               default-first-option>
               <el-option
                 v-for="dict in confirmDiseaseOptions"
@@ -110,6 +130,12 @@
             <el-input-tag v-model="tagsOptions" @input="handleTagInput" tag-type="primary" tag-effect="light" placeholder="输入标签" >
               <template #suffix>
                 <el-popover :visible="tagsPopOpen" placement="top" :width="400">
+									<el-divider content-position="center">
+										<span class="table-title">
+											<svg-icon icon-class="budget" />
+											标签选择
+										</span>
+									</el-divider>
                   <el-tag
                     effect="plain"
                     type="primary"
@@ -121,7 +147,12 @@
                     {{tag.text}}
                   </el-tag>
                   <div style="text-align: right; margin: 0">
-                    <el-button size="small" type="success" icon="CircleCheckFilled" @click="tagsPopOpen = false">确定</el-button>
+										<el-divider content-position="center">
+										</el-divider>
+										<el-tag type="success">{{tagQueryTime}}</el-tag>
+										<el-button size="small" type="primary" icon="DArrowLeft" @click="loadTagOptions(-1)">往前</el-button>
+										<el-button size="small" type="primary" icon="DArrowRight" @click="loadTagOptions(1)">往后</el-button>
+										<el-button size="small" type="danger" icon="CircleClose" @click="tagsPopOpen = false">关闭</el-button>
                   </div>
                   <template #reference>
                     <el-button @click="tagsPopOpen=true" type="success" icon="Share" size="small">选择</el-button>
@@ -252,8 +283,9 @@
 </template>
 
 <script setup name="TreatForm">
-  import { createTreat, editTreat, getTreat, getTreatCateTree } from "@/api/health/treat/treat";
+  import { createTreat, editTreat, getTreat, getTreatCateTree,getTreatCateTreeEH } from "@/api/health/treat/treat";
   import { appendTagToOptions,checkTag } from "@/utils/tagUtils";
+	import { getNowDateTimeString, getDayByDate,getDay } from "@/utils/datetime";
   import FeeForm from './feeForm.vue'
 
   const { proxy } = getCurrentInstance();
@@ -277,7 +309,11 @@
   const tagsOptions = ref([]);
   const hisTagOptions = ref([]);
   const tagsPopOpen = ref(false);
-
+	//标签字段
+	const tagsEndDate = ref(null);
+  const tagsLoading = ref(false);
+	const tagQueryTime = ref(null);
+	
   const data = reactive({
     form: {},
     // 表单校验
@@ -321,7 +357,6 @@
   const openForm = async (id, type) => {
     open.value = true;
     resetForm();
-    loadOptions();
     if (id != null) {
       title.value = "修改";
       formLoading.value = true;
@@ -336,6 +371,7 @@
       });
     } else {
       title.value = "新增";
+			loadOptions();
     }
   }
 
@@ -365,38 +401,124 @@
   
   /** 加载下拉选项 */
   function loadOptions() {
-    getTreatCateTree('tags', false).then(
-      response => {
-        hisTagOptions.value = response;
-      }
-    );
-    getTreatCateTree('hospital', false).then(
-      response => {
-        hospitalOptions.value = response;
-      }
-    );
-    getTreatCateTree('department', false).then(
-      response => {
-        departmentOptions.value = response;
-      }
-    );
-    getTreatCateTree('disease', false).then(
-      response => {
-        diseaseOptions.value = response;
-      }
-    );
-    getTreatCateTree('organ', false).then(
-      response => {
-        organOptions.value = response;
-      }
-    );
-    getTreatCateTree('confirmDisease', false).then(
-      response => {
-        confirmDiseaseOptions.value = response;
-      }
-    );
+    loadHospitalOptions(null);
+    loadDepartmentOptions(null);
+    loadDiseaseOptions(null);
+    loadOrganOptions(null);
+    loadConfirmDiseaseOptions(null);
+		loadTagOptions(-1);
   }
+	
+	/** 医院加载，远程方法加载 */
+	function loadHospitalOptions(name){
+		let para = {
+			groupField:'hospital',
+			needRoot:false,
+			name: name,
+			page: 0,
+			pageSize:20
+		}
+		getTreatCateTreeEH(para).then(
+		  response => {
+		    hospitalOptions.value = response;
+		  }
+		);
+	}
+	
+	/** 科室加载，远程方法加载 */
+	function loadDepartmentOptions(name){
+		let para = {
+			groupField:'department',
+			needRoot:false,
+			name: name,
+			page: 0,
+			pageSize:20
+		}
+		getTreatCateTreeEH(para).then(
+		  response => {
+		    departmentOptions.value = response;
+		  }
+		);
+	}
+	
+	/** 疾病加载，远程方法加载 */
+	function loadDiseaseOptions(name){
+		let para = {
+			groupField:'disease',
+			needRoot:false,
+			name: name,
+			page: 0,
+			pageSize:20
+		}
+		getTreatCateTreeEH(para).then(
+		  response => {
+		    diseaseOptions.value = response;
+		  }
+		);
+	}
+	
+	/** 器官加载，远程方法加载 */
+	function loadOrganOptions(name){
+		let para = {
+			groupField:'organ',
+			needRoot:false,
+			name: name,
+			page: 0,
+			pageSize:20
+		}
+		getTreatCateTreeEH(para).then(
+		  response => {
+		    organOptions.value = response;
+		  }
+		);
+	}
+	
+	/** 确诊疾病加载，远程方法加载 */
+	function loadConfirmDiseaseOptions(name){
+		let para = {
+			groupField:'confirmDisease',
+			needRoot:false,
+			name: name,
+			page: 0,
+			pageSize:20
+		}
+		getTreatCateTreeEH(para).then(
+		  response => {
+		    confirmDiseaseOptions.value = response;
+		  }
+		);
+	}
 
+	/** 标签加载 */
+	function loadTagOptions(off){
+		let offDays = off * 365;
+		if(tagsEndDate.value==null){
+			tagsEndDate.value = form.value.buyTime;
+		}
+		if(tagsEndDate.value==null){
+			tagsEndDate.value = getDay(0);
+		}else{
+			tagsEndDate.value = tagsEndDate.value.substring(0,10);
+		}
+		let para = {
+			startDate:getDayByDate(offDays,tagsEndDate.value),
+			endDate: tagsEndDate.value,
+			groupField:'tags',
+			needRoot:false,
+			page: 0,
+			pageSize:20
+		}
+		tagQueryTime.value = para.startDate + '~' + para.endDate;
+		tagsLoading.value = true;
+		getTreatCateTreeEH(para).then(
+		  response => {
+		    hisTagOptions.value = response;
+				tagsLoading.value = false;
+		  }
+		);
+		tagsEndDate.value = para.startDate;
+	}
+	
   // 表单重置
   function resetForm() {
     form.value = {

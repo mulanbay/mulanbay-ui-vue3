@@ -5,26 +5,24 @@
     <el-form ref="formRef" :model="form" :rules="rules" v-loading="formLoading" label-width="120px">
       <el-row>
         <el-col :span="24">
-          <el-form-item label="手术名称" prop="operationName">
-            <el-select
-              v-model="form.operationName"
-              filterable
-              allow-create
-              default-first-option
-              remote
-              reserve-keyword
-              placeholder="输入手术名称"
-              remote-show-suffix
-              :remote-method="filterTreatOperationCateTree"
-              :style="{width: '100%'}">
-              <el-option
-                v-for="dict in operationNameOptions"
-                :key="dict.id"
-                :label="dict.text"
-                :value="dict.id"
-              />
-            </el-select>
-          </el-form-item>
+					<el-form-item label="手术名称" prop="operationName">
+					  <el-select
+					    v-model="form.operationName"
+					    :style="{width: '100%'}"
+					    filterable
+					    allow-create
+							remote
+							reserve-keyword
+							placeholder="输入手术名称"
+							:remote-method="loadOperationOptions"
+					    default-first-option>
+					    <el-option
+					      v-for="dict in operationNameOptions"
+					      :key="dict.id"
+					      :label="dict.text"
+					      :value="dict.id" />
+					  </el-select>
+					</el-form-item>
         </el-col>
       </el-row>
       <el-row>
@@ -138,7 +136,6 @@
   const openForm = async (id, type,treatId) => {
     open.value = true;
     resetForm();
-    loadOptions();
     if (id != null) {
       title.value = "修改";
       formLoading.value = true;
@@ -162,6 +159,7 @@
       }
       title.value = "新增";
       form.value.treatId = treatId;
+			loadOptions();
     }
   }
 
@@ -170,33 +168,24 @@
 
   /** 加载下拉选项 */
   function loadOptions() {
-    let operationNamePara = {
-      groupField:'operationName',
-      needRoot:false
-    };
-    getTreatOperationCateTree(operationNamePara).then(
-      response => {
-        operationNameOptions.value = response;
-      }
-    );
-    proxy.getDictItemTree('OPERATION_CATEGORY', false).then(response => {
-      categoryOptions.value = response;
-    });
+    loadOperationOptions(null);
   }
-  
-  /** 根据下拉框的输入筛选drug名称 */
-  function filterTreatOperationCateTree(name) {
-    let operationNamePara = {
-      groupField:'operationName',
-      needRoot:false,
-      name: name
-    }
-    getTreatOperationCateTree(operationNamePara).then(
-      response => {
-        operationNameOptions.value = response;
-      }
-    );
-  }
+	
+	/** 疾病选项加载 */
+	function loadOperationOptions(name) {
+	  let para = {
+	    groupField:'operationName',
+	    needRoot:false,
+	    name: name,
+			page: 0,
+			pageSize:20
+	  }
+	  getTreatOperationCateTree(para).then(
+	    response => {
+	      operationNameOptions.value = response;
+	    }
+	  );
+	}
 
   // 表单重置
   function resetForm() {
@@ -237,5 +226,8 @@
 
   /** 初始化 **/
   onMounted(() => {
+		proxy.getDictItemTree('OPERATION_CATEGORY', false).then(response => {
+		  categoryOptions.value = response;
+		});
   })
 </script>

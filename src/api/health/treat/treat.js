@@ -63,6 +63,14 @@ export function getTreatCateTree(groupField,needRoot) {
   })
 }
 
+export function getTreatCateTreeEH(para) {
+  return request({
+    url: '/treat/tree',
+    method: 'get',
+    params: para
+  })
+}
+
 export function getTreatRelation(query) {
   return request({
     url: '/treat/relation',
