@@ -298,6 +298,7 @@
 		refreshExperienceCost(para).then(
 		  response => {
 		    row.cost = response;
+				proxy.$modal.msgSuccess("刷新成功");
 		  }
 		);
 	}

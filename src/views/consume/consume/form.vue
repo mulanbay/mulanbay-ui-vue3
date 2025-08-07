@@ -218,7 +218,7 @@
         <el-col :span="12">
           <el-form-item label="出售信息" prop="showSold">
             <el-switch
-              v-model="showSold">
+              v-model="showSold" :disabled="form.consumeId==null">
             </el-switch>
             <span class="link-type" @click="msgAlert('提示','选填内容，预期作废时间：期望该商品丢弃或者售出的时间。售出时间：商品被废弃或者卖出的时间。为了计算商品的使用寿命')"><i class="el-icon-question" /></span>
           </el-form-item>
