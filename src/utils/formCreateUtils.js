@@ -17,13 +17,13 @@ export function generateFcRules(dataRules) {
     if(r.tree==true){
       //树形结构(treeSelect无效)
       selectData = {
-        type:"treeSelect",
+        type:"elTreeSelect",
         title:r.name,
         field:field,
         value:r.defaultValue,
         props:{
           data:createTree(r.list),
-          multiple: true
+          multiple: false
         }
       };
     }else if (r.list == null || r.list.length == 0) {
