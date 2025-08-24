@@ -62,6 +62,14 @@
             </el-select>
           </el-form-item>
         </el-col>
+				<el-col :span="12">
+				  <el-form-item label="是否二手" prop="secondhand">
+						<el-radio-group v-model="form.secondhand">
+							<el-radio :value="false" size="large">全新商品</el-radio>
+							<el-radio :value="true" size="large">二手商品</el-radio>
+							</el-radio-group>  
+				  </el-form-item>
+				</el-col>
       </el-row>
       <el-row>
         <el-col :span="12">
@@ -207,26 +215,8 @@
 			  </el-col>
 			</el-row>
       <el-row>
-        <el-col :span="12">
-          <el-form-item label="是否二手" prop="secondhand">
-			<el-radio-group v-model="form.secondhand">
-			  <el-radio :value="false" size="large">全新商品</el-radio>
-			  <el-radio :value="true" size="large">二手商品</el-radio>
-			</el-radio-group>  
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="出售信息" prop="showSold">
-            <el-switch
-              v-model="showSold" :disabled="form.consumeId==null">
-            </el-switch>
-            <span class="link-type" @click="msgAlert('提示','选填内容，预期作废时间：期望该商品丢弃或者售出的时间。售出时间：商品被废弃或者卖出的时间。为了计算商品的使用寿命')"><i class="el-icon-question" /></span>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
         <el-col :span="24">
-          <el-form-item label="期望作废时间" label-width="100px" prop="expectInvalidTime" v-if="true==showSold">
+          <el-form-item label="期望作废时间" label-width="100px" prop="expectInvalidTime">
             <el-date-picker type="datetime" v-model="form.expectInvalidTime" format="YYYY-MM-DD HH:mm:ss" value-format="YYYY-MM-DD HH:mm:ss"
               :style="{width: '190px'}" placeholder="请选择时间" clearable>
             </el-date-picker>
@@ -246,24 +236,6 @@
               </el-option>
             </el-select>
             <el-button type="primary" icon="el-icon-star-on" :disabled="form.goodsName==null" @click="handlePeriodRecommend()" v-hasPermi="['consume:goodsLifetime:edit']">推荐</el-button>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="12">
-          <el-form-item label="售出价格" prop="soldPrice" v-if="true==showSold">
-            <el-input-number v-model="form.soldPrice" placeholder="" :style="{width: '100%'}" controls-position="right" :min="0" :controls="false" :precision="2" >
-              <template #suffix>
-                 <span>元</span>
-               </template>
-            </el-input-number> 
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="售出时间" prop="invalidTime" v-if="true==showSold">
-            <el-date-picker type="datetime" v-model="form.invalidTime" format="YYYY-MM-DD HH:mm:ss" value-format="YYYY-MM-DD HH:mm:ss"
-              :style="{width: '100%'}" placeholder="请选择时间" clearable>
-            </el-date-picker>
           </el-form-item>
         </el-col>
       </el-row>

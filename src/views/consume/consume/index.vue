@@ -139,8 +139,8 @@
           <span v-if="scope.row.secondhand==true">
             <el-tag type="warning">二手</el-tag>
           </span>
-					<span v-if="scope.row.invalidTime!=null">
-						<el-tag type="success">售</el-tag>
+					<span v-if="scope.row.invalidType!=null">
+						<el-icon color="red"><RemoveFilled /></el-icon>
 					</span>
           <span class="link-type" @click="handleEdit(scope.row)">{{ scope.row.goodsName }}</span>
         </template>
@@ -225,6 +225,15 @@
                     v-hasPermi="['consume:consume:delete']">删除
                   </el-button>
                 </el-dropdown-item>
+								<el-dropdown-item>
+								  <el-button
+								    link
+								    type="warning"
+								    icon="UploadFilled"
+								    @click="handleInvalid(scope.row)"
+								    v-hasPermi="['consume:consume:invalid']">过期/出售
+								  </el-button>
+								</el-dropdown-item>
                 <el-dropdown-item>
                   <el-button
                     link
@@ -260,6 +269,9 @@
     <!-- 表单 -->
     <ConsumeForm ref="formRef" @success="getList" />
 
+		<!-- 过期表单 -->
+    <InvalidForm ref="invalidFormRef" @success="getList" />
+		
     <!-- 关联 -->
     <CascadeForm ref="cascadeFormRef" />
 
@@ -275,10 +287,12 @@
   import { getGoodsTypeTree } from "@/api/consume/goodsType";
   import CascadeForm from './cascade/index.vue'
   import ConsumeForm from './form.vue'
+	import InvalidForm from './invalid.vue'
   import ArchiveForm from '../../life/archive/form.vue';
 
   const { proxy } = getCurrentInstance();
   const formRef = ref();
+	const invalidFormRef = ref();
   const cascadeFormRef = ref();
   const archiveFormRef = ref();
 
@@ -398,6 +412,11 @@
   function handleEdit(row) {
     const id = row.consumeId || ids.value.join(",");
     formRef.value.openForm(id, 'edit');
+  }
+
+  /** 过期按钮操作 */
+  function handleInvalid(row) {
+    invalidFormRef.value.openForm(row.consumeId);
   }
 
   /** 同步档案按钮操作 */

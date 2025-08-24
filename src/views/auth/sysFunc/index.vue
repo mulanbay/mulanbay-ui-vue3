@@ -378,8 +378,8 @@
         </el-row>
         <el-row>
           <el-col :span="12">
-            <el-form-item label="排序编号" style="width: 185px" prop="orderIndex">
-              <el-input-number v-model="form.orderIndex" controls-position="right" :min="0" :controls="true" :precision="0" style="width: 200px" />
+            <el-form-item label="排序编号" prop="orderIndex">
+              <el-input-number v-model="form.orderIndex" controls-position="right" :min="0" :controls="true" :precision="0" style="width: 185px"  />
             </el-form-item>
           </el-col>
           <el-col :span="12">

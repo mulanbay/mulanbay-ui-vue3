@@ -33,6 +33,14 @@ export function editConsume(data) {
   })
 }
 
+export function invalidConsume(data) {
+  return request({
+    url: '/consume/invalid',
+    method: 'post',
+    data
+  })
+}
+
 export function deleteConsume(ids) {
   const data = {
       ids
