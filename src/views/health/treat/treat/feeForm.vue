@@ -13,7 +13,7 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="药品费用" prop="drugFee">
-              <el-input-number v-model="form.drugFee" @change="calTotalFee" :style="{width: '90%'}" placeholder="单位:元" controls-position="right" :min="0" :controls="false" :precision="2" :disabled="feeReadOnly" >
+              <el-input-number v-model="form.drugFee" @change="calTotalFee" :style="{width: '90%'}" controls-position="right" :min="0" :controls="false" :precision="2" :disabled="feeReadOnly" >
                 <template #suffix>
                   <span>元</span>
                 </template>
@@ -22,7 +22,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="手术/治疗费用" prop="operationFee">
-              <el-input-number v-model="form.operationFee" @change="calTotalFee" :style="{width: '90%'}" placeholder="单位:元" controls-position="right" :min="0" :controls="false" :precision="2" :disabled="feeReadOnly" >
+              <el-input-number v-model="form.operationFee" @change="calTotalFee" :style="{width: '90%'}"controls-position="right" :min="0" :controls="false" :precision="2" :disabled="feeReadOnly" >
                 <template #suffix>
                   <span>元</span>
                 </template>
@@ -33,7 +33,7 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="挂号费用" prop="regFee">
-              <el-input-number v-model="form.regFee" @change="calTotalFee" :style="{width: '90%'}" placeholder="单位:元" controls-position="right" :min="0" :controls="false" :precision="2" :disabled="feeReadOnly" >
+              <el-input-number v-model="form.regFee" @change="calTotalFee" :style="{width: '90%'}" controls-position="right" :min="0" :controls="false" :precision="2" :disabled="feeReadOnly" >
                 <template #suffix>
                   <span>元</span>
                 </template>
@@ -42,7 +42,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="其他费用" prop="otherFee">
-              <el-input-number v-model="form.otherFee" @change="calTotalFee" :style="{width: '90%'}" placeholder="单位:元" controls-position="right" :min="0" :controls="false" :precision="2" disabled >
+              <el-input-number v-model="form.otherFee" @change="calTotalFee" :style="{width: '90%'}" controls-position="right" :min="0" :controls="false" :precision="2" disabled >
                 <template #suffix>
                   <span>元</span>
                 </template>
@@ -61,22 +61,31 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="总共花费" prop="totalFee">
-              <el-input-number v-model="form.totalFee" @change="calMIPFee" :style="{width: '90%'}" placeholder="单位:元" controls-position="right" :min="0" :controls="false" :precision="2" :disabled="feeReadOnly" />
-              元
+              <el-input-number v-model="form.totalFee" @change="calMIPFee" :style="{width: '90%'}" controls-position="right" :min="0" :controls="false" :precision="2" :disabled="feeReadOnly" >
+								<template #suffix>
+									<span>元</span>
+								</template>
+              </el-input-number>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="个人支付" prop="pdFee">
-              <el-input-number v-model="form.pdFee" @change="calMIPFee" :style="{width: '90%'}" placeholder="单位:元" controls-position="right" :min="0" :controls="false" :precision="2" :disabled="feeReadOnly" />
-              元
+              <el-input-number v-model="form.pdFee" @change="calMIPFee" :style="{width: '90%'}" controls-position="right" :min="0" :controls="false" :precision="2" :disabled="feeReadOnly" >
+								<template #suffix>
+              		<span>元</span>
+              	</template>
+              </el-input-number>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="12">
             <el-form-item label="医保花费" prop="miFee">
-              <el-input-number v-model="form.miFee" :style="{width: '90%'}" placeholder="单位:元" controls-position="right" :min="0" :controls="false" :precision="2" :disabled="feeReadOnly" />
-              元
+              <el-input-number v-model="form.miFee" :style="{width: '90%'}" controls-position="right" :min="0" :controls="false" :precision="2" :disabled="feeReadOnly" >
+								<template #suffix>
+									<span>元</span>
+								</template>
+							</el-input-number>
             </el-form-item>
           </el-col>
         </el-row>

@@ -12,6 +12,26 @@
       </el-row>
 			<el-row>
 			  <el-col :span="12">
+			    <el-form-item label="商品单价" prop="price">
+			      <el-input-number v-model="form.price" disabled placeholder="单位:元" :style="{width: '100%'}" controls-position="right" :min="0" :controls="false" :precision="2" >
+			        <template #suffix>
+			          <span>元</span>
+			        </template>
+			      </el-input-number>
+			    </el-form-item>
+			  </el-col>
+			  <el-col :span="12">
+			    <el-form-item label="商品总价" prop="totalPrice">
+			      <el-input-number v-model="form.totalPrice" disabled placeholder="单位:元" :style="{width: '100%'}" controls-position="right" :min="0" :controls="false" :precision="2" >
+			        <template #suffix>
+			          <span>元</span>
+			        </template>
+			      </el-input-number>
+			    </el-form-item>
+			  </el-col>
+			</el-row>
+			<el-row>
+			  <el-col :span="12">
 			    <el-form-item label="购买时间" prop="buyTime">
 			      <el-date-picker type="datetime" v-model="form.buyTime" disabled format="YYYY-MM-DD HH:mm:ss" value-format="YYYY-MM-DD HH:mm:ss"
 			        :style="{width: '100%'}" >

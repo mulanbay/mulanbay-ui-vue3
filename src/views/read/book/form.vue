@@ -185,11 +185,12 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="是否二手" prop="secondhand">
-            <el-switch
-              v-model="form.secondhand">
-            </el-switch>
-          </el-form-item>
+					<el-form-item label="是否二手" prop="secondhand">
+						<el-radio-group v-model="form.secondhand">
+							<el-radio :value="false" size="large">全新</el-radio>
+							<el-radio :value="true" size="large">二手</el-radio>
+						</el-radio-group>  
+					</el-form-item>
         </el-col>
       </el-row>
       <el-row>

@@ -211,7 +211,10 @@
       <el-row>
         <el-col :span="12">
           <el-form-item label="检查唯一性" prop="checkUnique">
-            <el-switch v-model="form.checkUnique"></el-switch>
+						<el-radio-group v-model="form.checkUnique">
+							<el-radio :value="false" size="large">允许重复</el-radio>
+							<el-radio :value="true" size="large">必须唯一</el-radio>
+						</el-radio-group>  
           </el-form-item>
         </el-col>
         <el-col :span="12">

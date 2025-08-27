@@ -80,7 +80,7 @@
           <span>{{ scope.row.practiceId }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="名称" min-width="140px" fixed="left">
+      <el-table-column label="乐器" min-width="140px" fixed="left">
         <template #default="scope">
           <span class="link-type" @click="handleEdit(scope.row)">{{ scope.row.instrument.instrumentName }}</span>
         </template>

@@ -31,19 +31,19 @@
       <el-row>
         <el-col :span="12">
           <el-form-item label="类型单位" prop="unit">
-            <el-input v-model="form.unit" placeholder="请输入单位" />
+            <el-input v-model="form.unit" placeholder="请输入单位" :style="{width: '100%'}"/>
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="积分值" prop="rewardPoint">
-            <el-input-number v-model="form.rewardPoint" controls-position="right" :controls="true" :precision="0"/>
+          <el-form-item label="积分奖励" prop="rewardPoint">
+            <el-input-number v-model="form.rewardPoint" :style="{width: '100%'}" controls-position="right" :controls="true" :precision="0"/>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="12">
           <el-form-item label="显示顺序" prop="orderIndex">
-            <el-input-number v-model="form.orderIndex" controls-position="right" :min="0" :controls="true" :precision="0"/>
+            <el-input-number v-model="form.orderIndex" :style="{width: '100%'}" controls-position="right" :min="0" :controls="true" :precision="0"/>
           </el-form-item>
         </el-col>
         <el-col :span="12">
