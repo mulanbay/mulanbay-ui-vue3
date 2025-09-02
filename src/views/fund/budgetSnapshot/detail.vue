@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <!-- 表单编辑对话框 -->
-    <el-dialog :title="title" v-model="open" width="870px" append-to-body class="customDialogCss">
+    <el-dialog :title="title" v-model="open" width="950px" append-to-body class="customDialogCss">
       <el-descriptions class="margin-top" :column="3" border v-loading="infoLoading">
         <el-descriptions-item>
           <template #label>

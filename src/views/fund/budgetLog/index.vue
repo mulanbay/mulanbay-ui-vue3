@@ -97,14 +97,16 @@
       <el-table-column label="实际消费" align="center" width="160">
         <template #default="scope">
           <span>{{ formatMoney(scope.row.totalAmount) }}</span>
-          <span v-if="(scope.row.totalAmount)>scope.row.budgetAmount">
-           <el-tag type="danger">超支</el-tag>
-          </span>
         </template>
       </el-table-column>
-      <el-table-column label="预算/实际" align="center" width="100">
+      <el-table-column label="实际/预算" align="center" width="100">
         <template #default="scope">
-          <span>{{ (scope.row.totalAmount/scope.row.budgetAmount*100).toFixed(0)+'%' }}</span>
+					<span v-if="(scope.row.totalAmount)>scope.row.budgetAmount" style="color: red;">
+						{{ calcABRate(scope.row) }}
+					</span>
+          <span v-else>
+          	{{ calcABRate(scope.row) }}
+          </span>
         </template>
       </el-table-column>
       <el-table-column label="收入统计" align="center"  width="160">
@@ -120,31 +122,57 @@
           <span v-else>{{ formatMoney(scope.row.accountChangeAmount) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="重新统计" width="80" fixed="right" align="center">
-        <template #default="scope">
-          <span v-if="scope.row.budget == null">
-           <span class="link-type" @click="handleReStat(scope.row.logId)">
-             <el-icon><Promotion /></el-icon>
-           </span>
-          </span>
-        </template>
-      </el-table-column>
       <el-table-column label="操作" align="center" width="160" fixed="right" class-name="small-padding fixed-width">
         <template #default="scope">
-          <el-button
-            link
-            type="success"
-            icon="edit"
-            @click="handleEdit(scope.row)"
-            v-hasPermi="['fund:budgetLog:edit']">修改
-          </el-button>
-          <el-button
-            link
-            type="danger"
-            icon="delete"
-            @click="handleDelete(scope.row)"
-            v-hasPermi="['fund:budget:delete']">删除
-          </el-button>
+					<el-dropdown>
+					  <span class="el-dropdown-link">
+					    选项
+					    <el-icon class="el-icon--right">
+					      <arrow-down />
+					    </el-icon>
+					  </span>
+					  <template #dropdown>
+					    <el-dropdown-menu>
+					      <el-dropdown-item><el-icon color="green"><Right /></el-icon>{{ scope.row.bussKey }}</el-dropdown-item>
+					      <el-dropdown-item divided>
+					        <el-button
+					          link
+					          type="success"
+					          icon="edit"
+					          @click="handleEdit(scope.row)"
+					          v-hasPermi="['fund:budgetLog:edit']">修改
+					        </el-button>
+					      </el-dropdown-item>
+					      <el-dropdown-item>
+					        <el-button
+					          link
+					          type="danger"
+					          icon="delete"
+					          @click="handleDelete(scope.row)"
+					          v-hasPermi="['fund:budget:delete']">删除
+					        </el-button>
+					      </el-dropdown-item>
+								<el-dropdown-item v-if="scope.row.budget == null">
+								  <el-button
+								    link
+								    type="warning"
+								    icon="Promotion"
+								    @click="handleReStat(scope.row.logId)"
+								    v-hasPermi="['fund:budgetLog:reSave']">重新统计
+								  </el-button>
+								</el-dropdown-item>
+					      <el-dropdown-item>
+					        <el-button
+					          link
+					          type="primary"
+					          icon="TrendCharts"
+					          @click="handleConsumeStat(scope.row)"
+					          v-hasPermi="['consume:consume:analyseStat']">消费统计
+					        </el-button>
+					      </el-dropdown-item>
+					    </el-dropdown-menu>
+					  </template>
+					</el-dropdown>
         </template>
       </el-table-column>
     </el-table>
@@ -162,6 +190,9 @@
     <!-- 快照详情 -->
     <BudgetSnapshotDetail ref="snapshotDetailRef" />
 
+    <!-- 消费统计 -->
+    <ConsumeStat ref="consumeStatRef" />
+
   </div>
 </template>
 
@@ -172,10 +203,12 @@
   import { getQueryObject } from "@/utils/index";
   import BudgetLogForm from './form.vue'
   import BudgetSnapshotDetail from '../budgetSnapshot/detail.vue'
+  import ConsumeStat from './consumeStat.vue'
 
   const { proxy } = getCurrentInstance();
   const formRef = ref();
   const snapshotDetailRef = ref();
+  const consumeStatRef = ref();
 
   // 遮罩层
   const loading = ref(true);
@@ -204,11 +237,21 @@
 
   const { queryParams } = toRefs(data);
 
+	/** /实际与预算比例 */
+  function calcABRate(row) {
+    return (row.totalAmount/row.budgetAmount*100).toFixed(0)+'%';
+  }
+	
   /** 统计 */
   function handleStat() {
     //路由定向
     proxy.$router.push({ name: 'BudgetStat', query: {} })
   }
+	
+	/** 消费统计 */
+	function handleConsumeStat(row) {
+	  consumeStatRef.value.showData(row.statPeriod,row.bussKey);
+	}
   
   /** 账户变化统计 */
   function handleAccountChange(logId){

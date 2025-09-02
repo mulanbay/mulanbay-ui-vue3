@@ -26,6 +26,16 @@
           </span>
         </template>
       </el-table-column>
+			<el-table-column label="实际/预算" align="center" width="100">
+			  <template #default="scope">
+          <span v-if="scope.row.acAmount>scope.row.amount*scope.row.factor" style="color: red;">
+						{{ calcABRate(scope.row) }}
+					</span>
+			    <span v-else>
+			    	{{ calcABRate(scope.row) }}
+			    </span>
+			  </template>
+			</el-table-column>
       <el-table-column label="类型" prop="value" align="center">
         <template #default="scope">
           <span>{{ scope.row.typeName }}</span>
@@ -94,6 +104,11 @@
   // 定义 success 事件，用于操作成功后的回调
   const emit = defineEmits(['success']);
 
+	/** /实际与预算比例 */
+  function calcABRate(row) {
+    return (row.acAmount/(row.amount*row.factor)*100).toFixed(0)+'%';
+  }
+	
   /** 打开弹窗 */
   const showData = async (dataList) => {
     budgetSnapshotList.value = dataList;
