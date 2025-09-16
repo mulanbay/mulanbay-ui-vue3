@@ -11,7 +11,7 @@
     <el-tabs v-loading="detailLoading" v-model="activeName" @tab-click="handleClick">
       <el-tab-pane label="日志详情" name="info">
         <el-descriptions class="margin-top" :column="1" border>
-          <el-descriptions-item label-class-name="my-label">
+          <el-descriptions-item width="180px">
             <template #label>
               <div class="cell-item">
                 <el-icon><HomeFilled /></el-icon>
@@ -20,7 +20,7 @@
             </template>
             {{ beanData.title}}
           </el-descriptions-item>
-          <el-descriptions-item label-class-name="my-label">
+          <el-descriptions-item>
             <template #label>
               <div class="cell-item">
                 <el-icon><HomeFilled /></el-icon>
@@ -29,7 +29,7 @@
             </template>
             <el-text class="mx-1" type="primary">{{ beanData.content}}</el-text>
           </el-descriptions-item>
-          <el-descriptions-item label-class-name="my-label">
+          <el-descriptions-item>
             <template #label>
               <div class="cell-item">
                 <el-icon><Comment /></el-icon>
@@ -117,11 +117,3 @@
 
   })
 </script>
-<style>
-  .my-label {
-    width: 120px;
-    color: #999;
-    font-weight: normal;
-    background: #fff;
-  }
-</style>

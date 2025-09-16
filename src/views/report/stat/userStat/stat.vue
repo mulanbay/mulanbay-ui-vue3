@@ -162,7 +162,7 @@
       } else {
         statData.value.statContent = '';
       }
-      let unit = response.userStat.template.valueTypeName;
+      let unit = response.userStat.unit;
       let valueDesc =  response.statValue + unit;
       valueDesc += '   (期望值:'+response.userStat.compareTypeName+response.userStat.expectValue+unit+')'
       statData.value.valueDesc = valueDesc;
