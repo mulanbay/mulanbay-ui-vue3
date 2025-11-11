@@ -6,45 +6,48 @@
       <el-row>
         <el-col :span="24">
 					<el-form-item label="药品名称" prop="drugName">
-					  <el-select
-					    v-model="form.drugName"
-					    :style="{width: '100%'}"
-					    filterable
-					    allow-create
-							remote
-							reserve-keyword
-							placeholder="输入药品名称"
-							:remote-method="loadDrugOptions"
-					    default-first-option
-							@change="loadDrugProperties">
-					    <el-option
-					      v-for="dict in drugNameOptions"
-					      :key="dict.id"
-					      :label="dict.text"
-					      :value="dict.id" />
-					  </el-select>
+						<span v-if="form.drugId == null">
+						  <el-select
+						    v-model="form.drugName"
+						    filterable
+						    allow-create
+						    default-first-option
+						    :style="{width: '570px'}"
+						    @change="loadDrugOptions">
+						    <el-option
+						      v-for="dict in drugNameOptions"
+						      :key="dict.id"
+						      :label="dict.text"
+						      :value="dict.id" />
+						  </el-select>
+						</span>
+						<span v-else>
+						  <el-input v-model="form.drugName" style="width: 570px" />
+						</span>
 					</el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="24">
 					<el-form-item label="针对疾病" prop="disease">
-					  <el-select
-					    v-model="form.disease"
-					    :style="{width: '100%'}"
-					    filterable
-					    allow-create
-							remote
-							reserve-keyword
-							placeholder="输入疾病名称"
-							:remote-method="loadDiseaseOptions"
-					    default-first-option>
-					    <el-option
-					      v-for="dict in diseaseOptions"
-					      :key="dict.id"
-					      :label="dict.text"
-					      :value="dict.id" />
-					  </el-select>
+						<span v-if="form.drugId == null">
+						  <el-select
+						    v-model="form.disease"
+						    filterable
+						    allow-create
+						    default-first-option
+						    :style="{width: '570px'}"
+						    @change="loadDiseaseOptions">
+						    <el-option
+						      v-for="dict in diseaseOptions"
+						      :key="dict.id"
+						      :label="dict.text"
+						      :value="dict.id" />
+						  </el-select>
+						</span>
+						<span v-else>
+						  <el-input v-model="form.disease" style="width: 570px" />
+						</span>
 					</el-form-item>
         </el-col>
       </el-row>
@@ -284,7 +287,7 @@
   
   /** 药品名选项加载 */
   function loadDrugOptions(name) {
-		console.log('drugName:'+name);
+		//console.log('drugName:'+name);
     let para = {
       groupField:'drugName',
       needRoot:false,

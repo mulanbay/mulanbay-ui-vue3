@@ -25,6 +25,14 @@ export function createTreatTest(data) {
   })
 }
 
+export function importTreatTest(data) {
+  return request({
+    url: '/treatTest/importData',
+    method: 'post',
+    data
+  })
+}
+
 export function editTreatTest(data) {
   return request({
     url: '/treatTest/edit',

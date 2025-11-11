@@ -44,12 +44,14 @@
         <el-button icon="refresh" @click="resetQuery">重置</el-button>
 				<el-button type="warning" icon="more" @click="handleMoreCdn">{{cdnTitle}}</el-button>
         <el-button type="primary" icon="plus" v-if="queryParams.operationId!=null" @click="handleCreate" v-hasPermi="['health:treat:treatTest:create']">新增</el-button>
+				<el-button type="success" icon="Bottom" v-if="fp==true" @click="handleImport" v-hasPermi="['health:treat:treatTest:importData']">导入</el-button>
+				
       </el-form-item>
     </el-form>
 
     <!--列表数据-->
     <el-table v-loading="loading" :data="testList" @selection-change="handleSelectionChange">
-      <el-table-column label="ID" fixed="left" prop="testId" sortable="custom" align="center" width="120">
+      <el-table-column label="ID" fixed="left" prop="testId" sortable="custom" align="center" width="80">
         <template #default="scope">
           <span>{{ scope.row.testId }}</span>
         </template>
@@ -62,11 +64,6 @@
             </span>
           </el-tooltip>
           <span class="link-type" @click="handleEdit(scope.row)">{{ scope.row.name }}</span>&nbsp;
-        </template>
-      </el-table-column>
-      <el-table-column label="手术/检查项目" min-width="160px" :show-overflow-tooltip="true">
-        <template #default="scope">
-          <span>{{ scope.row.operation.operationName }}</span>
         </template>
       </el-table-column>
       <el-table-column label="检查结果" min-width="140px" align="center" :show-overflow-tooltip="true">
@@ -98,21 +95,26 @@
           <span>{{ formatScope(scope.row) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="统计" width="100" align="center">
+			<el-table-column label="手术/检查项目" min-width="160px" :show-overflow-tooltip="true">
+			  <template #default="scope">
+			    <span>{{ scope.row.operation.operationName }}</span>
+			  </template>
+			</el-table-column>
+      <el-table-column label="统计" width="50" align="center">
         <template #default="scope">
           <span class="link-type" @click="handleStat(scope.row)"><el-icon>
               <Histogram />
             </el-icon></span>
         </template>
       </el-table-column>
+			<el-table-column label="采样时间" align="center" width="180">
+			  <template #default="scope">
+			    <span>{{ scope.row.testTime }}</span>
+			  </template>
+			</el-table-column>
       <el-table-column label="医院" min-width="140px" :show-overflow-tooltip="true">
         <template #default="scope">
           <span>{{ scope.row.operation.treat.hospital }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="采样时间" align="center" width="180">
-        <template #default="scope">
-          <span>{{ scope.row.testTime }}</span>
         </template>
       </el-table-column>
       <el-table-column label="分类/试验方法" align="center" width="140">
@@ -130,15 +132,8 @@
           <span>{{ scope.row.operation.treat.organ }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" width="150" fixed="right" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" width="80" fixed="right" class-name="small-padding fixed-width">
         <template #default="scope">
-          <el-button
-            link
-            type="success"
-            icon="edit"
-            @click="handleEdit(scope.row)"
-            v-hasPermi="['health:treat:treatTest:edit']">修改
-          </el-button>
           <el-button
             link
             type="danger"
@@ -160,6 +155,9 @@
     <!-- 表单 -->
     <TreatTestForm ref="formRef" @success="getList" />
     
+		<!-- 导入 -->
+		<TreatTestImport ref="importRef" @success="getList" />
+		
     <!-- 统计 -->
     <TreatTestStat ref="statRef" />
     
@@ -170,11 +168,13 @@
   import { fetchList, deleteTreatTest } from "@/api/health/treat/treatTest";
   import { formatDays, getHourDesc } from "@/utils/datetime";
   import TreatTestForm from './form.vue'
+	import TreatTestImport from './import.vue'
   import TreatTestStat from './stat.vue'
 
   const { proxy } = getCurrentInstance();
 
   const formRef = ref();
+	const importRef = ref();
   const statRef = ref();
 
   const testList = ref([]);
@@ -216,6 +216,8 @@
     resetForm();
     queryParams.value.operationId = operationId;
     fp.value = true;
+		queryParams.value.sort = 'asc';
+		queryParams.value.sortField = 'createdTime';
     handleQuery();
   }
 
@@ -258,13 +260,22 @@
   /** 检查范围 */
   function formatScope(row) {
     if (row.minValue != null) {
-      return row.minValue + '~' + row.maxValue + (row.unit == null ? '' : row.unit);
+      return row.minValue + '~' + row.maxValue + (row.unit == null ? '' : '('+row.unit+')');
     } else if (row.referScope != null) {
       return row.referScope;
     } else {
       return '--';
     }
   }
+	
+	/** 导入操作 */
+	function handleImport(){
+		if (queryParams.value.operationId == null) {
+		  proxy.$modal.msgError("没有看病记录编号绑定，无法新增");
+		  return;
+		}
+		importRef.value.openForm(queryParams.value.operationId);
+	}
 
   /** 检验项目操作 */
   function handleStat(row) {

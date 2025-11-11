@@ -211,7 +211,7 @@
     <TreatOperationForm ref="formRef" @success="getList" />
 
     <!-- 检验结果列表页面 -->
-    <el-dialog :title="treatTestTitle" width="900px" v-model="treatTestOpen" append-to-body>
+    <el-dialog :title="treatTestTitle" width="1200px" v-model="treatTestOpen" append-to-body>
       <TreatTest ref="treatTestRef" />
     </el-dialog>
     

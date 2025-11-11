@@ -6,106 +6,116 @@
       <el-row>
         <el-col :span="12">
           <el-form-item label="医院名称" prop="hospital">
-            <el-select
-              v-model="form.hospital"
-              :style="{width: '100%'}"
-              filterable
-              allow-create
-							remote
-							reserve-keyword
-							placeholder="请输入医院名称"
-							:remote-method="loadHospitalOptions"
-              default-first-option>
-              <el-option
-                v-for="dict in hospitalOptions"
-                :key="dict.id"
-                :label="dict.text"
-                :value="dict.id" />
-            </el-select>
+						<span v-if="form.treatId == null">
+						  <el-select
+						    v-model="form.hospital"
+						    filterable
+						    allow-create
+						    default-first-option
+						    style="width: 280px"
+						    @change="loadHospitalOptions">
+						    <el-option
+						      v-for="dict in hospitalOptions"
+						      :key="dict.id"
+						      :label="dict.text"
+						      :value="dict.id" />
+						  </el-select>
+						</span>
+						<span v-else>
+						  <el-input v-model="form.hospital" style="width: 280px" />
+						</span>
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="科室名称" prop="department">
-            <el-select
-              v-model="form.department"
-              :style="{width: '100%'}"
-              filterable
-              allow-create
-							remote
-							reserve-keyword
-							placeholder="请输入科室名称"
-							:remote-method="loadDepartmentOptions"
-              default-first-option>
-              <el-option
-                v-for="dict in departmentOptions"
-                :key="dict.id"
-                :label="dict.text"
-                :value="dict.id" />
-            </el-select>
+						<span v-if="form.treatId == null">
+						  <el-select
+						    v-model="form.department"
+						    filterable
+						    allow-create
+						    default-first-option
+						    style="width: 280px"
+						    @change="loadDepartmentOptions">
+						    <el-option
+						      v-for="dict in departmentOptions"
+						      :key="dict.id"
+						      :label="dict.text"
+						      :value="dict.id" />
+						  </el-select>
+						</span>
+						<span v-else>
+						  <el-input v-model="form.department" style="width: 280px" />
+						</span>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="12">
           <el-form-item label="疾病症状" prop="disease">
-            <el-select
-              v-model="form.disease"
-              :style="{width: '100%'}"
-              filterable
-              allow-create
-							remote
-							reserve-keyword
-							placeholder="请输入疾病症状"
-							:remote-method="loadDiseaseOptions"
-              default-first-option>
-              <el-option
-                v-for="dict in diseaseOptions"
-                :key="dict.id"
-                :label="dict.text"
-                :value="dict.id" />
-            </el-select>
+						<span v-if="form.treatId == null">
+						  <el-select
+						    v-model="form.disease"
+						    filterable
+						    allow-create
+						    default-first-option
+						    style="width: 280px"
+						    @change="loadDiseaseOptions">
+						    <el-option
+						      v-for="dict in diseaseOptions"
+						      :key="dict.id"
+						      :label="dict.text"
+						      :value="dict.id" />
+						  </el-select>
+						</span>
+						<span v-else>
+						  <el-input v-model="form.disease" style="width: 280px" />
+						</span>
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="所属器官" prop="organ">
-            <el-select
-              v-model="form.organ"
-              :style="{width: '100%'}"
-              filterable
-              allow-create
-							remote
-							reserve-keyword
-							placeholder="请输入所属器官"
-							:remote-method="loadOrganOptions"
-              default-first-option>
-              <el-option
-                v-for="dict in organOptions"
-                :key="dict.id"
-                :label="dict.text"
-                :value="dict.id" />
-            </el-select>
+						<span v-if="form.treatId == null">
+						  <el-select
+						    v-model="form.organ"
+						    filterable
+						    allow-create
+						    default-first-option
+						    style="width: 280px"
+						    @change="loadOrganOptions">
+						    <el-option
+						      v-for="dict in organOptions"
+						      :key="dict.id"
+						      :label="dict.text"
+						      :value="dict.id" />
+						  </el-select>
+						</span>
+						<span v-else>
+						  <el-input v-model="form.organ" style="width: 280px" />
+						</span>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="12">
           <el-form-item label="确诊疾病" prop="confirmDisease">
-            <el-select
-              v-model="form.confirmDisease"
-              :style="{width: '100%'}"
-              filterable
-              allow-create
-							remote
-							reserve-keyword
-							placeholder="请输入确诊疾病"
-							:remote-method="loadConfirmDiseaseOptions"
-              default-first-option>
-              <el-option
-                v-for="dict in confirmDiseaseOptions"
-                :key="dict.id"
-                :label="dict.text"
-                :value="dict.id" />
-            </el-select>
+						<span v-if="form.treatId == null">
+						  <el-select
+						    v-model="form.confirmDisease"
+						    filterable
+						    allow-create
+						    default-first-option
+						    style="width: 280px"
+						    @change="loadConfirmDiseaseOptions">
+						    <el-option
+						      v-for="dict in confirmDiseaseOptions"
+						      :key="dict.id"
+						      :label="dict.text"
+						      :value="dict.id" />
+						  </el-select>
+						</span>
+						<span v-else>
+						  <el-input v-model="form.confirmDisease" style="width: 280px" />
+						</span>
           </el-form-item>
         </el-col>
         <el-col :span="12">

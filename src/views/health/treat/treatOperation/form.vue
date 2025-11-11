@@ -6,22 +6,27 @@
       <el-row>
         <el-col :span="24">
 					<el-form-item label="手术名称" prop="operationName">
-					  <el-select
-					    v-model="form.operationName"
-					    :style="{width: '100%'}"
-					    filterable
-					    allow-create
-							remote
-							reserve-keyword
-							placeholder="输入手术名称"
-							:remote-method="loadOperationOptions"
-					    default-first-option>
-					    <el-option
-					      v-for="dict in operationNameOptions"
-					      :key="dict.id"
-					      :label="dict.text"
-					      :value="dict.id" />
-					  </el-select>
+						<span v-if="form.operationId == null">
+						  <el-select
+						    v-model="form.operationName"
+						    style="width: 570px"
+						    filterable
+						    allow-create
+						  	remote
+						  	reserve-keyword
+						  	placeholder="输入手术名称"
+						  	:remote-method="loadOperationOptions"
+						    default-first-option>
+						    <el-option
+						      v-for="dict in operationNameOptions"
+						      :key="dict.id"
+						      :label="dict.text"
+						      :value="dict.id" />
+						  </el-select>
+						</span>
+						<span v-else>
+						  <el-input v-model="form.operationName" style="width: 570px" />
+						</span>
 					</el-form-item>
         </el-col>
       </el-row>

@@ -20,19 +20,24 @@
       <el-row>
         <el-col :span="24">
           <el-form-item label="检验项目" prop="name">
-            <el-select
-              v-model="form.name"
-              filterable
-              allow-create
-              default-first-option
-              :style="{width: '520px'}"
-              @change="loadProperties">
-              <el-option
-                v-for="dict in nameOptions"
-                :key="dict.id"
-                :label="dict.text"
-                :value="dict.id" />
-            </el-select>
+						<span v-if="form.testId == null">
+						  <el-select
+						    v-model="form.name"
+						    filterable
+						    allow-create
+						    default-first-option
+						    :style="{width: '520px'}"
+						    @change="loadProperties">
+						    <el-option
+						      v-for="dict in nameOptions"
+						      :key="dict.id"
+						      :label="dict.text"
+						      :value="dict.id" />
+						  </el-select>
+						</span>
+            <span v-else>
+              <el-input v-model="form.name" style="width: 520px" />
+            </span>
           </el-form-item>
         </el-col>
       </el-row>
