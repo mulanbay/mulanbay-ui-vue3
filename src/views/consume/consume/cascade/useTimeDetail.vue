@@ -191,6 +191,7 @@
         }
       }
       brData.push({ key: '售出价格', value: proxy.formatMoney(cc.soldPrice), desc: spDesc });
+			brData.push({ key: '盈亏', value: spDesc });
       if (cc.childrens > 0) {
         brData.push({ key: '下级商品成本', value: proxy.formatMoney(cc.childrenPrice) + ' (' + cc.childrens + '个)', desc: '该商品所有下级商品的个数' });
       }
