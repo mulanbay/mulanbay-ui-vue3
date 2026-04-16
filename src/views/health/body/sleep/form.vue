@@ -47,13 +47,8 @@
         </el-col>
         <el-col :span="12">
           <el-form-item label="睡眠质量" prop="quality">
-            <el-rate
-              v-model="form.quality"
-              show-score
-              :max="5"
-              text-color="#ff9900"
-              score-template="{value}">
-            </el-rate>
+						<el-input-number v-model="form.quality" :style="{width: '100%'}" controls-position="right" :min="0" :max="100" :controls="true" :precision="0">
+						</el-input-number>
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -152,7 +147,7 @@
       wps: 1,
       lightSleep: 0,
       deepSleep: 0,
-      quality:3
+      quality:80
     };
     proxy.resetForm("formRef");
   }

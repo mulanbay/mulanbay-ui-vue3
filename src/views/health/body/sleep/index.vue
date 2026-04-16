@@ -52,12 +52,12 @@
     <!--列表数据-->
     <el-table v-loading="loading" :data="sleepList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="ID" fixed="left" prop="sleepId" sortable="custom" align="center" width="120">
+      <el-table-column label="ID" fixed="left" prop="sleepId" sortable="custom" align="center" width="80">
         <template #default="scope">
           <span>{{ scope.row.sleepId }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="睡眠日" align="center" width="100">
+      <el-table-column label="睡眠日" fixed="left" align="center" width="100">
         <template #default="scope">
           <span class="link-type" @click="handleEdit(scope.row)">{{ scope.row.sleepDate }}</span>
         </template>
