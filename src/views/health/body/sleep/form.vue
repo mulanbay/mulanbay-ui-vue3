@@ -1,7 +1,7 @@
 <template>
 
   <!-- 表单编辑对话框 -->
-  <el-dialog :title="title" v-model="open" width="700px" append-to-body>
+  <el-dialog :title="title" v-model="open" width="800px" append-to-body>
     <el-form ref="formRef" :model="form" :rules="rules" v-loading="formLoading" label-width="120px">
       <el-row>
         <el-col :span="12">
@@ -37,8 +37,8 @@
       </el-row>
       <el-row>
         <el-col :span="12">
-          <el-form-item label="醒来次数" prop="wakeUpCount">
-						<el-input-number v-model="form.wakeUpCount" :style="{width: '100%'}" controls-position="right" :min="0" :controls="true" :precision="0">
+          <el-form-item label="醒来次数" prop="wps">
+						<el-input-number v-model="form.wps" :style="{width: '100%'}" controls-position="right" :min="0" :controls="true" :precision="0">
 						  <template #suffix>
 						    <span>次</span>
 						  </template>
@@ -55,29 +55,39 @@
         </el-col>
       </el-row>
       <el-row>
+				<el-col :span="12">
+				  <el-form-item label="深睡时长" prop="deepSleep">
+				    <el-input-number v-model="detail.dsh" :style="{width: '50%'}" controls-position="right" :min="0" :controls="true" :precision="0">
+				      <template #suffix>
+				        <span>小时</span>
+				      </template>
+				    </el-input-number> 
+						<el-input-number v-model="detail.dsm" :style="{width: '50%'}" controls-position="right" :min="0" :controls="true" :precision="0">
+						  <template #suffix>
+						    <span>分钟</span>
+						  </template>
+						</el-input-number> 
+				  </el-form-item>
+				</el-col>
         <el-col :span="12">
           <el-form-item label="浅睡时长" prop="lightSleep">
-            <el-input-number v-model="form.lightSleep" :style="{width: '100%'}" controls-position="right" :min="0" :controls="true" :precision="0">
+            <el-input-number v-model="detail.lsh" :style="{width: '50%'}" controls-position="right" :min="0" :controls="true" :precision="0">
               <template #suffix>
-                <span>分钟</span>
+                <span>小时</span>
               </template>
             </el-input-number> 
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="深睡时长" prop="deepSleep">
-            <el-input-number v-model="form.deepSleep" :style="{width: '100%'}" controls-position="right" :min="0" :controls="true" :precision="0">
-              <template #suffix>
-                <span>分钟</span>
-              </template>
-            </el-input-number>
+						<el-input-number v-model="detail.lsm" :style="{width: '50%'}" controls-position="right" :min="0" :controls="true" :precision="0">
+						  <template #suffix>
+						    <span>分钟</span>
+						  </template>
+						</el-input-number> 
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="24">
           <el-form-item label="备注信息">
-            <el-input v-model="form.remark" :style="{width: '100%'}" type="textarea" placeholder="请输入内容"></el-input>
+            <el-input v-model="form.remark" :style="{width: '100%'}" type="textarea" :rows="5" placeholder="请输入内容"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -105,6 +115,8 @@
 
   const data = reactive({
     form: {},
+		//浅睡+深睡
+		detail:{},
     // 表单校验
     rules: {
       sleepTime: [
@@ -116,7 +128,7 @@
     }
   });
 
-  const { form, rules } = toRefs(data);
+  const { form,detail, rules } = toRefs(data);
 
   // 定义 success 事件，用于操作成功后的回调
   const emit = defineEmits(['success']);
@@ -131,6 +143,7 @@
       getSleep(id).then(response => {
         formLoading.value = false;
         form.value = response;
+				convertFormToDetail();
       });
     } else {
       title.value = "新增";
@@ -140,6 +153,26 @@
   // 提供 open 方法，用于打开弹窗
   defineExpose({ openForm });
 
+	// 浅睡+深睡 转换为 小时+分钟
+	function convertFormToDetail() {
+		if(form.value.lightSleep>0){
+			let ls = form.value.lightSleep;
+			detail.value.lsh = parseInt(ls / 60);
+			detail.value.lsm = ls%60;
+		}
+		if(form.value.deepSleep>0){
+			let ds = form.value.deepSleep;
+			detail.value.dsh = parseInt(ds / 60);
+			detail.value.dsm = ds%60;
+		}
+  }
+	
+	// 浅睡+深睡转换
+	function convertDetailToForm() {
+		form.value.lightSleep = detail.value.lsh*60+detail.value.lsm;
+		form.value.deepSleep = detail.value.dsh*60+detail.value.dsm;
+	}
+	
   // 表单重置
   function resetForm() {
     form.value = {
@@ -149,6 +182,12 @@
       deepSleep: 0,
       quality:80
     };
+		detail.value={
+			lsh:0,
+			lsm:0,
+			dsh:0,
+			dsm:0
+		};
     proxy.resetForm("formRef");
   }
   
@@ -156,6 +195,7 @@
   function submitForm() {
     proxy.$refs["formRef"].validate(valid => {
       if (valid) {
+				convertDetailToForm();
         if (form.value.sleepId != undefined) {
           editSleep(form.value).then(response => {
             proxy.$modal.msgSuccess("修改成功");

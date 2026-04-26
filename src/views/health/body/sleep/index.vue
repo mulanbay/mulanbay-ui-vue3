@@ -85,6 +85,16 @@
           <span>{{ scope.row.quality }}</span>
         </template>
       </el-table-column>
+			<el-table-column label="深睡时长" align="center" width="120">
+			  <template #default="scope">
+			    <span>{{ formatSleepTimes(scope.row.deepSleep) }}</span>
+			  </template>
+			</el-table-column>
+			<el-table-column label="浅睡时长" align="center" width="120">
+			  <template #default="scope">
+			    <span>{{ formatSleepTimes(scope.row.lightSleep) }}</span>
+			  </template>
+			</el-table-column>
       <el-table-column label="首次醒来时间" align="center" width="120">
         <template #default="scope">
           <span v-if="scope.row.fwpTime!=null">
@@ -118,16 +128,6 @@
       <el-table-column label="起床时长" align="center" width="120">
         <template #default="scope">
           {{ formatGetUpTimes(scope.row) }}
-        </template>
-      </el-table-column>
-      <el-table-column label="浅睡时长" align="center" width="120">
-        <template #default="scope">
-          <span>{{ formatSleepTimes(scope.row.lightSleep) }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="深睡时长" align="center" width="120">
-        <template #default="scope">
-          <span>{{ formatSleepTimes(scope.row.deepSleep) }}</span>
         </template>
       </el-table-column>
       <el-table-column label="创建时间" width="180">
