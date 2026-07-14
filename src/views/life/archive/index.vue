@@ -1,16 +1,13 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryRef" :inline="true">
-      <el-form-item v-show="moreCdn==true" label="起止日期" style="width: 308px">
-        <el-date-picker
-          v-model="dateRange"
-          unlink-panels
-          value-format="YYYY-MM-DD"
-          type="daterange"
-          range-separator="-"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-          :shortcuts="datePickerOptions"></el-date-picker>
+      <el-form-item label="名称检索" prop="name">
+        <el-input
+          v-model="queryParams.name"
+          placeholder="请输入名称"
+          clearable
+          style="width: 240px"
+          @keyup.enter.native="handleQuery" />
       </el-form-item>
       <el-form-item label="排序方式" prop="sortType">
         <el-select
@@ -36,6 +33,17 @@
             :value="dict.id" />
         </el-select>
       </el-form-item>
+			<el-form-item v-show="moreCdn==true" label="起止日期" style="width: 308px">
+			  <el-date-picker
+			    v-model="dateRange"
+			    unlink-panels
+			    value-format="YYYY-MM-DD"
+			    type="daterange"
+			    range-separator="-"
+			    start-placeholder="开始日期"
+			    end-placeholder="结束日期"
+			    :shortcuts="datePickerOptions"></el-date-picker>
+			</el-form-item>
       <el-form-item v-show="moreCdn==true" label="业务类型" prop="bussType">
         <el-select
           v-model="queryParams.bussType"
@@ -48,14 +56,6 @@
             :label="dict.text"
             :value="dict.id" />
         </el-select>
-      </el-form-item>
-      <el-form-item v-show="moreCdn==true" label="名称检索" prop="name">
-        <el-input
-          v-model="queryParams.name"
-          placeholder="请输入名称"
-          clearable
-          style="width: 240px"
-          @keyup.enter.native="handleQuery" />
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="search" @click="handleQuery" v-hasPermi="['life:archive:list']">搜索</el-button>
