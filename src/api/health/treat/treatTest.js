@@ -77,3 +77,12 @@ export function getTreatTestStat(query) {
     params: query
   })
 }
+
+export function uploadTreatTestReport(data) {
+  return request({
+    url: '/treatTest/uploadReport',
+		headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    method: 'post',
+    data
+  })
+}

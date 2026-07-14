@@ -82,11 +82,6 @@
           <span>{{ scope.row.operationId }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="医院" min-width="160" align="center" :show-overflow-tooltip="true">
-        <template #default="scope">
-          <span>{{ scope.row.treat.hospital }}</span>
-        </template>
-      </el-table-column>
       <el-table-column label="手术/检查项目" fixed="left" width="160" :show-overflow-tooltip="true">
         <template #default="scope">
           <span class="link-type" @click="handleEdit(scope.row)">{{ scope.row.operationName }}</span>
@@ -101,6 +96,20 @@
           </el-tooltip>
         </template>
       </el-table-column>
+			<el-table-column label="原始报告" width="80" align="center">
+			  <template #default="scope">
+			    <el-tooltip class="box-item" effect="dark" content="图片" placement="top">
+			      <span class="link-type" @click="handleReport(scope.row)">
+			        <el-icon><PictureFilled /></el-icon>
+			      </span>
+			    </el-tooltip>
+			  </template>
+			</el-table-column>
+			<el-table-column label="医院" min-width="160" align="center" :show-overflow-tooltip="true">
+			  <template #default="scope">
+			    <span>{{ scope.row.treat.hospital }}</span>
+			  </template>
+			</el-table-column>
       <el-table-column label="疾病症状" min-width="140" :show-overflow-tooltip="true">
         <template #default="scope">
           <span>{{ scope.row.treat.disease }}</span>
@@ -218,6 +227,9 @@
     <!-- 统计 -->
     <TreatOperationStat ref="treatOperationStatRef" />
     
+		<!-- 报告列表 -->
+		<ReportList ref="reportListRef" />
+		
   </div>
 </template>
 
@@ -228,6 +240,7 @@
   import TreatOperationForm from './form.vue'
   import TreatTest from '../treatTest/index.vue'
   import TreatOperationStat from './stat.vue'
+	import ReportList from '../treatTest/reportList.vue'
 
   const { proxy } = getCurrentInstance();
   const formRef = ref();
@@ -237,6 +250,7 @@
   const treatTestOpen = ref(false);
   const treatTestRef = ref();
   const treatOperationStatRef = ref();
+  const reportListRef = ref();
 
   // 遮罩层
   const loading = ref(true);
@@ -299,6 +313,11 @@
   /** 统计 */
   function handleStat(){
     treatOperationStatRef.value.showData();
+  }
+
+  /** 报告 */
+  function handleReport(raw){
+    reportListRef.value.showData(raw.operationId);
   }
 
   /** 查询列表 */
