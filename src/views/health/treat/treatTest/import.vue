@@ -4,7 +4,7 @@
 	<el-dialog :title="title" v-model="open" width="850px" append-to-body class="customDialogCss">
 			<!-- 上传按钮 -->
 			<el-upload :on-change="handleExcelUpload" accept=".xlsx,.xls" :limit="1" :auto-upload="false" action="#" v-model:file-list="fileList">
-				<el-button type="primary">上传 Excel</el-button>
+				<el-button icon="UploadFilled" type="primary">上传 Excel</el-button>
 			</el-upload>
 			<el-text class="mx-1" type="success">格式说明：Excel表格按照下面数据表格的前五列作为表头（第一行为表头，不能省略）</el-text>
 			
@@ -76,6 +76,7 @@
 			</el-table>
 			<template #footer>
 				<div class="dialog-footer">
+					<el-button type="success" icon="Download" @click="loadTemplate" v-hasPermi="['health:treat:treatTest:list']">加载模板</el-button>
 					<el-button type="primary" @click="submitForm()">保 存</el-button>
 					<el-button @click="open=false">取 消</el-button>
 				</div>
@@ -85,7 +86,7 @@
 </template>
 
 <script setup name="TreatTestImport">
-	import {importTreatTest} from "@/api/health/treat/treatTest";
+	import {importTreatTest,loadTreatTestTemplate} from "@/api/health/treat/treatTest";
 	import {getTreatOperation} from "@/api/health/treat/treatOperation";
 	import * as XLSX from 'xlsx';
 
@@ -134,6 +135,16 @@
 	defineExpose({
 		openForm
 	});
+	
+	/** 加载模板 */
+	function loadTemplate(){
+		let para = {
+			operationId: form.value.operationId
+		}
+		loadTreatTestTemplate(para).then(response => {
+		  tableData.value = response;
+		});
+	}
 	
 	/** 加载手术信息 */
 	function loadOperation(id){

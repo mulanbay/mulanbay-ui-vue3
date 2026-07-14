@@ -78,6 +78,14 @@ export function getTreatTestStat(query) {
   })
 }
 
+export function loadTreatTestTemplate(query) {
+  return request({
+    url: '/treatTest/loadTemplate',
+    method: 'get',
+    params: query
+  })
+}
+
 export function uploadTreatTestReport(data) {
   return request({
     url: '/treatTest/uploadReport',

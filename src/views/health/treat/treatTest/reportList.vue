@@ -39,9 +39,37 @@
 						show-progress
 						:initial-index="4"
 						fit="cover"
-					/>
+					>
 					
-					
+					<template
+						#toolbar="{ actions, prev, next, reset, activeIndex, setActiveItem }"
+					>
+						<el-icon @click="prev"><Back /></el-icon>
+						<el-icon @click="next"><Right /></el-icon>
+						<el-icon @click="setActiveItem(previewSrcList.length - 1)">
+							<DArrowRight />
+						</el-icon>
+						<el-icon @click="actions('zoomOut')"><ZoomOut /></el-icon>
+						<el-icon
+							@click="actions('zoomIn', { enableTransition: false, zoomRate: 2 })"
+						>
+							<ZoomIn />
+						</el-icon>
+						<el-icon
+							@click="
+								actions('clockwise', { rotateDeg: 180, enableTransition: false })
+							"
+						>
+							<RefreshRight />
+						</el-icon>
+						<el-icon @click="actions('anticlockwise')"><RefreshLeft /></el-icon>
+						<el-icon @click="reset"><Refresh /></el-icon>
+						<el-icon @click="download(activeIndex)"><Download /></el-icon>
+						<el-tooltip content="扫码报告为文本信息" effect="dark" placement="top">
+						  <el-icon @click="handleScan(item)"><FullScreen /></el-icon>
+						</el-tooltip>
+					</template>
+				</el-image>
 					
 				</div>
 			</div>
@@ -56,7 +84,19 @@
 
 <script setup name="TreatTestReportList">
 	import { fetchList, deleteResources } from "@/api/system/resources";
-	
+	import {
+	  Back,
+	  DArrowRight,
+	  Download,
+	  Refresh,
+	  RefreshLeft,
+	  RefreshRight,
+	  Right,
+	  ZoomIn,
+	  ZoomOut,
+	} from '@element-plus/icons-vue'
+	import Tesseract from 'tesseract.js'
+
   import UploadReport from './uploadReport.vue'
 
   const { proxy } = getCurrentInstance();
@@ -133,6 +173,18 @@
 	      loading.value = false;
 	    }
 	  );
+	}
+	
+	/** 扫码操作 */
+	function handleScan(item) {
+		Tesseract.recognize(
+		  item.path,
+		  'chi_sim+eng',
+		  { logger: m => console.log(m) }
+		).then(({ data: { text } }) => {
+		  proxy.$modal.msgSuccess(text);
+		})
+		
 	}
 	
 	/** 新增操作 */
