@@ -115,6 +115,9 @@
       </el-table-column>
       <el-table-column label="疾病症状" fixed="left" width="120" :show-overflow-tooltip="true">
         <template #default="scope">
+					<span v-if="scope.row.tags != null" >
+					  <el-icon color="darkred"><StarFilled /></el-icon>
+					</span>
           <span class="link-type" style="color:darkgreen" @click="handleEdit(scope.row)">{{ scope.row.disease }}</span>
         </template>
       </el-table-column>

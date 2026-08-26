@@ -8,6 +8,14 @@ export function fetchList(query) {
   })
 }
 
+export function fetchReviewList(query) {
+  return request({
+    url: '/treatOperation/reviewList',
+    method: 'get',
+    params: query
+  })
+}
+
 
 export function getTreatOperation(operationId) {
   return request({

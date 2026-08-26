@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryRef" :inline="true">
-      <el-form-item label="用药日期" v-show="moreCdn==true" style="width: 308px">
+      <el-form-item label="手术日期" v-show="moreCdn==true" style="width: 308px">
         <el-date-picker
           v-model="dateRange"
           unlink-panels
@@ -20,6 +20,9 @@
           style="width: 240px"
           @keyup.enter.native="handleQuery" />
       </el-form-item>
+			<el-form-item label="需要复查" prop="needReview">
+			  <el-switch v-model="queryParams.needReview" @change="handleQuery"></el-switch>
+			</el-form-item>
       <el-form-item v-show="moreCdn==true" label="疾病标签" prop="tags">
         <el-select
           v-model="queryParams.tags"
@@ -72,6 +75,13 @@
           @click="handleStat"
           v-hasPermi="['health:treat:treatOperation:stat']">统计</el-button>
       </el-col>
+			<el-col :span="1.5">
+			  <el-button
+			    type="success"
+			    icon="Promotion"
+			    @click="handleReview"
+			    v-hasPermi="['health:treat:treatOperation:reviewList']">复查</el-button>
+			</el-col>
     </el-row>
 
     <!--列表数据-->
@@ -82,8 +92,11 @@
           <span>{{ scope.row.operationId }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="手术/检查项目" fixed="left" width="160" :show-overflow-tooltip="true">
+      <el-table-column label="手术/检查项目" fixed="left" width="200" :show-overflow-tooltip="true">
         <template #default="scope">
+					<span v-if="scope.row.rdDays!=null && scope.row.rdDays<=0">
+					  <el-tag type="danger">待复查</el-tag>
+					</span>
           <span class="link-type" @click="handleEdit(scope.row)">{{ scope.row.operationName }}</span>
         </template>
       </el-table-column>
@@ -105,6 +118,48 @@
 			    </el-tooltip>
 			  </template>
 			</el-table-column>
+			<el-table-column label="确诊疾病" min-width="140" :show-overflow-tooltip="true">
+			  <template #default="scope">
+			    <span>{{ scope.row.treat.confirmDisease }}</span>
+			  </template>
+			</el-table-column>
+			<el-table-column label="手术/检查日期" width="110" align="center" >
+			  <template #default="scope">
+			    <span>{{ scope.row.treatDate }}</span>
+			  </template>
+			</el-table-column>
+			<el-table-column label="距离现在" width="110" :show-overflow-tooltip="true">
+			  <template #default="scope">
+			    <span v-if="scope.row.tdDays>=365" style="color: red;">
+			     {{ scope.row.tdDaysStr }}
+			    </span>
+			    <span v-else-if="scope.row.tdDays>=90" style="color: purple;">
+			     {{ scope.row.tdDaysStr }}
+			    </span>
+			    <span v-else-if="scope.row.tdDays>=30" style="color: green;">
+			     {{ scope.row.tdDaysStr }}
+			    </span>
+			    <span v-else>
+			     {{ scope.row.tdDaysStr }}
+			    </span>
+			  </template>
+			</el-table-column>
+			<el-table-column label="复查日期" width="100" align="center" >
+			  <template #default="scope">
+			    <span v-if="scope.row.rdDays>=365" style="color: black;">
+			     {{ scope.row.reviewDate }}
+			    </span>
+			    <span v-else-if="scope.row.rdDays>=90" style="color: purple;">
+			     {{ scope.row.reviewDate }}
+			    </span>
+			    <span v-else-if="scope.row.rdDays>=30" style="color: #8b008b;">
+			     {{ scope.row.reviewDate }}
+			    </span>
+			    <span v-else style="color: red;">
+			     {{ scope.row.reviewDate }}
+			    </span>
+			  </template>
+			</el-table-column>
 			<el-table-column label="医院" min-width="160" align="center" :show-overflow-tooltip="true">
 			  <template #default="scope">
 			    <span>{{ scope.row.treat.hospital }}</span>
@@ -120,51 +175,9 @@
           <span>{{ scope.row.treat.organ }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="确诊疾病" min-width="140" :show-overflow-tooltip="true">
-        <template #default="scope">
-          <span>{{ scope.row.treat.confirmDisease }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="费用" :show-overflow-tooltip="true">
+      <el-table-column label="费用" width="120" align="center">
         <template #default="scope">
           <span>{{ formatMoney(scope.row.fee) }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="手术/检查日期" width="110" :show-overflow-tooltip="true">
-        <template #default="scope">
-          <span>{{ scope.row.treatDate }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="距离现在" width="110" :show-overflow-tooltip="true">
-        <template #default="scope">
-          <span v-if="scope.row.tdDays>=365" style="color: red;">
-           {{ scope.row.tdDaysStr }}
-          </span>
-          <span v-else-if="scope.row.tdDays>=90" style="color: purple;">
-           {{ scope.row.tdDaysStr }}
-          </span>
-          <span v-else-if="scope.row.tdDays>=30" style="color: green;">
-           {{ scope.row.tdDaysStr }}
-          </span>
-          <span v-else>
-           {{ scope.row.tdDaysStr }}
-          </span>
-        </template>
-      </el-table-column>
-      <el-table-column label="复查日期" width="110" :show-overflow-tooltip="true">
-        <template #default="scope">
-          <span v-if="scope.row.rdDays>=365" style="color: black;">
-           {{ scope.row.reviewDate }}
-          </span>
-          <span v-else-if="scope.row.tdDays>=90" style="color: purple;">
-           {{ scope.row.reviewDate }}
-          </span>
-          <span v-else-if="scope.row.tdDays>=30" style="color: #8b008b;">
-           {{ scope.row.reviewDate }}
-          </span>
-          <span v-else style="color: red;">
-           {{ scope.row.reviewDate }}
-          </span>
         </template>
       </el-table-column>
       <el-table-column label="是否有效" align="center" width="100">
@@ -226,6 +239,9 @@
     
     <!-- 统计 -->
     <TreatOperationStat ref="treatOperationStatRef" />
+		
+		<!-- 复查列表 -->
+		<TreatOperationReviewList ref="treatOperationReviewListRef" />
     
 		<!-- 报告列表 -->
 		<ReportList ref="reportListRef" />
@@ -240,6 +256,7 @@
   import TreatOperationForm from './form.vue'
   import TreatTest from '../treatTest/index.vue'
   import TreatOperationStat from './stat.vue'
+	import TreatOperationReviewList from './reviewList.vue'
 	import ReportList from '../treatTest/reportList.vue'
 
   const { proxy } = getCurrentInstance();
@@ -250,6 +267,7 @@
   const treatTestOpen = ref(false);
   const treatTestRef = ref();
   const treatOperationStatRef = ref();
+	const treatOperationReviewListRef = ref();
   const reportListRef = ref();
 
   // 遮罩层
@@ -282,7 +300,8 @@
       treatId: undefined,
       page: 1,
       pageSize: 10,
-      name: undefined
+      name: undefined,
+			needReview:false
     }
   });
 
@@ -315,6 +334,11 @@
     treatOperationStatRef.value.showData();
   }
 
+  /** 复查 */
+  function handleReview(){
+    treatOperationReviewListRef.value.showData();
+  }
+	
   /** 报告 */
   function handleReport(raw){
     reportListRef.value.showData(raw.operationId);
@@ -337,7 +361,7 @@
           row.tdDays=tdDays;
           row.tdDaysStr=tdDaysStr;
           if(!proxy.isEmpty(row.reviewDate)){
-            const rd = new Date(Date.parse(row.treatDate.replace(/-/g,"/")));
+            const rd = new Date(Date.parse(row.reviewDate.replace(/-/g,"/")));
             const rdDays = (parseInt(nowTime - rd)) / (1000*24*3600);
             row.rdDays = rdDays;
           }
