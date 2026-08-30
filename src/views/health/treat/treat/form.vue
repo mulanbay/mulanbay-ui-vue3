@@ -354,6 +354,9 @@
       ],
       treatType: [
         { required: true, message: "看病类型不能为空", trigger: "blur" }
+      ],
+			syncToConsume: [
+        { required: true, message: "请选择是否同步消费", trigger: "blur" }
       ]
     }
   });
@@ -378,6 +381,7 @@
         }else{
           tagsOptions.value = [];
         }
+				form.value.syncToConsume = true;
       });
     } else {
       title.value = "新增";
